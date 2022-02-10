@@ -1,0 +1,13 @@
+Enabled: true
+SubscriptionEndCheckTicks: 100
+
+#yaml mysql
+DataProvider: yaml
+
+DataFile: "data.yml"
+Mysql:
+  Ip: '135.181.169.114'
+  User: '2com9'
+  Password: 'LS=z3LuCEXD^6wYt'
+  Database: 'WellMinedWhiteList'
+  Table: 'WellMinedWhiteListTable'

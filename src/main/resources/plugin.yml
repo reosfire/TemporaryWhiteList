@@ -1,0 +1,8 @@
+name: TemporaryWhiteList
+version: '${project.version}'
+main: ru.reosfire.temporarywhitelist.TemporaryWhiteList
+prefix: TWL
+authors: [ reosfire ]
+description: Names based temporary white list
+commands:
+  twl: {}
