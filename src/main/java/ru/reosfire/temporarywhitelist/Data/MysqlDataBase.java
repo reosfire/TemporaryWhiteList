@@ -1,6 +1,7 @@
 package ru.reosfire.temporarywhitelist.Data;
 
 import org.bukkit.Bukkit;
+import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Comparer;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Where;
 import ru.reosfire.temporarywhitelist.Lib.Sql.SqlConnection;
@@ -21,19 +22,22 @@ import java.util.List;
 
 public class MysqlDataBase implements IDataProvider
 {
+    private final Config Configuration;
     private SqlConnection sqlConnection;
     private static final String[] AllColumns = new String[] {"*"};
+
     private final HashMap<String, PlayerData> PlayerDataCache = new HashMap<>();
     private void UpdateCache(String nick) throws SQLException
     {
-        ResultSet set = sqlConnection.Select(TemporaryWhiteList.getConfiguration().SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
+        ResultSet set = sqlConnection.Select(Configuration.SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
         PlayerDataCache.put(nick, new PlayerData(set));
     }
 
-    public MysqlDataBase(SqlConfiguration config) throws SQLException
+    public MysqlDataBase(Config configuratuion) throws SQLException
     {
-        sqlConnection = new SqlConnection(config);
-        sqlConnection.CreateTable(TemporaryWhiteList.getConfiguration().SqlTable,
+        Configuration = configuratuion;
+        sqlConnection = new SqlConnection(configuratuion.SqlConfiguration);
+        sqlConnection.CreateTable(Configuration.SqlTable,
                 new TableColumn("Player", ColumnType.VarChar.setMax(32), ColumnFlag.Not_null, ColumnFlag.Unique),
                 new TableColumn("Permanent", ColumnType.Boolean, ColumnFlag.Not_null),
                 new TableColumn("LastStartTime", ColumnType.BigInt, ColumnFlag.Not_null),
@@ -66,7 +70,7 @@ public class MysqlDataBase implements IDataProvider
         long StartTime;
         long TimeAmount;
         boolean Permanent;
-        ResultSet playerData = sqlConnection.Select(TemporaryWhiteList.getConfiguration().SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
+        ResultSet playerData = sqlConnection.Select(Configuration.SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
 
         long timeLeft;
         if (playerData.next())
@@ -91,7 +95,7 @@ public class MysqlDataBase implements IDataProvider
             StartTime = Instant.now().getEpochSecond();
             Permanent = false;
         }
-        String setRequest = "INSERT INTO "+ TemporaryWhiteList.getConfiguration().SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
+        String setRequest = "INSERT INTO "+ Configuration.SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
         PreparedStatement statement = sqlConnection.getConnection().prepareStatement(setRequest);
         statement.setString(1, nick);
         statement.setBoolean(2, Permanent);
@@ -111,7 +115,7 @@ public class MysqlDataBase implements IDataProvider
         long StartTime = Instant.now().getEpochSecond();
         long TimeAmount = 0;
         boolean Permanent = true;
-        String setRequest = "INSERT INTO "+ TemporaryWhiteList.getConfiguration().SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
+        String setRequest = "INSERT INTO "+ Configuration.SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
         PreparedStatement statement = sqlConnection.getConnection().prepareStatement(setRequest);
         statement.setString(1, nick);
         statement.setBoolean(2, Permanent);
@@ -128,7 +132,7 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public void Remove(String nick) throws Exception
     {
-        String removeRequest = "DELETE FROM "+ TemporaryWhiteList.getConfiguration().SqlTable +" WHERE Player=?;";
+        String removeRequest = "DELETE FROM "+ Configuration.SqlTable +" WHERE Player=?;";
         PreparedStatement statement = sqlConnection.getConnection().prepareStatement(removeRequest);
         statement.setString(1, nick);
         statement.executeUpdate();
@@ -138,7 +142,7 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public void SetPermanent(String nick, boolean permanent) throws Exception
     {
-        String setRequest = "INSERT INTO "+ TemporaryWhiteList.getConfiguration().SqlTable +" (Player, Permanent) VALUES (?, ?) ON DUPLICATE KEY UPDATE Permanent=?;";
+        String setRequest = "INSERT INTO "+ Configuration.SqlTable +" (Player, Permanent) VALUES (?, ?) ON DUPLICATE KEY UPDATE Permanent=?;";
         PreparedStatement statement = sqlConnection.getConnection().prepareStatement(setRequest);
         statement.setString(1, nick);
         statement.setBoolean(2, permanent);
@@ -153,17 +157,17 @@ public class MysqlDataBase implements IDataProvider
         if (!PlayerDataCache.containsKey(nick)) UpdateCache(nick);
         PlayerData playerData = PlayerDataCache.get(nick);
 
-        if (playerData.undefined) return TemporaryWhiteList.getMessages().PlayerUndefined;
-        if (playerData.isPermanent()) return TemporaryWhiteList.getMessages().SubscribeNeverEnd;
+        if (playerData.undefined) return Configuration.Messages.PlayerUndefined;
+        if (playerData.isPermanent()) return Configuration.Messages.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if (secondsAmount < 0) return TemporaryWhiteList.getMessages().SubscribeEnd;
+        if (secondsAmount < 0) return Configuration.Messages.SubscribeEnd;
         return TimeConverter.ReadableTime(secondsAmount);
     }
 
     @Override
     public List<String> ActiveList() throws Exception
     {
-        ResultSet playerData = sqlConnection.Select(TemporaryWhiteList.getConfiguration().SqlTable, AllColumns);
+        ResultSet playerData = sqlConnection.Select(Configuration.SqlTable, AllColumns);
         List<String> result = new LinkedList<>();
         while (playerData.next())
         {
@@ -177,7 +181,7 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public List<String> AllList() throws Exception
     {
-        ResultSet playerData = sqlConnection.Select(TemporaryWhiteList.getConfiguration().SqlTable, AllColumns);
+        ResultSet playerData = sqlConnection.Select(Configuration.SqlTable, AllColumns);
         List<String> result = new LinkedList<>();
         while (playerData.next())
         {

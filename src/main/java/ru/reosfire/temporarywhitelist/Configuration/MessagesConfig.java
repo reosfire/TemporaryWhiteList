@@ -1,9 +1,10 @@
 package ru.reosfire.temporarywhitelist.Configuration;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
-public class Messages extends YamlConfig
+public class MessagesConfig extends YamlConfig
 {
     public final String KickOnConnecting;
     public final String KickConnected;
@@ -15,7 +16,7 @@ public class Messages extends YamlConfig
     public final String WhiteListEnabledStatus;
     public final String WhiteListDisabledStatus;
 
-    public Messages(YamlConfiguration configuration)
+    public MessagesConfig(ConfigurationSection configuration)
     {
         super(configuration);
         KickOnConnecting = getString("Kick.Connecting");

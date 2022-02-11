@@ -2,9 +2,22 @@ package ru.reosfire.temporarywhitelist;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
+import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {
+    private final Config Configuration;
+    private final IDataProvider DataProvider;
+    private final TemporaryWhiteList PluginInstance;
+
+    public PlaceholdersExpansion(Config configuration, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    {
+        Configuration = configuration;
+        DataProvider = dataProvider;
+        PluginInstance = pluginInstance;
+    }
+
     @Override
     public boolean persist()
     {
@@ -20,7 +33,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     @Override
     public String getAuthor()
     {
-        return TemporaryWhiteList.getSingleton().getDescription().getAuthors().toString();
+        return PluginInstance.getDescription().getAuthors().toString();
     }
 
     @Override
@@ -32,7 +45,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     @Override
     public String getVersion()
     {
-        return TemporaryWhiteList.getSingleton().getDescription().getVersion();
+        return PluginInstance.getDescription().getVersion();
     }
 
     @Override
@@ -43,7 +56,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         {
             try
             {
-                return TemporaryWhiteList.getDataProvider().Check(player.getName());
+                return DataProvider.Check(player.getName());
             }
             catch (Exception e)
             {
@@ -53,9 +66,9 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         }
         if(identifier.equals("status"))
         {
-            return TemporaryWhiteList.getConfiguration().Enabled ?
-                    TemporaryWhiteList.getMessages().WhiteListEnabledStatus:
-                    TemporaryWhiteList.getMessages().WhiteListDisabledStatus;
+            return Configuration.Enabled ?
+                    Configuration.Messages.WhiteListEnabledStatus:
+                    Configuration.Messages.WhiteListDisabledStatus;
         }
 
         return "";

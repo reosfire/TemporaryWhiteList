@@ -1,11 +1,15 @@
 package ru.reosfire.temporarywhitelist.Data;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.io.File;
+import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,18 +19,18 @@ import java.util.Map;
 public class YamlDataBase implements IDataProvider
 {
     private HashMap<String, PlayerData> data = new HashMap<>();
-    private YamlConfiguration yamlDataFile;
+    private final File YamlDataFile;
+    private final YamlConfiguration YamlDataConfig;
+    private final Config Configuration;
 
-    public YamlDataBase(YamlConfiguration yamlConfiguration)
+    public YamlDataBase(Config configuration, File yamlFile) throws IOException, InvalidConfigurationException
     {
-        yamlDataFile = yamlConfiguration;
-        Load(yamlConfiguration);
-    }
+        Configuration = configuration;
+        YamlDataFile = yamlFile;
+        YamlDataConfig = YamlConfig.LoadOrCreate(YamlDataFile);
 
-    public void Load(YamlConfiguration yamlConfiguration)
-    {
         data = new HashMap<>();
-        ConfigurationSection players = yamlConfiguration.getConfigurationSection("Players");
+        ConfigurationSection players = YamlDataConfig.getConfigurationSection("Players");
         for (String player : players.getKeys(false))
         {
             ConfigurationSection playerSection = players.getConfigurationSection(player);
@@ -43,7 +47,7 @@ public class YamlDataBase implements IDataProvider
     }
 
     @Override
-    public void Add(String nick, long addedTime) throws Exception
+    public void Add(String nick, long addedTime) throws IOException
     {
         long StartTime;
         long TimeAmount;
@@ -61,91 +65,59 @@ public class YamlDataBase implements IDataProvider
             StartTime = Instant.now().getEpochSecond();
             Permanent = false;
         }
-        ConfigurationSection playersSection = yamlDataFile.getConfigurationSection("Players");
+        ConfigurationSection playersSection = YamlDataConfig.getConfigurationSection("Players");
         ConfigurationSection playerSection = playersSection.createSection(nick);
         playerSection.set("lastStartTime", StartTime);
         playerSection.set("permanent", Permanent);
         playerSection.set("timeAmount", TimeAmount);
 
-        File dataFile = new File(TemporaryWhiteList.getSingleton().getDataFolder(), TemporaryWhiteList.getConfiguration().DataFile);
-        try
-        {
-            yamlDataFile.save(dataFile);
-            data.put(nick, new PlayerData(StartTime, TimeAmount, false));
-        }
-        catch (Exception e)
-        {
-            throw new Exception();
-        }
+        YamlDataConfig.save(YamlDataFile);
+        data.put(nick, new PlayerData(StartTime, TimeAmount, false));
     }
     @Override
     public void Add(String nick) throws Exception
     {
-        ConfigurationSection playersSection = yamlDataFile.getConfigurationSection("Players");
+        ConfigurationSection playersSection = YamlDataConfig.getConfigurationSection("Players");
         ConfigurationSection playerSection = playersSection.createSection(nick);
         long nowEpochSecond = Instant.now().getEpochSecond();
         playerSection.set("lastStartTime", nowEpochSecond);
         playerSection.set("permanent", true);
         playerSection.set("timeAmount", 0);
 
-        try
-        {
-            File dataFile = new File(TemporaryWhiteList.getSingleton().getDataFolder(), TemporaryWhiteList.getConfiguration().DataFile);
-            yamlDataFile.save(dataFile);
-            data.put(nick, new PlayerData(nowEpochSecond, 0, true));
-        }
-        catch (Exception e)
-        {
-            throw new Exception();
-        }
+        YamlDataConfig.save(YamlDataFile);
+        data.put(nick, new PlayerData(nowEpochSecond, 0, true));
     }
 
     @Override
-    public void Remove(String nick) throws Exception
+    public void Remove(String nick) throws IOException
     {
         if (!data.containsKey(nick)) return;
-        ConfigurationSection playersSection = yamlDataFile.getConfigurationSection("Players");
+        ConfigurationSection playersSection = YamlDataConfig.getConfigurationSection("Players");
         playersSection.set(nick, null);
 
-        try
-        {
-            File dataFile = new File(TemporaryWhiteList.getSingleton().getDataFolder(), TemporaryWhiteList.getConfiguration().DataFile);
-            yamlDataFile.save(dataFile);
-            data.remove(nick);
-        }
-        catch (Exception e)
-        {
-            throw new Exception();
-        }
+        YamlDataConfig.save(YamlDataFile);
+        data.remove(nick);
     }
 
     @Override
-    public void SetPermanent(String player, boolean permanent) throws Exception
+    public void SetPermanent(String player, boolean permanent) throws IOException
     {
         if(!data.containsKey(player)) return;
-        ConfigurationSection playerSection = yamlDataFile.getConfigurationSection("Players").getConfigurationSection(player);
+        ConfigurationSection playerSection = YamlDataConfig.getConfigurationSection("Players").getConfigurationSection(player);
         playerSection.set("permanent", permanent);
 
-        try
-        {
-            File dataFile = new File(TemporaryWhiteList.getSingleton().getDataFolder(), TemporaryWhiteList.getConfiguration().DataFile);
-            yamlDataFile.save(dataFile);
-            data.get(player).setPermanent(permanent);
-        }
-        catch (Exception e)
-        {
-            throw new Exception();
-        }
+        YamlDataConfig.save(YamlDataFile);
+        data.get(player).setPermanent(permanent);
     }
 
     @Override
     public String Check(String player)
     {
-        if (!data.containsKey(player)) return TemporaryWhiteList.getMessages().PlayerUndefined;
+        if (!data.containsKey(player)) return Configuration.Messages.PlayerUndefined;
         PlayerData playerData = data.get(player);
-        if(playerData.isPermanent()) return TemporaryWhiteList.getMessages().SubscribeNeverEnd;
+        if(playerData.isPermanent()) return Configuration.Messages.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if(secondsAmount < 0) return TemporaryWhiteList.getMessages().SubscribeEnd;
+        if(secondsAmount < 0) return Configuration.Messages.SubscribeEnd;
         return "действительна еще " + TimeConverter.ReadableTime(secondsAmount);
     }
 

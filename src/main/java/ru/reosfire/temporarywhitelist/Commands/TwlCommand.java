@@ -3,6 +3,8 @@ package ru.reosfire.temporarywhitelist.Commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
@@ -10,6 +12,17 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 
 public class TwlCommand extends CommandNode
 {
+    private final IDataProvider DataProvider;
+    private final Config Configuration;
+    private final TemporaryWhiteList PluginInstance;
+
+    public TwlCommand(Config config, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    {
+        DataProvider = dataProvider;
+        Configuration = config;
+        PluginInstance = pluginInstance;
+    }
+
     @Override
     public String getName()
     {
@@ -43,13 +56,13 @@ public class TwlCommand extends CommandNode
             {
                 if(args.length == 1)
                 {
-                    TemporaryWhiteList.getDataProvider().Add(args[0]);
+                    DataProvider.Add(args[0]);
                     sender.sendMessage(args[0] + " success added to white list");
                     return true;
                 }
                 else if(args.length == 2)
                 {
-                    TemporaryWhiteList.getDataProvider().Add(args[0], TimeConverter.ParseTime(args[1]));
+                    DataProvider.Add(args[0], TimeConverter.ParseTime(args[1]));
                     sender.sendMessage(args[0] + " success added to white list for " + args[1]);
                     return true;
                 }
@@ -81,7 +94,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                TemporaryWhiteList.getDataProvider().Remove(args[0]);
+                DataProvider.Remove(args[0]);
                 sender.sendMessage(args[0] + " success removed from white list");
                 return true;
             }
@@ -129,7 +142,7 @@ public class TwlCommand extends CommandNode
             {
                 try
                 {
-                    TemporaryWhiteList.getDataProvider().SetPermanent(args[0], true);
+                    DataProvider.SetPermanent(args[0], true);
                     sender.sendMessage(args[0] + "'s subscribe set permanent");
                     return true;
                 }
@@ -159,7 +172,7 @@ public class TwlCommand extends CommandNode
             {
                 try
                 {
-                    TemporaryWhiteList.getDataProvider().SetPermanent(args[0], false);
+                    DataProvider.SetPermanent(args[0], false);
                     sender.sendMessage(args[0] + "'s subscribe set permanent");
                     return true;
                 }
@@ -195,7 +208,7 @@ public class TwlCommand extends CommandNode
                     if (sender instanceof Player)
                     {
                         Player playerSender = (Player) sender;
-                        playerSender.sendMessage(Text.Colorize(playerSender, TemporaryWhiteList.getMessages().CheckMessageFormat));
+                        playerSender.sendMessage(Text.Colorize(playerSender, Configuration.Messages.CheckMessageFormat));
                     }
                 }
                 else if (args.length == 1)
@@ -204,7 +217,7 @@ public class TwlCommand extends CommandNode
                     {
                         noPermissionAction(sender);
                     }
-                    else sender.sendMessage(TemporaryWhiteList.getDataProvider().Check(args[0]));
+                    else sender.sendMessage(DataProvider.Check(args[0]));
                 }
                 return true;
             }
@@ -231,7 +244,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            TemporaryWhiteList.getSingleton().Enable();
+            PluginInstance.Enable();
             sender.sendMessage("enabled");
             return true;
         }
@@ -254,7 +267,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            TemporaryWhiteList.getSingleton().Disable();
+            PluginInstance.Disable();
             sender.sendMessage("disabled");
             return true;
         }
@@ -277,7 +290,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            TemporaryWhiteList.ReloadConfigurations();
+            PluginInstance.ReloadConfigurations();
             sender.sendMessage("reloaded");
             return true;
         }
@@ -301,7 +314,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                java.util.List<String> activePlayers  = TemporaryWhiteList.getDataProvider().ActiveList();
+                java.util.List<String> activePlayers  = DataProvider.ActiveList();
                 String buffer = "";
                 for (int i = 0; i < activePlayers.size(); i++)
                 {
@@ -343,7 +356,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                sender.sendMessage(Integer.toString(TemporaryWhiteList.getDataProvider().ActiveList().size()));
+                sender.sendMessage(Integer.toString(DataProvider.ActiveList().size()));
                 return true;
             }
             catch (Exception e)
