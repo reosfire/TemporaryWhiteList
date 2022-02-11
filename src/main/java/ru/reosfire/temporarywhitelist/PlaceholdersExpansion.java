@@ -2,6 +2,7 @@ package ru.reosfire.temporarywhitelist;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 
@@ -31,27 +32,27 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     }
 
     @Override
-    public String getAuthor()
+    public @NotNull String getAuthor()
     {
         return PluginInstance.getDescription().getAuthors().toString();
     }
 
     @Override
-    public String getIdentifier()
+    public @NotNull String getIdentifier()
     {
         return "WMWhiteList";
     }
 
     @Override
-    public String getVersion()
+    public @NotNull String getVersion()
     {
         return PluginInstance.getDescription().getVersion();
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier)
+    public String onPlaceholderRequest(Player player, @NotNull String identifier)
     {
-        if (player == null || identifier == null) return "";
+        if (player == null) return "";
         if(identifier.equals("subscription_status"))
         {
             try
@@ -66,7 +67,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         }
         if(identifier.equals("status"))
         {
-            return Configuration.Enabled ?
+            return PluginInstance.isWhiteListEnabled() ?
                     Configuration.Messages.WhiteListEnabledStatus:
                     Configuration.Messages.WhiteListDisabledStatus;
         }

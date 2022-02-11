@@ -1,6 +1,8 @@
 package ru.reosfire.temporarywhitelist;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -13,12 +15,21 @@ import ru.reosfire.temporarywhitelist.Data.YamlDataBase;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
+import java.io.File;
+import java.io.IOException;
+
 public final class TemporaryWhiteList extends JavaPlugin
 {
+    private boolean Enabled;
     private Config configuration;
     private IDataProvider dataProvider;
 
     private BukkitTask KickerTask;
+
+    public boolean isWhiteListEnabled()
+    {
+        return Enabled;
+    }
 
     @Override
     public void onEnable()
@@ -33,6 +44,21 @@ public final class TemporaryWhiteList extends JavaPlugin
         TwlCommand commands = new TwlCommand(configuration, dataProvider, this);
         commands.Register(getCommand("twl"));
 
+        Enabled = configuration.getBoolean("Enabled");
+        if (Enabled)
+        {
+            getLogger().info("Enabling...");
+            try
+            {
+                Enable();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                getLogger().warning("Error while enabling");
+            }
+        }
+
         getLogger().info("Loaded");
     }
 
@@ -40,7 +66,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         try
         {
-            configuration = new Config(YamlConfig.LoadOrCreate("config.yml", this), this);
+            configuration = new Config(YamlConfig.LoadOrCreate("config.yml", this));
         }
         catch (Exception e)
         {
@@ -82,9 +108,11 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public void Enable()
+    public void Enable() throws IOException, InvalidConfigurationException
     {
-        if (configuration.Enabled) return;
+        if (Enabled) return;
+
+        SetEnabledInConfiguration(true);
 
         KickerTask = new BukkitRunnable()
         {
@@ -100,15 +128,26 @@ public final class TemporaryWhiteList extends JavaPlugin
                 }
             }
         }.runTaskTimer(this, 0, configuration.SubscriptionEndCheckTicks);
-
-        configuration.SetEnabled(true);
     }
 
-    public void Disable()
+    public void Disable() throws IOException, InvalidConfigurationException
     {
-        if (!configuration.Enabled) return;
+        if (!Enabled) return;
+
+        SetEnabledInConfiguration(false);
 
         KickerTask.cancel();
-        configuration.SetEnabled(false);
+    }
+
+    private void SetEnabledInConfiguration(boolean enabled) throws IOException, InvalidConfigurationException
+    {
+        File configFile = new File(this.getDataFolder(), "config.yml");
+        YamlConfiguration yamlConfiguration = new YamlConfiguration();
+        yamlConfiguration.load(configFile);
+
+        if (enabled == yamlConfiguration.getBoolean("Enabled"))
+
+        yamlConfiguration.save(configFile);
+        Enabled = enabled;
     }
 }

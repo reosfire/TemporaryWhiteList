@@ -11,16 +11,18 @@ public class EventsListener implements Listener
 {
     private final Config Configuration;
     private final IDataProvider DataProvider;
-    public EventsListener(Config configuration, IDataProvider dataProvider)
+    private final TemporaryWhiteList PluginInstance;
+    public EventsListener(Config configuration, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
         Configuration = configuration;
         DataProvider = dataProvider;
+        PluginInstance = pluginInstance;
     }
 
     @EventHandler
     public void onJoin(PlayerLoginEvent event)
     {
-        if(!Configuration.Enabled) return;
+        if(!PluginInstance.isWhiteListEnabled()) return;
         if (!DataProvider.CanJoin(event.getPlayer().getDisplayName()))
         {
             if (!event.getPlayer().isOp())

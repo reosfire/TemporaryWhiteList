@@ -2,6 +2,7 @@ package ru.reosfire.temporarywhitelist.Commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
@@ -9,6 +10,8 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
+
+import java.io.IOException;
 
 public class TwlCommand extends CommandNode
 {
@@ -244,8 +247,16 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            PluginInstance.Enable();
-            sender.sendMessage("enabled");
+            try
+            {
+                PluginInstance.Enable();
+                sender.sendMessage("enabled");
+            }
+            catch (Exception e)
+            {
+                sender.sendMessage("Error! Watch console");
+                e.printStackTrace();
+            }
             return true;
         }
     }
@@ -267,8 +278,16 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            PluginInstance.Disable();
-            sender.sendMessage("disabled");
+            try
+            {
+                PluginInstance.Disable();
+                sender.sendMessage("disabled");
+            }
+            catch (Exception e)
+            {
+                sender.sendMessage("Error! Watch console");
+                e.printStackTrace();
+            }
             return true;
         }
     }
