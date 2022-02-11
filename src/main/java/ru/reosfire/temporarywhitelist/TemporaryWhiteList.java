@@ -44,6 +44,10 @@ public final class TemporaryWhiteList extends JavaPlugin
         TwlCommand commands = new TwlCommand(configuration, dataProvider, this);
         commands.Register(getCommand("twl"));
 
+        getLogger().info("Loading placeholders...");
+        PlaceholdersExpansion placeholdersExpansion = new PlaceholdersExpansion(configuration, dataProvider, this);
+        placeholdersExpansion.register();
+
         Enabled = configuration.getBoolean("Enabled");
         if (Enabled)
         {

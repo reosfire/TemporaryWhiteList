@@ -4,5 +4,7 @@ main: ru.reosfire.temporarywhitelist.TemporaryWhiteList
 prefix: TWL
 authors: [ reosfire ]
 description: Names based temporary white list
+depend:
+  - PlaceholderAPI
 commands:
   twl: {}
