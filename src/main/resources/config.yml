@@ -6,22 +6,22 @@ DataProvider: yaml
 
 DataFile: "data.yml"
 Mysql:
-  Ip: '135.181.169.114'
-  User: '2com9'
-  Password: 'LS=z3LuCEXD^6wYt'
-  Database: 'WellMinedWhiteList'
-  Table: 'WellMinedWhiteListTable'
+  Ip: 111.222.333.444
+  User: "root"
+  Password: "pass"
+  Database: "WhiteListDB"
+  Table: "WhiteListTable"
 
 Messages:
   Kick:
-    Connecting: '&bВы не в вайтлисте!'
-    WhileConnected: '&bВаша подписка закончилась!'
-  NoPermission: 'Недостаточно прав.'
-  CheckMessageFormat: 'Ваша подписка: %WMWhiteList_subscription_status%'
+    Connecting: "&bВы не в вайтлисте!"
+    WhileConnected: "&bВаша подписка закончилась!"
+  NoPermission: "Недостаточно прав."
+  CheckMessageFormat: "Ваша подписка: %WMWhiteList_subscription_status%"
   WhiteListStatuses:
-    Enabled: '&c&lвключен'
-    Disabled: '&a&lвыключен'
+    Enabled: "&c&lвключен"
+    Disabled: "&a&lвыключен"
   DataBase:
-    PlayerUndefined: 'Игрок не найден'
-    SubscribeNeverEnd: 'никогда не закончится.'
-    SubscribeEnd: 'уже закончилась.'
+    PlayerUndefined: "Игрок не найден"
+    SubscribeNeverEnd: "никогда не закончится."
+    SubscribeEnd: "уже закончилась."

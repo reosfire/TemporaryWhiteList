@@ -48,19 +48,15 @@ public final class TemporaryWhiteList extends JavaPlugin
         PlaceholdersExpansion placeholdersExpansion = new PlaceholdersExpansion(configuration, dataProvider, this);
         placeholdersExpansion.register();
 
+        getLogger().info("Loading events handler...");
+        EventsListener eventsListener = new EventsListener(configuration, dataProvider, this);
+        getServer().getPluginManager().registerEvents(eventsListener, this);
+
         Enabled = configuration.getBoolean("Enabled");
         if (Enabled)
         {
             getLogger().info("Enabling...");
-            try
-            {
-                Enable();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                getLogger().warning("Error while enabling");
-            }
+            RunKickerTask();
         }
 
         getLogger().info("Loaded");
@@ -117,21 +113,20 @@ public final class TemporaryWhiteList extends JavaPlugin
         if (Enabled) return;
 
         SetEnabledInConfiguration(true);
+    }
 
-        KickerTask = new BukkitRunnable()
+    private void RunKickerTask()
+    {
+        KickerTask = Bukkit.getScheduler().runTaskTimer(this, () ->
         {
-            @Override
-            public void run()
+            for (Player player : getServer().getOnlinePlayers())
             {
-                for (Player player : getServer().getOnlinePlayers())
+                if (!dataProvider.CanJoin(player.getName()) && !player.isOp())
                 {
-                    if (!dataProvider.CanJoin(player.getName()) && !player.isOp())
-                    {
-                        player.kickPlayer(Text.Colorize(player, configuration.Messages.KickConnected));
-                    }
+                    player.kickPlayer(Text.Colorize(player, configuration.Messages.KickConnected));
                 }
             }
-        }.runTaskTimer(this, 0, configuration.SubscriptionEndCheckTicks);
+        }, 0, configuration.SubscriptionEndCheckTicks);
     }
 
     public void Disable() throws IOException, InvalidConfigurationException
@@ -149,7 +144,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         YamlConfiguration yamlConfiguration = new YamlConfiguration();
         yamlConfiguration.load(configFile);
 
-        if (enabled == yamlConfiguration.getBoolean("Enabled"))
+        if (enabled == yamlConfiguration.getBoolean("Enabled")) return;
 
         yamlConfiguration.save(configFile);
         Enabled = enabled;
