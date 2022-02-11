@@ -6,27 +6,24 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 public class MessagesConfig extends YamlConfig
 {
+    public final DatabaseMessagesConfig DataBase;
     public final String KickOnConnecting;
     public final String KickConnected;
     public final String NoPermission;
     public final String CheckMessageFormat;
-    public final String PlayerUndefined;
-    public final String SubscribeNeverEnd;
-    public final String SubscribeEnd;
     public final String WhiteListEnabledStatus;
     public final String WhiteListDisabledStatus;
 
     public MessagesConfig(ConfigurationSection configuration)
     {
         super(configuration);
-        KickOnConnecting = getString("Kick.Connecting");
-        KickConnected = getString("Kick.WhileConnected");
-        NoPermission = getString("NoPermission");
-        CheckMessageFormat = getString("CheckMessageFormat");
-        PlayerUndefined = getString("DataBase.PlayerUndefined");
-        SubscribeNeverEnd = getString("DataBase.SubscribeNeverEnd");
-        SubscribeEnd = getString("DataBase.SubscribeEnd");
-        WhiteListEnabledStatus = getString("WhiteListStatuses.Enabled");
-        WhiteListDisabledStatus = getString("WhiteListStatuses.Disabled");
+
+        DataBase = new DatabaseMessagesConfig(getSection("DataBase"));
+        KickOnConnecting = getColoredString("Kick.Connecting");
+        KickConnected = getColoredString("Kick.WhileConnected");
+        NoPermission = getColoredString("NoPermission");
+        CheckMessageFormat = getColoredString("CheckMessageFormat");
+        WhiteListEnabledStatus = getColoredString("WhiteListStatuses.Enabled");
+        WhiteListDisabledStatus = getColoredString("WhiteListStatuses.Disabled");
     }
 }

@@ -157,10 +157,10 @@ public class MysqlDataBase implements IDataProvider
         if (!PlayerDataCache.containsKey(nick)) UpdateCache(nick);
         PlayerData playerData = PlayerDataCache.get(nick);
 
-        if (playerData.undefined) return Configuration.Messages.PlayerUndefined;
-        if (playerData.isPermanent()) return Configuration.Messages.SubscribeNeverEnd;
+        if (playerData.undefined) return Configuration.Messages.DataBase.PlayerUndefined;
+        if (playerData.isPermanent()) return Configuration.Messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if (secondsAmount < 0) return Configuration.Messages.SubscribeEnd;
+        if (secondsAmount < 0) return Configuration.Messages.DataBase.SubscribeEnd;
         return TimeConverter.ReadableTime(secondsAmount);
     }
 

@@ -113,11 +113,11 @@ public class YamlDataBase implements IDataProvider
     @Override
     public String Check(String player)
     {
-        if (!data.containsKey(player)) return Configuration.Messages.PlayerUndefined;
+        if (!data.containsKey(player)) return Configuration.Messages.DataBase.PlayerUndefined;
         PlayerData playerData = data.get(player);
-        if(playerData.isPermanent()) return Configuration.Messages.SubscribeNeverEnd;
+        if(playerData.isPermanent()) return Configuration.Messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if(secondsAmount < 0) return Configuration.Messages.SubscribeEnd;
+        if(secondsAmount < 0) return Configuration.Messages.DataBase.SubscribeEnd;
         return "действительна еще " + TimeConverter.ReadableTime(secondsAmount);
     }
 
