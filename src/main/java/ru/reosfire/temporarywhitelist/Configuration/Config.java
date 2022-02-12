@@ -1,13 +1,8 @@
 package ru.reosfire.temporarywhitelist.Configuration;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.SqlConfiguration;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
-import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
-
-import java.io.File;
-import java.io.IOException;
 
 public class Config extends YamlConfig
 {

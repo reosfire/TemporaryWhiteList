@@ -1,7 +1,6 @@
 package ru.reosfire.temporarywhitelist.Configuration;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 public class MessagesConfig extends YamlConfig

@@ -8,8 +8,6 @@ import ru.reosfire.temporarywhitelist.Lib.Sql.SqlConnection;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.ColumnFlag;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.ColumnType;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.TableColumn;
-import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.SqlConfiguration;
-import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.sql.PreparedStatement;
@@ -23,7 +21,7 @@ import java.util.List;
 public class MysqlDataBase implements IDataProvider
 {
     private final Config Configuration;
-    private SqlConnection sqlConnection;
+    private final SqlConnection sqlConnection;
     private static final String[] AllColumns = new String[] {"*"};
 
     private final HashMap<String, PlayerData> PlayerDataCache = new HashMap<>();
@@ -33,10 +31,10 @@ public class MysqlDataBase implements IDataProvider
         PlayerDataCache.put(nick, new PlayerData(set));
     }
 
-    public MysqlDataBase(Config configuratuion) throws SQLException
+    public MysqlDataBase(Config configuration) throws SQLException
     {
-        Configuration = configuratuion;
-        sqlConnection = new SqlConnection(configuratuion.SqlConfiguration);
+        Configuration = configuration;
+        sqlConnection = new SqlConnection(configuration.SqlConfiguration);
         sqlConnection.CreateTable(Configuration.SqlTable,
                 new TableColumn("Player", ColumnType.VarChar.setMax(32), ColumnFlag.Not_null, ColumnFlag.Unique),
                 new TableColumn("Permanent", ColumnType.Boolean, ColumnFlag.Not_null),
@@ -80,14 +78,13 @@ public class MysqlDataBase implements IDataProvider
             {
                 TimeAmount = playerData.getLong("TimeAmount") + addedTime;
                 StartTime = playerData.getLong("LastStartTime");
-                Permanent = playerData.getBoolean("Permanent");
             }
             else
             {
                 TimeAmount = addedTime;
                 StartTime = Instant.now().getEpochSecond();
-                Permanent = playerData.getBoolean("Permanent");
             }
+            Permanent = playerData.getBoolean("Permanent");
         }
         else
         {

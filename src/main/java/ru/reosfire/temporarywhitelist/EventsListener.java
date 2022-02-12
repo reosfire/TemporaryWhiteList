@@ -1,5 +1,6 @@
 package ru.reosfire.temporarywhitelist;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
@@ -23,11 +24,12 @@ public class EventsListener implements Listener
     public void onJoin(PlayerLoginEvent event)
     {
         if(!PluginInstance.isWhiteListEnabled()) return;
-        if (!DataProvider.CanJoin(event.getPlayer().getDisplayName()))
+        Player player = event.getPlayer();
+        if (!DataProvider.CanJoin(player.getDisplayName()))
         {
-            if (!event.getPlayer().isOp())
+            if (!player.isOp())
             {
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Text.Colorize(event.getPlayer(), Configuration.Messages.KickOnConnecting));
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, Text.Colorize(player, Configuration.Messages.KickOnConnecting));
             }
         }
     }

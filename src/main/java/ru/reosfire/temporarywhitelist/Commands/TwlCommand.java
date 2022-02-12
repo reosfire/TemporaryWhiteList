@@ -2,7 +2,6 @@ package ru.reosfire.temporarywhitelist.Commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
@@ -10,8 +9,6 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
-
-import java.io.IOException;
 
 public class TwlCommand extends CommandNode
 {
@@ -334,19 +331,19 @@ public class TwlCommand extends CommandNode
             try
             {
                 java.util.List<String> activePlayers  = DataProvider.ActiveList();
-                String buffer = "";
+                StringBuilder buffer = new StringBuilder();
                 for (int i = 0; i < activePlayers.size(); i++)
                 {
-                    buffer += activePlayers.get(i) + ", ";
+                    buffer.append(activePlayers.get(i)).append(", ");
                     if (i % 5 == 4)
                     {
-                        sender.sendMessage(buffer);
-                        buffer = "";
+                        sender.sendMessage(buffer.toString());
+                        buffer = new StringBuilder();
                     }
                 }
-                if (!buffer.equals(""))
+                if (!buffer.toString().equals(""))
                 {
-                    sender.sendMessage(buffer);
+                    sender.sendMessage(buffer.toString());
                 }
             }
             catch (Exception e)

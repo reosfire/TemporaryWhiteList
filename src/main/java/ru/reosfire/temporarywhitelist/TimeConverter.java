@@ -24,11 +24,11 @@ public class TimeConverter
 
         long resultYears = seconds;
 
-        if (resultYears != 0) timeBuilder.append(resultYears + "г,");
-        if (resultDays != 0) timeBuilder.append(resultDays + "дн,");
-        if (resultHours != 0) timeBuilder.append(resultHours + "ч,");
-        if (resultMinutes != 0) timeBuilder.append(resultMinutes + "мин,");
-        timeBuilder.append(resultSeconds + "сек.");
+        if (resultYears != 0) timeBuilder.append(resultYears).append("г,");
+        if (resultDays != 0) timeBuilder.append(resultDays).append("дн,");
+        if (resultHours != 0) timeBuilder.append(resultHours).append("ч,");
+        if (resultMinutes != 0) timeBuilder.append(resultMinutes).append("мин,");
+        timeBuilder.append(resultSeconds).append("сек.");
         return timeBuilder.toString();
     }
 
@@ -44,11 +44,24 @@ public class TimeConverter
         for (String timeElement : timeElements)
         {
             String[] split = timeElement.split(":");
-            if (split[1].equals("s")) result += Long.parseLong(split[0]);
-            else if (split[1].equals("m")) result += Long.parseLong(split[0]) * secondsInMinute;
-            else if (split[1].equals("h")) result += Long.parseLong(split[0]) * secondsInHour;
-            else if (split[1].equals("d")) result += Long.parseLong(split[0]) * secondsInDay;
-            else if (split[1].equals("y")) result += Long.parseLong(split[0]) * secondsInYear;
+            switch (split[1])
+            {
+                case "s":
+                    result += Long.parseLong(split[0]);
+                    break;
+                case "m":
+                    result += Long.parseLong(split[0]) * secondsInMinute;
+                    break;
+                case "h":
+                    result += Long.parseLong(split[0]) * secondsInHour;
+                    break;
+                case "d":
+                    result += Long.parseLong(split[0]) * secondsInDay;
+                    break;
+                case "y":
+                    result += Long.parseLong(split[0]) * secondsInYear;
+                    break;
+            }
         }
         return result;
     }
