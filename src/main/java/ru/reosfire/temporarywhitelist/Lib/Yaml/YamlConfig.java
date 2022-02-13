@@ -63,8 +63,7 @@ public abstract class YamlConfig
         return configFile;
     }
 
-    public static File LoadOrCreateFile(String fileName, JavaPlugin plugin) throws IOException,
-            InvalidConfigurationException
+    public static File LoadOrCreateFile(String fileName, JavaPlugin plugin) throws IOException
     {
         return LoadOrCreateFile(fileName, fileName, plugin);
     }

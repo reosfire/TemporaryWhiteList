@@ -16,9 +16,7 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
@@ -41,8 +39,9 @@ public final class TemporaryWhiteList extends JavaPlugin
         ReloadConfigurations();
 
         getLogger().info("Loading messages...");
-        CopyDefaultTranslations();
-        LoadMessages();
+        LocalizationsLoader localizationsLoader = new LocalizationsLoader(this, configuration);
+        localizationsLoader.CopyDefaultTranslations();
+        messages = localizationsLoader.LoadMessages();
 
         getLogger().info("Loading data...");
         ReloadData();
@@ -79,50 +78,6 @@ public final class TemporaryWhiteList extends JavaPlugin
         {
             e.printStackTrace();
             throw new RuntimeException("Error while loading config!");
-        }
-    }
-
-    public void CopyDefaultTranslations()
-    {
-        String[] translationsResources = new String[]
-                {
-                        "en.yml",
-                        "ru.yml"
-                };
-        try
-        {
-            File translationsDirectory = new File(getDataFolder(), "./translations/");
-            translationsDirectory.mkdir();
-
-            for (String translationsResource : translationsResources)
-            {
-                File translationFile = new File(translationsDirectory, translationsResource);
-                if (translationFile.exists()) continue;
-
-                InputStream resource = getResource("translations/" + translationsResource);
-                byte[] buffer = new byte[resource.available()];
-                resource.read(buffer);
-
-                FileOutputStream fileOutputStream = new FileOutputStream(translationFile);
-                fileOutputStream.write(buffer);
-                fileOutputStream.close();
-            }
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException();
-        }
-    }
-
-    public void LoadMessages()
-    {
-        try
-        {
-            messages = new MessagesConfig(YamlConfig.LoadOrCreate("translations/" + configuration.Translation, this));
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
         }
     }
 
