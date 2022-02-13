@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Configuration;
+package ru.reosfire.temporarywhitelist.Configuration.Localization;
 
 import org.bukkit.configuration.ConfigurationSection;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
@@ -6,8 +6,7 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 public class MessagesConfig extends YamlConfig
 {
     public final DatabaseMessagesConfig DataBase;
-    public final String KickOnConnecting;
-    public final String KickConnected;
+    public final KickMessagesConfig Kick;
     public final String NoPermission;
     public final String CheckMessageFormat;
     public final String WhiteListEnabledStatus;
@@ -18,8 +17,7 @@ public class MessagesConfig extends YamlConfig
         super(configuration);
 
         DataBase = new DatabaseMessagesConfig(getSection("DataBase"));
-        KickOnConnecting = getColoredString("Kick.Connecting");
-        KickConnected = getColoredString("Kick.WhileConnected");
+        Kick = new KickMessagesConfig(getSection("Kick"));
         NoPermission = getColoredString("NoPermission");
         CheckMessageFormat = getColoredString("CheckMessageFormat");
         WhiteListEnabledStatus = getColoredString("WhiteListStatuses.Enabled");

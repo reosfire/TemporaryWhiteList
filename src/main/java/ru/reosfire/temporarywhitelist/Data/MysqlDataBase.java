@@ -2,7 +2,7 @@ package ru.reosfire.temporarywhitelist.Data;
 
 import org.bukkit.Bukkit;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Comparer;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Where;
 import ru.reosfire.temporarywhitelist.Lib.Sql.SqlConnection;

@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Configuration;
+package ru.reosfire.temporarywhitelist.Configuration.Localization;
 
 import org.bukkit.configuration.ConfigurationSection;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;

@@ -3,8 +3,7 @@ package ru.reosfire.temporarywhitelist.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 

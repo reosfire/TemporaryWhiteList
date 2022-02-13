@@ -1,7 +1,13 @@
 Kick:
-  Connecting: "&bYou are not whitelisted!"
-  WhileConnected: "&bYou are not whitelisted now!"
-NoPermission: "No permission!"
+  Connecting:
+    - "&b------------------------"
+    - "&bYou are not whitelisted!"
+    - "&b------------------------"
+  WhilePlaying:
+    - "&b----------------------------"
+    - "&bYou are not whitelisted now!"
+    - "&b----------------------------"
+NoPermission: "&cNo permission!"
 CheckMessageFormat: "Your subscription: %WMWhiteList_subscription_status%"
 WhiteListStatuses:
   Enabled: "&c&lenabled"

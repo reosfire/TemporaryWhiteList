@@ -1,8 +1,9 @@
-package ru.reosfire.temporarywhitelist;
+package ru.reosfire.temporarywhitelist.Loaders;
 
 import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 import java.io.File;
 import java.io.FileOutputStream;

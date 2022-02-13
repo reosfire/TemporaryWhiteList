@@ -8,12 +8,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import ru.reosfire.temporarywhitelist.Commands.TwlCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Data.MysqlDataBase;
 import ru.reosfire.temporarywhitelist.Data.YamlDataBase;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
+import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,7 +130,7 @@ public final class TemporaryWhiteList extends JavaPlugin
             {
                 if (!dataProvider.CanJoin(player.getName()) && !player.isOp())
                 {
-                    player.kickPlayer(Text.Colorize(player, messages.KickConnected));
+                    player.kickPlayer(String.join("\n", Text.Colorize(player, messages.Kick.WhilePlaying)));
                 }
             }
         }, 0, configuration.SubscriptionEndCheckTicks);

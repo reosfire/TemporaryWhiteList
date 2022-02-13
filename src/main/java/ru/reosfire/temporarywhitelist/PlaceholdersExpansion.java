@@ -3,8 +3,7 @@ package ru.reosfire.temporarywhitelist;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion

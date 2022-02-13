@@ -1,7 +1,13 @@
 Kick:
-  Connecting: "&bВы не в вайтлисте!"
-  WhileConnected: "&bВаша подписка закончилась!"
-NoPermission: "Недостаточно прав."
+  Connecting:
+    - "&b------------------"
+    - "&bВы не в вайтлисте!"
+    - "&b------------------"
+  WhilePlaying:
+    - "&b--------------------------"
+    - "&bВаша подписка закончилась!"
+    - "&b--------------------------"
+NoPermission: "&cНедостаточно прав."
 CheckMessageFormat: "Ваша подписка: %WMWhiteList_subscription_status%"
 WhiteListStatuses:
   Enabled: "&c&lвключен"
