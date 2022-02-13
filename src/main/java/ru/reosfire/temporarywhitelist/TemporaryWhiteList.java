@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import ru.reosfire.temporarywhitelist.Commands.TwlCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Data.MysqlDataBase;
 import ru.reosfire.temporarywhitelist.Data.YamlDataBase;
@@ -15,13 +16,16 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
     private boolean Enabled;
     private Config configuration;
     private IDataProvider dataProvider;
+    private MessagesConfig messages;
 
     private BukkitTask KickerTask;
 
@@ -36,19 +40,23 @@ public final class TemporaryWhiteList extends JavaPlugin
         getLogger().info("Loading configurations...");
         ReloadConfigurations();
 
+        getLogger().info("Loading messages...");
+        CopyDefaultTranslations();
+        LoadMessages();
+
         getLogger().info("Loading data...");
         ReloadData();
 
         getLogger().info("Loading commands...");
-        TwlCommand commands = new TwlCommand(configuration, dataProvider, this);
+        TwlCommand commands = new TwlCommand(messages, dataProvider, this);
         commands.Register(getCommand("twl"));
 
         getLogger().info("Loading placeholders...");
-        PlaceholdersExpansion placeholdersExpansion = new PlaceholdersExpansion(configuration, dataProvider, this);
+        PlaceholdersExpansion placeholdersExpansion = new PlaceholdersExpansion(messages, dataProvider, this);
         placeholdersExpansion.register();
 
         getLogger().info("Loading events handler...");
-        EventsListener eventsListener = new EventsListener(configuration, dataProvider, this);
+        EventsListener eventsListener = new EventsListener(messages, dataProvider, this);
         getServer().getPluginManager().registerEvents(eventsListener, this);
 
         Enabled = configuration.getBoolean("Enabled");
@@ -74,6 +82,50 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
+    public void CopyDefaultTranslations()
+    {
+        String[] translationsResources = new String[]
+                {
+                        "en.yml",
+                        "ru.yml"
+                };
+        try
+        {
+            File translationsDirectory = new File(getDataFolder(), "./translations/");
+            translationsDirectory.mkdir();
+
+            for (String translationsResource : translationsResources)
+            {
+                File translationFile = new File(translationsDirectory, translationsResource);
+                if (translationFile.exists()) continue;
+
+                InputStream resource = getResource("translations/" + translationsResource);
+                byte[] buffer = new byte[resource.available()];
+                resource.read(buffer);
+
+                FileOutputStream fileOutputStream = new FileOutputStream(translationFile);
+                fileOutputStream.write(buffer);
+                fileOutputStream.close();
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException();
+        }
+    }
+
+    public void LoadMessages()
+    {
+        try
+        {
+            messages = new MessagesConfig(YamlConfig.LoadOrCreate("translations/" + configuration.Translation, this));
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public void ReloadData()
     {
         if (configuration.DataProvider.equals("yaml"))
@@ -84,7 +136,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         {
             try
             {
-                dataProvider = new MysqlDataBase(configuration);
+                dataProvider = new MysqlDataBase(configuration, messages);
             }
             catch (Exception e)
             {
@@ -99,7 +151,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         try
         {
-            dataProvider = new YamlDataBase(configuration, YamlConfig.LoadOrCreateFile("data.yml", this));
+            dataProvider = new YamlDataBase(messages, YamlConfig.LoadOrCreateFile("data.yml", this));
         }
         catch (Exception e)
         {
@@ -122,7 +174,7 @@ public final class TemporaryWhiteList extends JavaPlugin
             {
                 if (!dataProvider.CanJoin(player.getName()) && !player.isOp())
                 {
-                    player.kickPlayer(Text.Colorize(player, configuration.Messages.KickConnected));
+                    player.kickPlayer(Text.Colorize(player, messages.KickConnected));
                 }
             }
         }, 0, configuration.SubscriptionEndCheckTicks);

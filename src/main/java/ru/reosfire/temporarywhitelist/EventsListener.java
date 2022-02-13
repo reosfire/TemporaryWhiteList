@@ -7,17 +7,18 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 
 public class EventsListener implements Listener
 {
-    private final Config Configuration;
+    private final MessagesConfig Messages;
     private final IDataProvider DataProvider;
     private final TemporaryWhiteList PluginInstance;
-    public EventsListener(Config configuration, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    public EventsListener(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
-        Configuration = configuration;
+        Messages = messages;
         DataProvider = dataProvider;
         PluginInstance = pluginInstance;
     }
@@ -32,7 +33,7 @@ public class EventsListener implements Listener
         {
             if (!player.isOp())
             {
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Text.Colorize(player, Configuration.Messages.KickOnConnecting));
+                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, Text.Colorize(player, Messages.KickOnConnecting));
             }
         }
     }

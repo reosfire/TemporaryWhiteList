@@ -4,28 +4,25 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
-import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class YamlDataBase implements IDataProvider
 {
-    private HashMap<String, PlayerData> data = new HashMap<>();
+    private final HashMap<String, PlayerData> data;
     private final File YamlDataFile;
     private final YamlConfiguration YamlDataConfig;
-    private final Config Configuration;
+    private final MessagesConfig Messages;
 
-    public YamlDataBase(Config configuration, File yamlFile) throws IOException, InvalidConfigurationException
+    public YamlDataBase(MessagesConfig messages, File yamlFile) throws IOException, InvalidConfigurationException
     {
-        Configuration = configuration;
+        Messages = messages;
         YamlDataFile = yamlFile;
         YamlDataConfig = YamlConfig.LoadOrCreate(YamlDataFile);
 
@@ -113,17 +110,17 @@ public class YamlDataBase implements IDataProvider
     @Override
     public String Check(String player)
     {
-        if (!data.containsKey(player)) return Configuration.Messages.DataBase.PlayerUndefined;
+        if (!data.containsKey(player)) return Messages.DataBase.PlayerUndefined;
         PlayerData playerData = data.get(player);
-        if(playerData.isPermanent()) return Configuration.Messages.DataBase.SubscribeNeverEnd;
+        if(playerData.isPermanent()) return Messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if(secondsAmount < 0) return Configuration.Messages.DataBase.SubscribeEnd;
+        if(secondsAmount < 0) return Messages.DataBase.SubscribeEnd;
         return "действительна еще " + TimeConverter.ReadableTime(secondsAmount);
     }
 
     @Override
     public List<String> ActiveList(){
-        List<String> active = new LinkedList();
+        List<String> active = new ArrayList<>();
         for (Map.Entry<String, PlayerData> player: data.entrySet())
         {
             if(player.getValue().isTimeOut() && !player.getValue().isPermanent()) continue;
@@ -133,6 +130,6 @@ public class YamlDataBase implements IDataProvider
     }
     @Override
     public List<String> AllList(){
-        return new LinkedList(data.keySet());
+        return new ArrayList<>(data.keySet());
     }
 }

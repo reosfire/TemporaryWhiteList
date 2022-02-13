@@ -2,6 +2,7 @@ package ru.reosfire.temporarywhitelist.Data;
 
 import org.bukkit.Bukkit;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Comparer;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Where;
 import ru.reosfire.temporarywhitelist.Lib.Sql.SqlConnection;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MysqlDataBase implements IDataProvider
 {
     private final Config Configuration;
+    private final MessagesConfig Messages;
     private final SqlConnection sqlConnection;
     private static final String[] AllColumns = new String[] {"*"};
 
@@ -31,9 +33,10 @@ public class MysqlDataBase implements IDataProvider
         PlayerDataCache.put(nick, new PlayerData(set));
     }
 
-    public MysqlDataBase(Config configuration) throws SQLException
+    public MysqlDataBase(Config configuration, MessagesConfig messages) throws SQLException
     {
         Configuration = configuration;
+        Messages = messages;
         sqlConnection = new SqlConnection(configuration.SqlConfiguration);
         sqlConnection.CreateTable(Configuration.SqlTable,
                 new TableColumn("Player", ColumnType.VarChar.setMax(32), ColumnFlag.Not_null, ColumnFlag.Unique),
@@ -154,10 +157,10 @@ public class MysqlDataBase implements IDataProvider
         if (!PlayerDataCache.containsKey(nick)) UpdateCache(nick);
         PlayerData playerData = PlayerDataCache.get(nick);
 
-        if (playerData.undefined) return Configuration.Messages.DataBase.PlayerUndefined;
-        if (playerData.isPermanent()) return Configuration.Messages.DataBase.SubscribeNeverEnd;
+        if (playerData.undefined) return Messages.DataBase.PlayerUndefined;
+        if (playerData.isPermanent()) return Messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if (secondsAmount < 0) return Configuration.Messages.DataBase.SubscribeEnd;
+        if (secondsAmount < 0) return Messages.DataBase.SubscribeEnd;
         return TimeConverter.ReadableTime(secondsAmount);
     }
 

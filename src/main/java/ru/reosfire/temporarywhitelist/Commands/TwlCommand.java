@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
@@ -13,13 +14,13 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 public class TwlCommand extends CommandNode
 {
     private final IDataProvider DataProvider;
-    private final Config Configuration;
+    private final MessagesConfig Messages;
     private final TemporaryWhiteList PluginInstance;
 
-    public TwlCommand(Config config, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    public TwlCommand(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
         DataProvider = dataProvider;
-        Configuration = config;
+        Messages = messages;
         PluginInstance = pluginInstance;
     }
 
@@ -208,7 +209,7 @@ public class TwlCommand extends CommandNode
                     if (sender instanceof Player)
                     {
                         Player playerSender = (Player) sender;
-                        playerSender.sendMessage(Text.Colorize(playerSender, Configuration.Messages.CheckMessageFormat));
+                        playerSender.sendMessage(Text.Colorize(playerSender, Messages.CheckMessageFormat));
                     }
                 }
                 else if (args.length == 1)

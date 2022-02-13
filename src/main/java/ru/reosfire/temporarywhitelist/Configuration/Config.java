@@ -11,7 +11,7 @@ public class Config extends YamlConfig
     public final String DataProvider;
     public final SqlConfiguration SqlConfiguration;
     public final String SqlTable;
-    public final MessagesConfig Messages;
+    public final String Translation;
 
     public Config(ConfigurationSection configuration)
     {
@@ -22,6 +22,6 @@ public class Config extends YamlConfig
         DataProvider = getString("DataProvider");
         SqlConfiguration = new SqlConfiguration(getSection("Mysql"));
         SqlTable = getString("Mysql.Table");
-        Messages = new MessagesConfig(getSection("Messages"));
+        Translation = getString("Translation");
     }
 }

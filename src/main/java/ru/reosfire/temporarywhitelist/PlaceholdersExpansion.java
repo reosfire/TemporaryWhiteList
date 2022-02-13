@@ -4,17 +4,18 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Configuration.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {
-    private final Config Configuration;
+    private final MessagesConfig Messages;
     private final IDataProvider DataProvider;
     private final TemporaryWhiteList PluginInstance;
 
-    public PlaceholdersExpansion(Config configuration, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    public PlaceholdersExpansion(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
-        Configuration = configuration;
+        Messages = messages;
         DataProvider = dataProvider;
         PluginInstance = pluginInstance;
     }
@@ -53,7 +54,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     public String onPlaceholderRequest(Player player, @NotNull String identifier)
     {
         if (player == null) return "";
-        if(identifier.equals("subscription_status"))
+        if (identifier.equals("subscription_status"))
         {
             try
             {
@@ -65,11 +66,10 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
                 return "";
             }
         }
-        if(identifier.equals("status"))
+        if (identifier.equals("status"))
         {
-            return PluginInstance.isWhiteListEnabled() ?
-                    Configuration.Messages.WhiteListEnabledStatus:
-                    Configuration.Messages.WhiteListDisabledStatus;
+            return PluginInstance.isWhiteListEnabled() ? Messages.WhiteListEnabledStatus :
+                    Messages.WhiteListDisabledStatus;
         }
 
         return "";
