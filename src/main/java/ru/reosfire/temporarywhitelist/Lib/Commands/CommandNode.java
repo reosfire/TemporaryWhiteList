@@ -115,7 +115,12 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         Children.add(child);
     }
 
-    protected abstract String getName();
+    protected String getName()
+    {
+        CommandName annotation = this.getClass().getAnnotation(CommandName.class);
+        if (annotation == null) return null;
+        return annotation.value();
+    }
 
     protected abstract boolean execute(CommandSender sender, String[] args);
 
@@ -126,7 +131,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
 
     protected String getPermission()
     {
-        return null;
+        CommandPermission annotation = this.getClass().getAnnotation(CommandPermission.class);
+        if (annotation == null) return null;
+        return annotation.value();
     }
 
     protected void noPermissionAction(CommandSender sender)

@@ -5,11 +5,14 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
+import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
+@CommandName("twl")
 public class TwlCommand extends CommandNode
 {
     private final IDataProvider DataProvider;
@@ -24,31 +27,15 @@ public class TwlCommand extends CommandNode
     }
 
     @Override
-    public String getName()
-    {
-        return "twl";
-    }
-
-    @Override
     public boolean execute(CommandSender sender, String[] args)
     {
         return true;
     }
 
+    @CommandName("add")
+    @CommandPermission("TemporaryWhiteList.Add")
     public class Add extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "add";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Add";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
@@ -75,20 +62,11 @@ public class TwlCommand extends CommandNode
             return true;
         }
     }
+
+    @CommandName("remove")
+    @CommandPermission("TemporaryWhiteList.Remove")
     public class Remove extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "remove";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Remove";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
@@ -104,39 +82,21 @@ public class TwlCommand extends CommandNode
             }
         }
     }
+
+    @CommandName("permanent")
+    @CommandPermission("TemporaryWhiteList.Permanent")
     public class Permanent extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "permanent";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Permanent";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
             return true;
         }
+
+        @CommandName("set")
+        @CommandPermission("TemporaryWhiteList.Permanent.Set")
         public class Set extends CommandNode
         {
-            @Override
-            public String getName()
-            {
-                return "set";
-            }
-
-            @Override
-            public String getPermission()
-            {
-                return "TemporaryWhiteList.Permanent.Set";
-            }
-
             @Override
             public boolean execute(CommandSender sender, String[] args)
             {
@@ -153,20 +113,11 @@ public class TwlCommand extends CommandNode
             }
 
         }
+
+        @CommandName("reset")
+        @CommandPermission("TemporaryWhiteList.Permanent.Reset")
         public class Reset extends CommandNode
         {
-            @Override
-            public String getName()
-            {
-                return "reset";
-            }
-
-            @Override
-            public String getPermission()
-            {
-                return "TemporaryWhiteList.Permanent.Reset";
-            }
-
             @Override
             public boolean execute(CommandSender sender, String[] args)
             {
@@ -184,20 +135,11 @@ public class TwlCommand extends CommandNode
 
         }
     }
+
+    @CommandName("check")
+    @CommandPermission("TemporaryWhiteList.Check")
     public class Check extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "check";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Check";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
@@ -227,20 +169,11 @@ public class TwlCommand extends CommandNode
             }
         }
     }
+
+    @CommandName("enable")
+    @CommandPermission("TemporaryWhiteList.Administrate.Enable")
     public class Enable extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "enable";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Administrate.Enable";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
@@ -257,21 +190,11 @@ public class TwlCommand extends CommandNode
             return true;
         }
     }
+
+    @CommandName("disable")
+    @CommandPermission("TemporaryWhiteList.Administrate.Disable")
     public class Disable extends CommandNode
     {
-
-        @Override
-        public String getName()
-        {
-            return "disable";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Administrate.Disable";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
@@ -288,21 +211,11 @@ public class TwlCommand extends CommandNode
             return true;
         }
     }
+
+    @CommandName("reload")
+    @CommandPermission("TemporaryWhiteList.Administrate.Reload")
     public class Reload extends CommandNode
     {
-
-        @Override
-        public String getName()
-        {
-            return "reload";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Administrate.Reload";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
@@ -311,40 +224,17 @@ public class TwlCommand extends CommandNode
             return true;
         }
     }
+
+    @CommandName("list")
+    @CommandPermission("TemporaryWhiteList.Administrate.List")
     public class List extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "list";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Administrate.List";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
             try
             {
-                java.util.List<String> activePlayers  = DataProvider.ActiveList();
-                StringBuilder buffer = new StringBuilder();
-                for (int i = 0; i < activePlayers.size(); i++)
-                {
-                    buffer.append(activePlayers.get(i)).append(", ");
-                    if (i % 5 == 4)
-                    {
-                        sender.sendMessage(buffer.toString());
-                        buffer = new StringBuilder();
-                    }
-                }
-                if (!buffer.toString().equals(""))
-                {
-                    sender.sendMessage(buffer.toString());
-                }
+                sender.sendMessage(String.join(", ", DataProvider.ActiveList()));
             }
             catch (Exception e)
             {
@@ -353,20 +243,11 @@ public class TwlCommand extends CommandNode
             return true;
         }
     }
+
+    @CommandName("count")
+    @CommandPermission("TemporaryWhiteList.Administrate.Count")
     public class Count extends CommandNode
     {
-        @Override
-        public String getName()
-        {
-            return "count";
-        }
-
-        @Override
-        public String getPermission()
-        {
-            return "TemporaryWhiteList.Administrate.Count";
-        }
-
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
