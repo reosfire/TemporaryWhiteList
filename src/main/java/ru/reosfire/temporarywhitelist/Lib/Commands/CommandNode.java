@@ -19,8 +19,8 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         {
             try
             {
-                Constructor<?> ctor = declaredClass.getDeclaredConstructor(this.getClass());
-                Object innerInstance = ctor.newInstance(this);
+                Constructor<?> constructor = declaredClass.getDeclaredConstructor(this.getClass());
+                Object innerInstance = constructor.newInstance(this);
 
                 if (innerInstance instanceof CommandNode)
                 {
@@ -59,10 +59,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
                 if (child.getName().equals(args[0]))
                 {
                     String[] newArgs = new String[args.length - 1];
-                    for (int i = 1; i < args.length; i++)
-                    {
-                        newArgs[i - 1] = args[i];
-                    }
+
+                    System.arraycopy(args, 1, newArgs, 0, args.length - 1);
+
                     command.setName(args[0]);
                     lastExecutionResult = child.onCommand(sender, command, args[0], newArgs);
                     executorFound = true;
@@ -87,16 +86,13 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
             if (child.getName().equals(args[0]))
             {
                 String[] newArgs = new String[args.length - 1];
-                for (int i = 1; i < args.length; i++)
-                {
-                    newArgs[i - 1] = args[i];
-                }
+                System.arraycopy(args, 1, newArgs, 0, args.length - 1);
                 return child.onTabComplete(sender, command, alias, newArgs);
             }
         }
         if (args.length == 1)
         {
-            List<String> result = new ArrayList<String>();
+            List<String> result = new ArrayList<>();
             for (CommandNode child : Children)
             {
                 if (child.getName().startsWith(args[0]) && (child.getPermission() == null || sender.hasPermission(child.getPermission())))
@@ -111,7 +107,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
 
     public final void AddChildren(CommandNode child)
     {
-        if (Children == null) Children = new ArrayList<CommandNode>();
+        if (Children == null) Children = new ArrayList<>();
         Children.add(child);
     }
 
