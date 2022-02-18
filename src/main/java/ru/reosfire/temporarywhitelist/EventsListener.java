@@ -10,8 +10,6 @@ import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 
-import java.util.List;
-
 public class EventsListener implements Listener
 {
     private final MessagesConfig Messages;
@@ -30,13 +28,10 @@ public class EventsListener implements Listener
         if(!PluginInstance.isWhiteListEnabled()) return;
         OfflinePlayer player = Bukkit.getOfflinePlayer(event.getUniqueId());
 
-        if (!DataProvider.CanJoin(player.getName()))
-        {
-            if (!player.isOp())
-            {
-                String message = String.join("\n", Text.Colorize(player, Messages.Kick.Connecting));
-                event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, message);
-            }
-        }
+        if (DataProvider.CanJoin(event.getName())) return;
+        if (player.isOp()) return;
+
+        String message = String.join("\n", Text.Colorize(player, Messages.Kick.Connecting));
+        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, message);
     }
 }
