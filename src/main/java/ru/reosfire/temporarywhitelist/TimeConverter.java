@@ -1,38 +1,22 @@
 package ru.reosfire.temporarywhitelist;
 
+import org.apache.commons.lang.time.DurationFormatUtils;
+
 public class TimeConverter
 {
-    public static String ReadableTime(long seconds)
+    private final String _format;
+
+    public TimeConverter(String format)
     {
-        StringBuilder timeBuilder = new StringBuilder();
-        long daysInYear = 365;
-        long hoursInDay = 24;
-        long minutesInHour = 60;
-        long secondsInMinute = 60;
-
-        long resultSeconds = seconds % secondsInMinute;
-        seconds = (seconds - resultSeconds) / secondsInMinute;
-
-        long resultMinutes = seconds % minutesInHour;
-        seconds = (seconds - resultMinutes) / minutesInHour;
-
-        long resultHours = seconds % hoursInDay;
-        seconds = (seconds - resultHours) / hoursInDay;
-
-        long resultDays = seconds % daysInYear;
-        seconds = (seconds - resultDays) / daysInYear;
-
-        long resultYears = seconds;
-
-        if (resultYears != 0) timeBuilder.append(resultYears).append("г,");
-        if (resultDays != 0) timeBuilder.append(resultDays).append("дн,");
-        if (resultHours != 0) timeBuilder.append(resultHours).append("ч,");
-        if (resultMinutes != 0) timeBuilder.append(resultMinutes).append("мин,");
-        timeBuilder.append(resultSeconds).append("сек.");
-        return timeBuilder.toString();
+        _format = format;
     }
 
-    public static long ParseTime(String time)
+    public String ReadableTime(long seconds)
+    {
+        return DurationFormatUtils.formatDuration(seconds * 1000, _format);
+    }
+
+    public long ParseTime(String time)
     {
         long secondsInYear = 31536000;
         long secondsInDay = 86400;

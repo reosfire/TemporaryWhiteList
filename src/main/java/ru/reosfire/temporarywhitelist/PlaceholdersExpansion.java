@@ -8,13 +8,13 @@ import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {
-    private final MessagesConfig Messages;
+    private final MessagesConfig _messages;
     private final IDataProvider DataProvider;
     private final TemporaryWhiteList PluginInstance;
 
     public PlaceholdersExpansion(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
-        Messages = messages;
+        _messages = messages;
         DataProvider = dataProvider;
         PluginInstance = pluginInstance;
     }
@@ -40,7 +40,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     @Override
     public @NotNull String getIdentifier()
     {
-        return "WMWhiteList";
+        return "twl";
     }
 
     @Override
@@ -67,8 +67,8 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         }
         if (identifier.equals("status"))
         {
-            return PluginInstance.isWhiteListEnabled() ? Messages.WhiteListEnabledStatus :
-                    Messages.WhiteListDisabledStatus;
+            return PluginInstance.isWhiteListEnabled() ? _messages.WhiteListEnabledStatus :
+                    _messages.WhiteListDisabledStatus;
         }
 
         return "";

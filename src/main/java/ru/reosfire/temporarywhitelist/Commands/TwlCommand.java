@@ -1,8 +1,6 @@
 package ru.reosfire.temporarywhitelist.Commands;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
@@ -20,12 +18,14 @@ public class TwlCommand extends CommandNode
     private final IDataProvider DataProvider;
     private final MessagesConfig Messages;
     private final TemporaryWhiteList PluginInstance;
+    private final TimeConverter TimeConverter;
 
-    public TwlCommand(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    public TwlCommand(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance, TimeConverter timeConverter)
     {
         DataProvider = dataProvider;
         Messages = messages;
         PluginInstance = pluginInstance;
+        TimeConverter = timeConverter;
     }
 
     @Override
@@ -227,7 +227,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            PluginInstance.ReloadAllData();
+            PluginInstance.Load();
             sender.sendMessage("reloaded");
             return true;
         }

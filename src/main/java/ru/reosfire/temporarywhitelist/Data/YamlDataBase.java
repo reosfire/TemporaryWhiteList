@@ -3,6 +3,7 @@ package ru.reosfire.temporarywhitelist.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.TimeConverter;
@@ -14,14 +15,18 @@ import java.util.*;
 
 public class YamlDataBase implements IDataProvider
 {
+    private final MessagesConfig Messages;
+    private final TimeConverter TimeConverter;
+
     private final HashMap<String, PlayerData> data;
     private final File YamlDataFile;
     private final YamlConfiguration YamlDataConfig;
-    private final MessagesConfig Messages;
 
-    public YamlDataBase(MessagesConfig messages, File yamlFile) throws IOException, InvalidConfigurationException
+    public YamlDataBase(MessagesConfig messages, File yamlFile, TimeConverter converter) throws IOException, InvalidConfigurationException
     {
         Messages = messages;
+        TimeConverter = converter;
+
         YamlDataFile = yamlFile;
         YamlDataConfig = YamlConfig.LoadOrCreate(YamlDataFile);
 
@@ -114,7 +119,7 @@ public class YamlDataBase implements IDataProvider
         if(playerData.isPermanent()) return Messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
         if(secondsAmount < 0) return Messages.DataBase.SubscribeEnd;
-        return "действительна еще " + TimeConverter.ReadableTime(secondsAmount);
+        return TimeConverter.ReadableTime(secondsAmount);
     }
 
     @Override

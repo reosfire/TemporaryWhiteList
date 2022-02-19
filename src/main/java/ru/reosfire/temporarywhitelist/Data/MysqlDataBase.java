@@ -21,24 +21,26 @@ import java.util.List;
 
 public class MysqlDataBase implements IDataProvider
 {
-    private final Config Configuration;
-    private final MessagesConfig Messages;
-    private final SqlConnection sqlConnection;
+    private final Config _configuration;
+    private final MessagesConfig _messages;
+    private final TimeConverter _timeConverter;
+    private final SqlConnection _sqlConnection;
     private static final String[] AllColumns = new String[] {"*"};
 
-    private final HashMap<String, PlayerData> PlayerDataCache = new HashMap<>();
+    private final HashMap<String, PlayerData> _playerDataCache = new HashMap<>();
     private void UpdateCache(String nick) throws SQLException
     {
-        ResultSet set = sqlConnection.Select(Configuration.SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
-        PlayerDataCache.put(nick, new PlayerData(set));
+        ResultSet set = _sqlConnection.Select(_configuration.SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
+        _playerDataCache.put(nick, new PlayerData(set));
     }
 
-    public MysqlDataBase(Config configuration, MessagesConfig messages) throws SQLException
+    public MysqlDataBase(Config configuration, MessagesConfig messages, TimeConverter converter) throws SQLException
     {
-        Configuration = configuration;
-        Messages = messages;
-        sqlConnection = new SqlConnection(configuration.SqlConfiguration);
-        sqlConnection.CreateTable(Configuration.SqlTable,
+        _configuration = configuration;
+        _messages = messages;
+        _timeConverter = converter;
+        _sqlConnection = new SqlConnection(configuration.SqlConfiguration);
+        _sqlConnection.CreateTable(_configuration.SqlTable,
                 new TableColumn("Player", ColumnType.VarChar.setMax(32), ColumnFlag.Not_null, ColumnFlag.Unique),
                 new TableColumn("Permanent", ColumnType.Boolean, ColumnFlag.Not_null),
                 new TableColumn("LastStartTime", ColumnType.BigInt, ColumnFlag.Not_null),
@@ -50,8 +52,8 @@ public class MysqlDataBase implements IDataProvider
     {
         try
         {
-            if (!PlayerDataCache.containsKey(nick)) UpdateCache(nick);
-            PlayerData playerData = PlayerDataCache.get(nick);
+            if (!_playerDataCache.containsKey(nick)) UpdateCache(nick);
+            PlayerData playerData = _playerDataCache.get(nick);
 
             if (playerData.undefined) return false;
             if (playerData.isPermanent()) return true;
@@ -71,7 +73,7 @@ public class MysqlDataBase implements IDataProvider
         long StartTime;
         long TimeAmount;
         boolean Permanent;
-        ResultSet playerData = sqlConnection.Select(Configuration.SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
+        ResultSet playerData = _sqlConnection.Select(_configuration.SqlTable, AllColumns, new Where("Player", Comparer.Equal, nick));
 
         long timeLeft;
         if (playerData.next())
@@ -95,8 +97,8 @@ public class MysqlDataBase implements IDataProvider
             StartTime = Instant.now().getEpochSecond();
             Permanent = false;
         }
-        String setRequest = "INSERT INTO "+ Configuration.SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
-        PreparedStatement statement = sqlConnection.getConnection().prepareStatement(setRequest);
+        String setRequest = "INSERT INTO "+ _configuration.SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
+        PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(setRequest);
         statement.setString(1, nick);
         statement.setBoolean(2, Permanent);
         statement.setLong(3, StartTime);
@@ -115,8 +117,8 @@ public class MysqlDataBase implements IDataProvider
         long StartTime = Instant.now().getEpochSecond();
         long TimeAmount = 0;
         boolean Permanent = true;
-        String setRequest = "INSERT INTO "+ Configuration.SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
-        PreparedStatement statement = sqlConnection.getConnection().prepareStatement(setRequest);
+        String setRequest = "INSERT INTO "+ _configuration.SqlTable +" (Player, Permanent, LastStartTime, TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, TimeAmount=?;";
+        PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(setRequest);
         statement.setString(1, nick);
         statement.setBoolean(2, Permanent);
         statement.setLong(3, StartTime);
@@ -132,8 +134,8 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public void Remove(String nick) throws Exception
     {
-        String removeRequest = "DELETE FROM "+ Configuration.SqlTable +" WHERE Player=?;";
-        PreparedStatement statement = sqlConnection.getConnection().prepareStatement(removeRequest);
+        String removeRequest = "DELETE FROM "+ _configuration.SqlTable +" WHERE Player=?;";
+        PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(removeRequest);
         statement.setString(1, nick);
         statement.executeUpdate();
         UpdateCache(nick);
@@ -142,8 +144,8 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public void SetPermanent(String nick, boolean permanent) throws Exception
     {
-        String setRequest = "INSERT INTO "+ Configuration.SqlTable +" (Player, Permanent) VALUES (?, ?) ON DUPLICATE KEY UPDATE Permanent=?;";
-        PreparedStatement statement = sqlConnection.getConnection().prepareStatement(setRequest);
+        String setRequest = "INSERT INTO "+ _configuration.SqlTable +" (Player, Permanent) VALUES (?, ?) ON DUPLICATE KEY UPDATE Permanent=?;";
+        PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(setRequest);
         statement.setString(1, nick);
         statement.setBoolean(2, permanent);
         statement.setBoolean(3, permanent);
@@ -154,20 +156,20 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public String Check(String nick) throws Exception
     {
-        if (!PlayerDataCache.containsKey(nick)) UpdateCache(nick);
-        PlayerData playerData = PlayerDataCache.get(nick);
+        if (!_playerDataCache.containsKey(nick)) UpdateCache(nick);
+        PlayerData playerData = _playerDataCache.get(nick);
 
-        if (playerData.undefined) return Messages.DataBase.PlayerUndefined;
-        if (playerData.isPermanent()) return Messages.DataBase.SubscribeNeverEnd;
+        if (playerData.undefined) return _messages.DataBase.PlayerUndefined;
+        if (playerData.isPermanent()) return _messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if (secondsAmount < 0) return Messages.DataBase.SubscribeEnd;
-        return TimeConverter.ReadableTime(secondsAmount);
+        if (secondsAmount < 0) return _messages.DataBase.SubscribeEnd;
+        return _timeConverter.ReadableTime(secondsAmount);
     }
 
     @Override
     public List<String> ActiveList() throws Exception
     {
-        ResultSet playerData = sqlConnection.Select(Configuration.SqlTable, AllColumns);
+        ResultSet playerData = _sqlConnection.Select(_configuration.SqlTable, AllColumns);
         List<String> result = new LinkedList<>();
         while (playerData.next())
         {
@@ -181,7 +183,7 @@ public class MysqlDataBase implements IDataProvider
     @Override
     public List<String> AllList() throws Exception
     {
-        ResultSet playerData = sqlConnection.Select(Configuration.SqlTable, AllColumns);
+        ResultSet playerData = _sqlConnection.Select(_configuration.SqlTable, AllColumns);
         List<String> result = new LinkedList<>();
         while (playerData.next())
         {

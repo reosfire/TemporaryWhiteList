@@ -12,6 +12,7 @@ public class Config extends YamlConfig
     public final SqlConfiguration SqlConfiguration;
     public final String SqlTable;
     public final String Translation;
+    public final String DurationFormat;
 
     public Config(ConfigurationSection configuration)
     {
@@ -23,5 +24,6 @@ public class Config extends YamlConfig
         SqlConfiguration = new SqlConfiguration(getSection("Mysql"));
         SqlTable = getString("Mysql.Table");
         Translation = getString("Translation");
+        DurationFormat = getString("DurationFormat");
     }
 }

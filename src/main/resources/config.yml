@@ -13,3 +13,5 @@ Mysql:
   Table: "WhiteListTable"
 
 Translation: "en.yml"
+
+DurationFormat: "&bdd 'days' &cHH 'hours' &emm 'minutes' &ass 'seconds'"
