@@ -37,16 +37,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     @Override
     public void onEnable()
     {
-        getLogger().info("Loading configurations...");
-        ReloadConfigurations();
-
-        getLogger().info("Loading messages...");
-        LocalizationsLoader localizationsLoader = new LocalizationsLoader(this, configuration);
-        localizationsLoader.CopyDefaultTranslations();
-        messages = localizationsLoader.LoadMessages();
-
-        getLogger().info("Loading data...");
-        ReloadData();
+        ReloadAllData();
 
         getLogger().info("Loading commands...");
         TwlCommand commands = new TwlCommand(messages, dataProvider, this);
@@ -78,11 +69,25 @@ public final class TemporaryWhiteList extends JavaPlugin
         getLogger().info("Loaded");
     }
 
-    public void ReloadConfigurations()
+    public void ReloadAllData()
+    {
+        getLogger().info("Loading configurations...");
+        configuration = LoadConfiguration();
+
+        getLogger().info("Loading messages...");
+        LocalizationsLoader localizationsLoader = new LocalizationsLoader(this, configuration);
+        localizationsLoader.CopyDefaultTranslations();
+        messages = localizationsLoader.LoadMessages();
+
+        getLogger().info("Loading data...");
+        ReloadDataProvider(configuration);
+    }
+
+    private Config LoadConfiguration()
     {
         try
         {
-            configuration = new Config(YamlConfig.LoadOrCreate("config.yml", this));
+            return new Config(YamlConfig.LoadOrCreate("config.yml", this));
         }
         catch (Exception e)
         {
@@ -91,17 +96,17 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public void ReloadData()
+    private void ReloadDataProvider(Config config)
     {
-        if (configuration.DataProvider.equals("yaml"))
+        if (config.DataProvider.equals("yaml"))
         {
             ReloadYamlData();
         }
-        else if (configuration.DataProvider.equals("mysql"))
+        else if (config.DataProvider.equals("mysql"))
         {
             try
             {
-                dataProvider = new MysqlDataBase(configuration, messages);
+                dataProvider = new MysqlDataBase(config, messages);
             }
             catch (Exception e)
             {

@@ -227,7 +227,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            PluginInstance.ReloadConfigurations();
+            PluginInstance.ReloadAllData();
             sender.sendMessage("reloaded");
             return true;
         }
