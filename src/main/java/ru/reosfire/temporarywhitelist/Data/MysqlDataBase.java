@@ -55,8 +55,8 @@ public class MysqlDataBase implements IDataProvider
             if (!_playerDataCache.containsKey(nick)) UpdateCache(nick);
             PlayerData playerData = _playerDataCache.get(nick);
 
-            if (playerData.undefined) return false;
-            if (playerData.isPermanent()) return true;
+            if (playerData._undefined) return false;
+            if (playerData.is_permanent()) return true;
             return !playerData.isTimeOut();
         }
         catch (SQLException e)
@@ -159,8 +159,8 @@ public class MysqlDataBase implements IDataProvider
         if (!_playerDataCache.containsKey(nick)) UpdateCache(nick);
         PlayerData playerData = _playerDataCache.get(nick);
 
-        if (playerData.undefined) return _messages.DataBase.PlayerUndefined;
-        if (playerData.isPermanent()) return _messages.DataBase.SubscribeNeverEnd;
+        if (playerData._undefined) return _messages.DataBase.PlayerUndefined;
+        if (playerData.is_permanent()) return _messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
         if (secondsAmount < 0) return _messages.DataBase.SubscribeEnd;
         return _timeConverter.ReadableTime(secondsAmount);

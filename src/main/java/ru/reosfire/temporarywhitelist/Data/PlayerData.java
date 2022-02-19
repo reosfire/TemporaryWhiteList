@@ -6,51 +6,51 @@ import java.time.Instant;
 
 public class PlayerData
 {
-    public final boolean undefined;
-    private long LastStartTime;
-    private long TimeAmount;
-    private boolean Permanent;
+    public final boolean _undefined;
+    private long _lastStartTime;
+    private long _timeAmount;
+    private boolean _permanent;
 
     public PlayerData(long lastStartTime, long timeAmount, boolean permanent)
     {
-        LastStartTime = lastStartTime;
-        TimeAmount = timeAmount;
-        Permanent = permanent;
-        undefined = false;
+        _lastStartTime = lastStartTime;
+        _timeAmount = timeAmount;
+        _permanent = permanent;
+        _undefined = false;
     }
 
     public PlayerData(ResultSet resultSet) throws SQLException
     {
-        undefined = !resultSet.next();
-        if (undefined) return;
-        Permanent = resultSet.getBoolean("Permanent");
-        LastStartTime = resultSet.getLong("LastStartTime");
-        TimeAmount = resultSet.getLong("TimeAmount");
+        _undefined = !resultSet.next();
+        if (_undefined) return;
+        _permanent = resultSet.getBoolean("Permanent");
+        _lastStartTime = resultSet.getLong("LastStartTime");
+        _timeAmount = resultSet.getLong("TimeAmount");
     }
 
     public long getLastStartTime()
     {
-        return LastStartTime;
+        return _lastStartTime;
     }
 
-    public long getTimeAmount()
+    public long get_timeAmount()
     {
-        return TimeAmount;
+        return _timeAmount;
     }
 
-    public boolean isPermanent()
+    public boolean is_permanent()
     {
-        return Permanent;
+        return _permanent;
     }
 
-    public void setPermanent(boolean permanent)
+    public void set_permanent(boolean _permanent)
     {
-        Permanent = permanent;
+        this._permanent = _permanent;
     }
 
     public long subscriptionEndTime()
     {
-        return LastStartTime + TimeAmount;
+        return _lastStartTime + _timeAmount;
     }
 
     public boolean isTimeOut()

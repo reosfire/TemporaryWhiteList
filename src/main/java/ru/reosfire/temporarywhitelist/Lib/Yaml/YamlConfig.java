@@ -68,17 +68,17 @@ public abstract class YamlConfig
         return LoadOrCreateFile(fileName, fileName, plugin);
     }
 
-    protected final ConfigurationSection configurationSection;
+    protected final ConfigurationSection _configurationSection;
 
     public ConfigurationSection getSection()
     {
-        return configurationSection;
+        return _configurationSection;
     }
 
     public YamlConfig(ConfigurationSection configurationSection)
     {
         if (configurationSection == null) throw new NullArgumentException("configurationSection");
-        this.configurationSection = configurationSection;
+        this._configurationSection = configurationSection;
     }
 
     public <T extends YamlConfig> List<T> getNestedConfigs(IConfigCreator<T> creator, String path)
@@ -124,12 +124,12 @@ public abstract class YamlConfig
 
     public String getString(String path)
     {
-        return configurationSection.getString(path);
+        return _configurationSection.getString(path);
     }
 
     public String getString(String path, String def)
     {
-        return configurationSection.getString(path, def);
+        return _configurationSection.getString(path, def);
     }
 
     public String getColoredString(String path)
@@ -144,41 +144,41 @@ public abstract class YamlConfig
 
     public int getInt(String path)
     {
-        return configurationSection.getInt(path);
+        return _configurationSection.getInt(path);
     }
 
     public int getInt(String path, int def)
     {
-        return configurationSection.getInt(path, def);
+        return _configurationSection.getInt(path, def);
     }
 
     public long getLong(String path)
     {
-        return configurationSection.getLong(path);
+        return _configurationSection.getLong(path);
     }
     public long getLong(String path, long def)
     {
-        return configurationSection.getLong(path, def);
+        return _configurationSection.getLong(path, def);
     }
 
     public boolean getBoolean(String path)
     {
-        return configurationSection.getBoolean(path);
+        return _configurationSection.getBoolean(path);
     }
 
     public boolean getBoolean(String path, boolean def)
     {
-        return configurationSection.getBoolean(path, def);
+        return _configurationSection.getBoolean(path, def);
     }
 
     public double getDouble(String path)
     {
-        return configurationSection.getDouble(path);
+        return _configurationSection.getDouble(path);
     }
 
     public double getDouble(String path, double def)
     {
-        return configurationSection.getDouble(path, def);
+        return _configurationSection.getDouble(path, def);
     }
 
     public float getFloat(String path, float def)
@@ -190,20 +190,20 @@ public abstract class YamlConfig
 
     public ConfigurationSection getSection(String path)
     {
-        ConfigurationSection result = this.configurationSection.getConfigurationSection(path);
+        ConfigurationSection result = this._configurationSection.getConfigurationSection(path);
         if (result == null) throw new IllegalArgumentException("Unknown path: " + getSection().getCurrentPath() + "." + path);
         return result;
     }
     public ConfigurationSection getSection(String path, ConfigurationSection def)
     {
-        ConfigurationSection result = this.configurationSection.getConfigurationSection(path);
+        ConfigurationSection result = this._configurationSection.getConfigurationSection(path);
         if (result == null) return def;
         return result;
     }
 
     public List<String> getStringList(String path)
     {
-        List<String> stringList = configurationSection.getStringList(path);
+        List<String> stringList = _configurationSection.getStringList(path);
         if (stringList == null || stringList.isEmpty())
         {
             String string = getString(path);

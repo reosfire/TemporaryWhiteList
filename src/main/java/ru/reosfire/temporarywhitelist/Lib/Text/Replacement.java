@@ -11,28 +11,28 @@ import java.util.List;
 
 public class Replacement
 {
-    private String From;
-    private String To;
+    private final String _from;
+    private final String _to;
 
     public Replacement(String from, String to)
     {
-        From = from;
-        To = to;
+        _from = from;
+        _to = to;
     }
 
     public String Set(String Input)
     {
         if (Input == null) return null;
-        if (From == null) return Input;
-        if (To == null) return Input;
-        return Input.replace(From, To);
+        if (_from == null) return Input;
+        if (_to == null) return Input;
+        return Input.replace(_from, _to);
     }
 
     public TextComponent Set(TextComponent Input)
     {
         if (Input == null) return null;
-        if (From == null) return Input;
-        if (To == null) return Input;
+        if (_from == null) return Input;
+        if (_to == null) return Input;
 
         TextComponent result = new TextComponent();
         result.setText(Input.getText());
@@ -52,8 +52,8 @@ public class Replacement
         }
 
         String text = Input.getText();
-        int startIndex = text.indexOf(From);
-        int length = From.length();
+        int startIndex = text.indexOf(_from);
+        int length = _from.length();
         if (startIndex == -1 || length < 1)
         {
             result.setClickEvent(this.Set(result.getClickEvent()));
@@ -73,7 +73,7 @@ public class Replacement
         rightPart.setClickEvent(resultClickEvent);
         rightPart.setHoverEvent(resultHoverEvent);
 
-        result.addExtra(To);
+        result.addExtra(_to);
         if (startIndex + length < text.length()) result.addExtra(rightPart);
 
         return result;

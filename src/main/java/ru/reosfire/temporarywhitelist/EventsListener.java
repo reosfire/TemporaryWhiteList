@@ -12,26 +12,27 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 
 public class EventsListener implements Listener
 {
-    private final MessagesConfig Messages;
-    private final IDataProvider DataProvider;
-    private final TemporaryWhiteList PluginInstance;
+    private final MessagesConfig _messages;
+    private final IDataProvider _dataProvider;
+    private final TemporaryWhiteList _pluginInstance;
+
     public EventsListener(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
-        Messages = messages;
-        DataProvider = dataProvider;
-        PluginInstance = pluginInstance;
+        _messages = messages;
+        _dataProvider = dataProvider;
+        _pluginInstance = pluginInstance;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(AsyncPlayerPreLoginEvent event)
     {
-        if(!PluginInstance.isWhiteListEnabled()) return;
+        if (!_pluginInstance.isWhiteListEnabled()) return;
         OfflinePlayer player = Bukkit.getOfflinePlayer(event.getUniqueId());
 
-        if (DataProvider.CanJoin(event.getName())) return;
+        if (_dataProvider.CanJoin(event.getName())) return;
         if (player.isOp()) return;
 
-        String message = String.join("\n", Text.Colorize(player, Messages.Kick.Connecting));
+        String message = String.join("\n", Text.Colorize(player, _messages.Kick.Connecting));
         event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, message);
     }
 }

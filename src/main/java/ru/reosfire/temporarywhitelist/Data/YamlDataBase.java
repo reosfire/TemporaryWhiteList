@@ -3,7 +3,6 @@ package ru.reosfire.temporarywhitelist.Data;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.TimeConverter;
@@ -15,36 +14,36 @@ import java.util.*;
 
 public class YamlDataBase implements IDataProvider
 {
-    private final MessagesConfig Messages;
-    private final TimeConverter TimeConverter;
+    private final MessagesConfig _messages;
+    private final TimeConverter _timeConverter;
 
-    private final HashMap<String, PlayerData> data;
-    private final File YamlDataFile;
-    private final YamlConfiguration YamlDataConfig;
+    private final HashMap<String, PlayerData> _data;
+    private final File _yamlDataFile;
+    private final YamlConfiguration _yamlDataConfig;
 
     public YamlDataBase(MessagesConfig messages, File yamlFile, TimeConverter converter) throws IOException, InvalidConfigurationException
     {
-        Messages = messages;
-        TimeConverter = converter;
+        _messages = messages;
+        _timeConverter = converter;
 
-        YamlDataFile = yamlFile;
-        YamlDataConfig = YamlConfig.LoadOrCreate(YamlDataFile);
+        _yamlDataFile = yamlFile;
+        _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
 
-        data = new HashMap<>();
-        ConfigurationSection players = YamlDataConfig.getConfigurationSection("Players");
+        _data = new HashMap<>();
+        ConfigurationSection players = _yamlDataConfig.getConfigurationSection("Players");
         for (String player : players.getKeys(false))
         {
             ConfigurationSection playerSection = players.getConfigurationSection(player);
-            data.put(player, new PlayerData(playerSection.getLong("lastStartTime"), playerSection.getLong("timeAmount"), playerSection.getBoolean("permanent")));
+            _data.put(player, new PlayerData(playerSection.getLong("lastStartTime"), playerSection.getLong("timeAmount"), playerSection.getBoolean("permanent")));
         }
     }
 
     @Override
     public boolean CanJoin(String playerDisplayName)
     {
-        if (!data.containsKey(playerDisplayName)) return false;
-        PlayerData playerData = data.get(playerDisplayName);
-        return playerData.isPermanent() || playerData.subscriptionEndTime() > Instant.now().getEpochSecond();
+        if (!_data.containsKey(playerDisplayName)) return false;
+        PlayerData playerData = _data.get(playerDisplayName);
+        return playerData.is_permanent() || playerData.subscriptionEndTime() > Instant.now().getEpochSecond();
     }
 
     @Override
@@ -53,12 +52,12 @@ public class YamlDataBase implements IDataProvider
         long StartTime;
         long TimeAmount;
         boolean Permanent;
-        if (data.containsKey(nick) && !data.get(nick).isTimeOut())
+        if (_data.containsKey(nick) && !_data.get(nick).isTimeOut())
         {
-            PlayerData playerData = data.get(nick);
-            TimeAmount = playerData.getTimeAmount() + addedTime;
+            PlayerData playerData = _data.get(nick);
+            TimeAmount = playerData.get_timeAmount() + addedTime;
             StartTime = playerData.getLastStartTime();
-            Permanent = playerData.isPermanent();
+            Permanent = playerData.is_permanent();
         }
         else
         {
@@ -66,74 +65,74 @@ public class YamlDataBase implements IDataProvider
             StartTime = Instant.now().getEpochSecond();
             Permanent = false;
         }
-        ConfigurationSection playersSection = YamlDataConfig.getConfigurationSection("Players");
+        ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
         ConfigurationSection playerSection = playersSection.createSection(nick);
         playerSection.set("lastStartTime", StartTime);
         playerSection.set("permanent", Permanent);
         playerSection.set("timeAmount", TimeAmount);
 
-        YamlDataConfig.save(YamlDataFile);
-        data.put(nick, new PlayerData(StartTime, TimeAmount, false));
+        _yamlDataConfig.save(_yamlDataFile);
+        _data.put(nick, new PlayerData(StartTime, TimeAmount, false));
     }
     @Override
     public void Add(String nick) throws Exception
     {
-        ConfigurationSection playersSection = YamlDataConfig.getConfigurationSection("Players");
+        ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
         ConfigurationSection playerSection = playersSection.createSection(nick);
         long nowEpochSecond = Instant.now().getEpochSecond();
         playerSection.set("lastStartTime", nowEpochSecond);
         playerSection.set("permanent", true);
         playerSection.set("timeAmount", 0);
 
-        YamlDataConfig.save(YamlDataFile);
-        data.put(nick, new PlayerData(nowEpochSecond, 0, true));
+        _yamlDataConfig.save(_yamlDataFile);
+        _data.put(nick, new PlayerData(nowEpochSecond, 0, true));
     }
 
     @Override
     public void Remove(String nick) throws IOException
     {
-        if (!data.containsKey(nick)) return;
-        ConfigurationSection playersSection = YamlDataConfig.getConfigurationSection("Players");
+        if (!_data.containsKey(nick)) return;
+        ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
         playersSection.set(nick, null);
 
-        YamlDataConfig.save(YamlDataFile);
-        data.remove(nick);
+        _yamlDataConfig.save(_yamlDataFile);
+        _data.remove(nick);
     }
 
     @Override
     public void SetPermanent(String player, boolean permanent) throws IOException
     {
-        if(!data.containsKey(player)) return;
-        ConfigurationSection playerSection = YamlDataConfig.getConfigurationSection("Players").getConfigurationSection(player);
+        if(!_data.containsKey(player)) return;
+        ConfigurationSection playerSection = _yamlDataConfig.getConfigurationSection("Players").getConfigurationSection(player);
         playerSection.set("permanent", permanent);
 
-        YamlDataConfig.save(YamlDataFile);
-        data.get(player).setPermanent(permanent);
+        _yamlDataConfig.save(_yamlDataFile);
+        _data.get(player).set_permanent(permanent);
     }
 
     @Override
     public String Check(String player)
     {
-        if (!data.containsKey(player)) return Messages.DataBase.PlayerUndefined;
-        PlayerData playerData = data.get(player);
-        if(playerData.isPermanent()) return Messages.DataBase.SubscribeNeverEnd;
+        if (!_data.containsKey(player)) return _messages.DataBase.PlayerUndefined;
+        PlayerData playerData = _data.get(player);
+        if(playerData.is_permanent()) return _messages.DataBase.SubscribeNeverEnd;
         long secondsAmount = playerData.subscriptionEndTime() - Instant.now().getEpochSecond();
-        if(secondsAmount < 0) return Messages.DataBase.SubscribeEnd;
-        return TimeConverter.ReadableTime(secondsAmount);
+        if(secondsAmount < 0) return _messages.DataBase.SubscribeEnd;
+        return _timeConverter.ReadableTime(secondsAmount);
     }
 
     @Override
     public List<String> ActiveList(){
         List<String> active = new ArrayList<>();
-        for (Map.Entry<String, PlayerData> player: data.entrySet())
+        for (Map.Entry<String, PlayerData> player: _data.entrySet())
         {
-            if(player.getValue().isTimeOut() && !player.getValue().isPermanent()) continue;
+            if(player.getValue().isTimeOut() && !player.getValue().is_permanent()) continue;
             active.add(player.getKey());
         }
         return active;
     }
     @Override
     public List<String> AllList(){
-        return new ArrayList<>(data.keySet());
+        return new ArrayList<>(_data.keySet());
     }
 }

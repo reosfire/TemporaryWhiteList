@@ -11,13 +11,13 @@ import java.io.InputStream;
 
 public class LocalizationsLoader
 {
-    private final TemporaryWhiteList PluginInstance;
-    private final Config Config;
+    private final TemporaryWhiteList _pluginInstance;
+    private final Config _config;
 
     public LocalizationsLoader(TemporaryWhiteList pluginInstance, Config config)
     {
-        PluginInstance = pluginInstance;
-        Config = config;
+        _pluginInstance = pluginInstance;
+        _config = config;
     }
 
     public void CopyDefaultTranslations()
@@ -29,7 +29,7 @@ public class LocalizationsLoader
                 };
         try
         {
-            File translationsDirectory = new File(PluginInstance.getDataFolder(), "./translations/");
+            File translationsDirectory = new File(_pluginInstance.getDataFolder(), "./translations/");
             translationsDirectory.mkdir();
 
             for (String translationsResource : translationsResources)
@@ -37,7 +37,7 @@ public class LocalizationsLoader
                 File translationFile = new File(translationsDirectory, translationsResource);
                 if (translationFile.exists()) continue;
 
-                InputStream resource = PluginInstance.getResource("translations/" + translationsResource);
+                InputStream resource = _pluginInstance.getResource("translations/" + translationsResource);
                 byte[] buffer = new byte[resource.available()];
                 resource.read(buffer);
 
@@ -56,7 +56,7 @@ public class LocalizationsLoader
     {
         try
         {
-            return new MessagesConfig(YamlConfig.LoadOrCreate("translations/" + Config.Translation, PluginInstance));
+            return new MessagesConfig(YamlConfig.LoadOrCreate("translations/" + _config.Translation, _pluginInstance));
         }
         catch (Exception e)
         {

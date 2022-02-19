@@ -11,8 +11,8 @@ import java.util.List;
 
 public class JsonReplacement
 {
-    private String From;
-    private TextComponent To;
+    private final String From;
+    private final TextComponent To;
 
     public JsonReplacement(String from, TextComponent to)
     {

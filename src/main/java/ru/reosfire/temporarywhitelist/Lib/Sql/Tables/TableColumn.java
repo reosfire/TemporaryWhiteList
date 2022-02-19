@@ -2,9 +2,9 @@ package ru.reosfire.temporarywhitelist.Lib.Sql.Tables;
 
 public class TableColumn
 {
-    private String name;
-    private ColumnType type;
-    private ColumnFlag[] flags;
+    private final String name;
+    private final ColumnType type;
+    private final ColumnFlag[] flags;
 
     public TableColumn(String name, ColumnType type, ColumnFlag... flags)
     {

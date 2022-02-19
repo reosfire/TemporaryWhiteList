@@ -15,17 +15,17 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
-    private final IDataProvider DataProvider;
-    private final MessagesConfig Messages;
-    private final TemporaryWhiteList PluginInstance;
-    private final TimeConverter TimeConverter;
+    private final IDataProvider _dataProvider;
+    private final MessagesConfig _messages;
+    private final TemporaryWhiteList _pluginInstance;
+    private final TimeConverter _timeConverter;
 
     public TwlCommand(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance, TimeConverter timeConverter)
     {
-        DataProvider = dataProvider;
-        Messages = messages;
-        PluginInstance = pluginInstance;
-        TimeConverter = timeConverter;
+        _dataProvider = dataProvider;
+        _messages = messages;
+        _pluginInstance = pluginInstance;
+        _timeConverter = timeConverter;
     }
 
     @Override
@@ -45,13 +45,13 @@ public class TwlCommand extends CommandNode
             {
                 if(args.length == 1)
                 {
-                    DataProvider.Add(args[0]);
+                    _dataProvider.Add(args[0]);
                     sender.sendMessage(args[0] + " success added to white list");
                     return true;
                 }
                 else if(args.length == 2)
                 {
-                    DataProvider.Add(args[0], TimeConverter.ParseTime(args[1]));
+                    _dataProvider.Add(args[0], _timeConverter.ParseTime(args[1]));
                     sender.sendMessage(args[0] + " success added to white list for " + args[1]);
                     return true;
                 }
@@ -74,7 +74,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                DataProvider.Remove(args[0]);
+                _dataProvider.Remove(args[0]);
                 sender.sendMessage(args[0] + " success removed from white list");
                 return true;
             }
@@ -104,7 +104,7 @@ public class TwlCommand extends CommandNode
             {
                 try
                 {
-                    DataProvider.SetPermanent(args[0], true);
+                    _dataProvider.SetPermanent(args[0], true);
                     sender.sendMessage(args[0] + "'s subscribe set permanent");
                     return true;
                 }
@@ -125,7 +125,7 @@ public class TwlCommand extends CommandNode
             {
                 try
                 {
-                    DataProvider.SetPermanent(args[0], false);
+                    _dataProvider.SetPermanent(args[0], false);
                     sender.sendMessage(args[0] + "'s subscribe set permanent");
                     return true;
                 }
@@ -153,8 +153,8 @@ public class TwlCommand extends CommandNode
                     {
                         Player playerSender = (Player)sender;
 
-                        Replacement replacement = new Replacement("{status}", DataProvider.Check(sender.getName()));
-                        sender.sendMessage(Text.Colorize(playerSender, Messages.CheckMessageFormat, replacement));
+                        Replacement replacement = new Replacement("{status}", _dataProvider.Check(sender.getName()));
+                        sender.sendMessage(Text.Colorize(playerSender, _messages.CheckMessageFormat, replacement));
                     }
                     else
                     {
@@ -167,7 +167,7 @@ public class TwlCommand extends CommandNode
                     {
                         noPermissionAction(sender);
                     }
-                    else sender.sendMessage(DataProvider.Check(args[0]));
+                    else sender.sendMessage(_dataProvider.Check(args[0]));
                 }
                 return true;
             }
@@ -187,7 +187,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                PluginInstance.Enable();
+                _pluginInstance.Enable();
                 sender.sendMessage("enabled");
             }
             catch (Exception e)
@@ -208,7 +208,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                PluginInstance.Disable();
+                _pluginInstance.Disable();
                 sender.sendMessage("disabled");
             }
             catch (Exception e)
@@ -227,7 +227,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            PluginInstance.Load();
+            _pluginInstance.Load();
             sender.sendMessage("reloaded");
             return true;
         }
@@ -242,7 +242,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                sender.sendMessage(String.join(", ", DataProvider.ActiveList()));
+                sender.sendMessage(String.join(", ", _dataProvider.ActiveList()));
             }
             catch (Exception e)
             {
@@ -261,7 +261,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                sender.sendMessage(Integer.toString(DataProvider.ActiveList().size()));
+                sender.sendMessage(Integer.toString(_dataProvider.ActiveList().size()));
                 return true;
             }
             catch (Exception e)

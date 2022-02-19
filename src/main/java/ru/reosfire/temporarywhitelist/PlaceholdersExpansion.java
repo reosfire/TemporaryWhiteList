@@ -9,14 +9,14 @@ import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {
     private final MessagesConfig _messages;
-    private final IDataProvider DataProvider;
-    private final TemporaryWhiteList PluginInstance;
+    private final IDataProvider _dataProvider;
+    private final TemporaryWhiteList _pluginInstance;
 
     public PlaceholdersExpansion(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
     {
         _messages = messages;
-        DataProvider = dataProvider;
-        PluginInstance = pluginInstance;
+        _dataProvider = dataProvider;
+        _pluginInstance = pluginInstance;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     @Override
     public @NotNull String getAuthor()
     {
-        return PluginInstance.getDescription().getAuthors().toString();
+        return _pluginInstance.getDescription().getAuthors().toString();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     @Override
     public @NotNull String getVersion()
     {
-        return PluginInstance.getDescription().getVersion();
+        return _pluginInstance.getDescription().getVersion();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         {
             try
             {
-                return DataProvider.Check(player.getName());
+                return _dataProvider.Check(player.getName());
             }
             catch (Exception e)
             {
@@ -67,7 +67,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         }
         if (identifier.equals("status"))
         {
-            return PluginInstance.isWhiteListEnabled() ? _messages.WhiteListEnabledStatus :
+            return _pluginInstance.isWhiteListEnabled() ? _messages.WhiteListEnabledStatus :
                     _messages.WhiteListDisabledStatus;
         }
 

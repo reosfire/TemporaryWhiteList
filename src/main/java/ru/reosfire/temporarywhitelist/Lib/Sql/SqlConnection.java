@@ -10,37 +10,37 @@ import java.sql.SQLException;
 
 public class SqlConnection
 {
-    private ISqlConfiguration configuration = null;
-    private Connection connection = null;
+    private ISqlConfiguration _configuration = null;
+    private Connection _connection = null;
 
     public SqlConnection(ISqlConfiguration config) throws SQLException
     {
-        configuration = config;
+        _configuration = config;
         Open();
     }
 
     private void Open() throws SQLException
     {
 
-        if (connection != null && !connection.isClosed() && isConnectionAlive()) return;
+        if (_connection != null && !_connection.isClosed() && isConnectionAlive()) return;
 
         try
         {
             synchronized (this)
             {
                 StringBuilder connectionBuilder = new StringBuilder("jdbc:mysql://");
-                connectionBuilder.append(configuration.getIp()).append(":").append(configuration.getPort());
-                connectionBuilder.append("/").append(configuration.getDatabase());
-                connectionBuilder.append("?useSSL=").append(configuration.getUseSsl() ? "true" : "false");
-                connectionBuilder.append("&useUnicode=").append(configuration.getUseUnicode() ? "true" : "false");
-                connectionBuilder.append("&autoReconnect=").append(configuration.getAutoReconnect() ? "true" : "false");
-                connectionBuilder.append("&failOverReadOnly=").append(configuration.getFailOverReadOnly() ? "true" :
+                connectionBuilder.append(_configuration.getIp()).append(":").append(_configuration.getPort());
+                connectionBuilder.append("/").append(_configuration.getDatabase());
+                connectionBuilder.append("?useSSL=").append(_configuration.getUseSsl() ? "true" : "false");
+                connectionBuilder.append("&useUnicode=").append(_configuration.getUseUnicode() ? "true" : "false");
+                connectionBuilder.append("&autoReconnect=").append(_configuration.getAutoReconnect() ? "true" : "false");
+                connectionBuilder.append("&failOverReadOnly=").append(_configuration.getFailOverReadOnly() ? "true" :
                         "false");
-                connectionBuilder.append("&maxReconnects=").append(configuration.getMaxReconnects());
+                connectionBuilder.append("&maxReconnects=").append(_configuration.getMaxReconnects());
 
                 Class.forName("com.mysql.jdbc.Driver");
-                connection = DriverManager.getConnection(connectionBuilder.toString(), configuration.getUser(),
-                        configuration.getPassword());
+                _connection = DriverManager.getConnection(connectionBuilder.toString(), _configuration.getUser(),
+                        _configuration.getPassword());
             }
         }
         catch (ClassNotFoundException e)
@@ -54,7 +54,7 @@ public class SqlConnection
         boolean alive;
         try
         {
-            connection.createStatement().executeQuery("SELECT 1;");
+            _connection.createStatement().executeQuery("SELECT 1;");
             alive = true;
         }
         catch (SQLException e)
@@ -67,12 +67,12 @@ public class SqlConnection
     public Connection getConnection() throws SQLException
     {
         Open();
-        return connection;
+        return _connection;
     }
 
     public void Close() throws SQLException
     {
-        connection.close();
+        _connection.close();
     }
 
     public void CreateTable(String name, TableColumn... columns) throws SQLException

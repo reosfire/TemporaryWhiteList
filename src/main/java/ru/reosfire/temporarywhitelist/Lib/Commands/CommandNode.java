@@ -9,7 +9,7 @@ import java.util.List;
 public abstract class CommandNode implements CommandExecutor, TabCompleter
 {
     public static String noPermissionMessage = "You can't do that!";
-    private List<CommandNode> Children = null;
+    private List<CommandNode> _children = null;
 
     public CommandNode()
     {
@@ -52,9 +52,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         }
         boolean executorFound = false;
         boolean lastExecutionResult = false;
-        if (Children != null && args.length > 0)
+        if (_children != null && args.length > 0)
         {
-            for (CommandNode child : Children)
+            for (CommandNode child : _children)
             {
                 if (child.getName().equals(args[0]))
                 {
@@ -80,8 +80,8 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         {
             return null;
         }
-        if (Children == null) return completeTab(args);
-        for (CommandNode child : Children)
+        if (_children == null) return completeTab(args);
+        for (CommandNode child : _children)
         {
             if (child.getName().equals(args[0]))
             {
@@ -93,7 +93,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         if (args.length == 1)
         {
             List<String> result = new ArrayList<>();
-            for (CommandNode child : Children)
+            for (CommandNode child : _children)
             {
                 if (child.getName().startsWith(args[0]) && (child.getPermission() == null || sender.hasPermission(child.getPermission())))
                 {
@@ -107,8 +107,8 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
 
     public final void AddChildren(CommandNode child)
     {
-        if (Children == null) Children = new ArrayList<>();
-        Children.add(child);
+        if (_children == null) _children = new ArrayList<>();
+        _children.add(child);
     }
 
     protected String getName()
