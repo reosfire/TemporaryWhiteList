@@ -8,7 +8,7 @@ Kick:
     - "&bYou are not whitelisted now!"
     - "&b----------------------------"
 NoPermission: "&cNo permission!"
-CheckMessageFormat: "Your subscription: %WMWhiteList_subscription_status%"
+CheckMessageFormat: "Your subscription: {status}"
 WhiteListStatuses:
   Enabled: "&c&lenabled"
   Disabled: "&a&ldisabled"

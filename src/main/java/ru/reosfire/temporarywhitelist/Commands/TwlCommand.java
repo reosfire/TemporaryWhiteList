@@ -1,5 +1,6 @@
 package ru.reosfire.temporarywhitelist.Commands;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
+import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
@@ -149,13 +151,19 @@ public class TwlCommand extends CommandNode
                 {
                     if (sender instanceof Player)
                     {
-                        Player playerSender = (Player) sender;
-                        playerSender.sendMessage(Text.Colorize(playerSender, Messages.CheckMessageFormat));
+                        Player playerSender = (Player)sender;
+
+                        Replacement replacement = new Replacement("{status}", DataProvider.Check(sender.getName()));
+                        sender.sendMessage(Text.Colorize(playerSender, Messages.CheckMessageFormat, replacement));
+                    }
+                    else
+                    {
+                        //TODO for players only
                     }
                 }
                 else if (args.length == 1)
                 {
-                    if (!sender.hasPermission("WMWhiteList.Check.Other") && !(sender instanceof ConsoleCommandSender))
+                    if (!sender.hasPermission("WMWhiteList.Check.Other") && !sender.isOp())
                     {
                         noPermissionAction(sender);
                     }

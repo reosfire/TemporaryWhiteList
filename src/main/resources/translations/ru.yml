@@ -8,7 +8,7 @@ Kick:
     - "&bВаша подписка закончилась!"
     - "&b--------------------------"
 NoPermission: "&cНедостаточно прав."
-CheckMessageFormat: "Ваша подписка: %WMWhiteList_subscription_status%"
+CheckMessageFormat: "Ваша подписка: {status}"
 WhiteListStatuses:
   Enabled: "&c&lвключен"
   Disabled: "&a&lвыключен"

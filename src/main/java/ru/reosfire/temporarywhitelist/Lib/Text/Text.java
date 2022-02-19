@@ -9,6 +9,8 @@ import java.util.List;
 
 public class Text
 {
+    public static boolean placeholderApiEnabled;
+
     public static String SetColors(String input)
     {
         if (input == null) return null;
@@ -28,11 +30,13 @@ public class Text
 
     public static String SetPlaceholders(OfflinePlayer player, String input)
     {
+        if (!placeholderApiEnabled) return input;
         if (input == null) return null;
         return PlaceholderAPI.setPlaceholders(player, input);
     }
     public static String SetPlaceholders(OfflinePlayer player, OfflinePlayer player2, String input)
     {
+        if (!placeholderApiEnabled) return input;
         if (input == null) return null;
         String relSet = PlaceholderAPI.setRelationalPlaceholders(player.getPlayer(), player2.getPlayer(), input);
         return SetPlaceholders(player, relSet);

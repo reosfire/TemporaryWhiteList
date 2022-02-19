@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import ru.reosfire.temporarywhitelist.Commands.TwlCommand;
@@ -52,8 +53,16 @@ public final class TemporaryWhiteList extends JavaPlugin
         commands.Register(getCommand("twl"));
 
         getLogger().info("Loading placeholders...");
-        PlaceholdersExpansion placeholdersExpansion = new PlaceholdersExpansion(messages, dataProvider, this);
-        placeholdersExpansion.register();
+        Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");
+        if (placeholderAPI == null)
+        {
+            getLogger().warning("Placeholder api plugin not found");
+        }
+        else
+        {
+            new PlaceholdersExpansion(messages, dataProvider, this).register();
+            Text.placeholderApiEnabled = true;
+        }
 
         getLogger().info("Loading events handler...");
         EventsListener eventsListener = new EventsListener(messages, dataProvider, this);
