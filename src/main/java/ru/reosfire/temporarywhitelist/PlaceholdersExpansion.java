@@ -5,17 +5,18 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {
     private final MessagesConfig _messages;
-    private final IDataProvider _dataProvider;
+    private final PlayerDatabase _database;
     private final TemporaryWhiteList _pluginInstance;
 
-    public PlaceholdersExpansion(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    public PlaceholdersExpansion(MessagesConfig messages, PlayerDatabase database, TemporaryWhiteList pluginInstance)
     {
         _messages = messages;
-        _dataProvider = dataProvider;
+        _database = database;
         _pluginInstance = pluginInstance;
     }
 
@@ -57,7 +58,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         {
             try
             {
-                return _dataProvider.Check(player.getName());
+                return _database.Check(player.getName());
             }
             catch (Exception e)
             {

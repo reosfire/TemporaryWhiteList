@@ -1,60 +1,52 @@
 package ru.reosfire.temporarywhitelist.Data;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 
 public class PlayerData
 {
-    public final boolean _undefined;
-    private long _lastStartTime;
-    private long _timeAmount;
-    private boolean _permanent;
+    public final String Name;
+    public final boolean Permanent;
+    public final long StartTime;
+    public final long TimeAmount;
 
-    public PlayerData(long lastStartTime, long timeAmount, boolean permanent)
+    public PlayerData(String name, long startTime, long timeAmount, boolean permanent)
     {
-        _lastStartTime = lastStartTime;
-        _timeAmount = timeAmount;
-        _permanent = permanent;
-        _undefined = false;
+        Name = name;
+        StartTime = startTime;
+        TimeAmount = timeAmount;
+        Permanent = permanent;
     }
 
     public PlayerData(ResultSet resultSet) throws SQLException
     {
-        _undefined = !resultSet.next();
-        if (_undefined) return;
-        _permanent = resultSet.getBoolean("Permanent");
-        _lastStartTime = resultSet.getLong("LastStartTime");
-        _timeAmount = resultSet.getLong("TimeAmount");
+        Name = resultSet.getString("Player");
+        Permanent = resultSet.getBoolean("Permanent");
+        StartTime = resultSet.getLong("LastStartTime");
+        TimeAmount = resultSet.getLong("TimeAmount");
     }
 
-    public long getLastStartTime()
+    public PlayerData(ConfigurationSection section)
     {
-        return _lastStartTime;
+        Name = section.getName();
+        Permanent = section.getBoolean("permanent");
+        StartTime = section.getLong("lastStartTime");
+        TimeAmount = section.getLong("timeAmount");
     }
 
-    public long get_timeAmount()
+    public long EndTime()
     {
-        return _timeAmount;
+        return StartTime + TimeAmount;
     }
-
-    public boolean is_permanent()
+    public boolean isTimedOut()
     {
-        return _permanent;
+        return EndTime() <= Instant.now().getEpochSecond();
     }
-
-    public void set_permanent(boolean _permanent)
+    public long TimeLeft()
     {
-        this._permanent = _permanent;
-    }
-
-    public long subscriptionEndTime()
-    {
-        return _lastStartTime + _timeAmount;
-    }
-
-    public boolean isTimeOut()
-    {
-        return subscriptionEndTime() <= Instant.now().getEpochSecond();
+        return EndTime() - Instant.now().getEpochSecond();
     }
 }

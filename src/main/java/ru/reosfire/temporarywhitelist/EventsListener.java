@@ -7,19 +7,19 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 
 public class EventsListener implements Listener
 {
     private final MessagesConfig _messages;
-    private final IDataProvider _dataProvider;
+    private final PlayerDatabase _database;
     private final TemporaryWhiteList _pluginInstance;
 
-    public EventsListener(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance)
+    public EventsListener(MessagesConfig messages, PlayerDatabase database, TemporaryWhiteList pluginInstance)
     {
         _messages = messages;
-        _dataProvider = dataProvider;
+        _database = database;
         _pluginInstance = pluginInstance;
     }
 
@@ -29,7 +29,7 @@ public class EventsListener implements Listener
         if (!_pluginInstance.isWhiteListEnabled()) return;
         OfflinePlayer player = Bukkit.getOfflinePlayer(event.getUniqueId());
 
-        if (_dataProvider.CanJoin(event.getName())) return;
+        if (_database.CanJoin(event.getName())) return;
         if (player.isOp()) return;
 
         String message = String.join("\n", Text.Colorize(player, _messages.Kick.Connecting));

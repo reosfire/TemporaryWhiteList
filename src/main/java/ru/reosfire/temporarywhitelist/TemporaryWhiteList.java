@@ -1,6 +1,5 @@
 package ru.reosfire.temporarywhitelist;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,9 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 import ru.reosfire.temporarywhitelist.Commands.TwlCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.IDataProvider;
-import ru.reosfire.temporarywhitelist.Data.MysqlDataBase;
-import ru.reosfire.temporarywhitelist.Data.YamlDataBase;
+import ru.reosfire.temporarywhitelist.Data.*;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
@@ -27,7 +24,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     private boolean _loaded;
     private boolean _enabled;
     private Config _configuration;
-    private IDataProvider _dataProvider;
+    private PlayerDatabase _database;
     private MessagesConfig _messages;
     private PlaceholdersExpansion _placeholdersExpansion;
 
@@ -59,10 +56,10 @@ public final class TemporaryWhiteList extends JavaPlugin
         TimeConverter timeConverter = new TimeConverter(_configuration.DurationFormat);
 
         getLogger().info("Loading data...");
-        _dataProvider = ReloadDataProvider(_configuration, timeConverter);
+        _database = LoadDatabase(_configuration, timeConverter);
 
         getLogger().info("Loading commands...");
-        TwlCommand commands = new TwlCommand(_messages, _dataProvider, this, timeConverter);
+        TwlCommand commands = new TwlCommand(_messages, _database, this, timeConverter);
         commands.Register(getCommand("twl"));
 
         getLogger().info("Loading placeholders...");
@@ -73,13 +70,13 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
         else
         {
-            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _dataProvider, this);
+            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _database, this);
             _placeholdersExpansion.register();
             Text.placeholderApiEnabled = true;
         }
 
         getLogger().info("Loading events handler...");
-        EventsListener eventsListener = new EventsListener(_messages, _dataProvider, this);
+        EventsListener eventsListener = new EventsListener(_messages, _database, this);
         getServer().getPluginManager().registerEvents(eventsListener, this);
 
         _enabled = _configuration.getBoolean("Enabled");
@@ -113,33 +110,37 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    private IDataProvider ReloadDataProvider(Config config, TimeConverter converter)
+    private PlayerDatabase LoadDatabase(Config config, TimeConverter converter)
     {
+        IDataProvider dataProvider;
+
         if (config.DataProvider.equals("yaml"))
         {
-            return LoadYamlData(converter);
+            dataProvider = LoadYamlData();
         }
         else if (config.DataProvider.equals("mysql"))
         {
             try
             {
-                return new MysqlDataBase(config, _messages, converter);
+                dataProvider = new SqlDataProvider(config);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
                 Bukkit.getLogger().warning("Can't connect to mysql data base! This plugin will use yaml data storing");
-                return LoadYamlData(converter);
+                dataProvider = LoadYamlData();
             }
         }
         else throw new RuntimeException("cannot load data provider of type: " + config.DataProvider);
+
+        return new PlayerDatabase(dataProvider, _messages, converter);
     }
 
-    private YamlDataBase LoadYamlData(TimeConverter converter)
+    private YamlDataProvider LoadYamlData()
     {
         try
         {
-            return new YamlDataBase(_messages, YamlConfig.LoadOrCreateFile("data.yml", this), converter);
+            return new YamlDataProvider(YamlConfig.LoadOrCreateFile("data.yml", this));
         }
         catch (Exception e)
         {
@@ -161,7 +162,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         {
             for (Player player : getServer().getOnlinePlayers())
             {
-                if (!_dataProvider.CanJoin(player.getName()) && !player.isOp())
+                if (!_database.CanJoin(player.getName()) && !player.isOp())
                 {
                     player.kickPlayer(String.join("\n", Text.Colorize(player, _messages.Kick.WhilePlaying)));
                 }

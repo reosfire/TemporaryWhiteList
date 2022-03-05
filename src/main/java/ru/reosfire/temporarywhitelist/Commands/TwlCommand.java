@@ -3,7 +3,8 @@ package ru.reosfire.temporarywhitelist.Commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Data.PlayerData;
+import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
@@ -15,14 +16,14 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
-    private final IDataProvider _dataProvider;
+    private final PlayerDatabase _database;
     private final MessagesConfig _messages;
     private final TemporaryWhiteList _pluginInstance;
     private final TimeConverter _timeConverter;
 
-    public TwlCommand(MessagesConfig messages, IDataProvider dataProvider, TemporaryWhiteList pluginInstance, TimeConverter timeConverter)
+    public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance, TimeConverter timeConverter)
     {
-        _dataProvider = dataProvider;
+        _database = dataProvider;
         _messages = messages;
         _pluginInstance = pluginInstance;
         _timeConverter = timeConverter;
@@ -45,13 +46,13 @@ public class TwlCommand extends CommandNode
             {
                 if(args.length == 1)
                 {
-                    _dataProvider.Add(args[0]);
+                    _database.Add(args[0]);
                     sender.sendMessage(args[0] + " success added to white list");
                     return true;
                 }
                 else if(args.length == 2)
                 {
-                    _dataProvider.Add(args[0], _timeConverter.ParseTime(args[1]));
+                    _database.Add(args[0], _timeConverter.ParseTime(args[1]));
                     sender.sendMessage(args[0] + " success added to white list for " + args[1]);
                     return true;
                 }
@@ -74,7 +75,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                _dataProvider.Remove(args[0]);
+                _database.Remove(args[0]);
                 sender.sendMessage(args[0] + " success removed from white list");
                 return true;
             }
@@ -104,7 +105,7 @@ public class TwlCommand extends CommandNode
             {
                 try
                 {
-                    _dataProvider.SetPermanent(args[0], true);
+                    _database.SetPermanent(args[0], true);
                     sender.sendMessage(args[0] + "'s subscribe set permanent");
                     return true;
                 }
@@ -125,7 +126,7 @@ public class TwlCommand extends CommandNode
             {
                 try
                 {
-                    _dataProvider.SetPermanent(args[0], false);
+                    _database.SetPermanent(args[0], false);
                     sender.sendMessage(args[0] + "'s subscribe set permanent");
                     return true;
                 }
@@ -153,7 +154,7 @@ public class TwlCommand extends CommandNode
                     {
                         Player playerSender = (Player)sender;
 
-                        Replacement replacement = new Replacement("{status}", _dataProvider.Check(sender.getName()));
+                        Replacement replacement = new Replacement("{status}", _database.Check(sender.getName()));
                         sender.sendMessage(Text.Colorize(playerSender, _messages.CheckMessageFormat, replacement));
                     }
                     else
@@ -167,7 +168,7 @@ public class TwlCommand extends CommandNode
                     {
                         noPermissionAction(sender);
                     }
-                    else sender.sendMessage(_dataProvider.Check(args[0]));
+                    else sender.sendMessage(_database.Check(args[0]));
                 }
                 return true;
             }
@@ -242,7 +243,15 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                sender.sendMessage(String.join(", ", _dataProvider.ActiveList()));
+                StringBuilder result = new StringBuilder();
+
+                for (PlayerData playerData : _database.ActiveList())
+                {
+                    result.append(playerData.Name).append(", ");
+                }
+
+                result.replace(result.length() - 2, result.length() - 1, "");
+                sender.sendMessage(result.toString());
             }
             catch (Exception e)
             {
@@ -261,7 +270,7 @@ public class TwlCommand extends CommandNode
         {
             try
             {
-                sender.sendMessage(Integer.toString(_dataProvider.ActiveList().size()));
+                sender.sendMessage(Integer.toString(_database.ActiveList().size()));
                 return true;
             }
             catch (Exception e)
