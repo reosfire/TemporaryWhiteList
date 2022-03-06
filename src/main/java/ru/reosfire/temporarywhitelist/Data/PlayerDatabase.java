@@ -6,13 +6,15 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerDatabase
 {
     private final IDataProvider _provider;
     private final MessagesConfig _messages;
     private final TimeConverter _timeConverter;
-    private final Map<String, PlayerData> _playersData = new HashMap<>();
+    private final Map<String, PlayerData> _playersData = new ConcurrentHashMap<>();
 
     public PlayerDatabase(IDataProvider provider, MessagesConfig messagesConfig, TimeConverter timeConverter)
     {
@@ -26,10 +28,12 @@ public class PlayerDatabase
     {
         return _playersData.get(name);
     }
-    public void Update(PlayerData playerData)
+    public CompletableFuture<Void> Update(PlayerData playerData)
     {
-        _playersData.put(playerData.Name, playerData);
-        _provider.Update(playerData);
+        return _provider.Update(playerData).thenRun(() ->
+        {
+            _playersData.put(playerData.Name, playerData);
+        });
     }
 
     public boolean CanJoin(String name)
@@ -45,7 +49,7 @@ public class PlayerDatabase
         return CanJoin(player.getName());
     }
 
-    public void Add(String name, long addedTime)
+    public CompletableFuture<Void> Add(String name, long addedTime)
     {
         PlayerData playerData = getPlayerData(name);
 
@@ -64,27 +68,26 @@ public class PlayerDatabase
             permanent = playerData.Permanent;
         }
 
-        Update(new PlayerData(name, startTime, timeAmount, permanent));
+        return Update(new PlayerData(name, startTime, timeAmount, permanent));
     }
-    public void Add(String name)
+    public CompletableFuture<Void> Add(String name)
     {
         long startTime = Instant.now().getEpochSecond();
         long timeAmount = 0;
         boolean permanent = true;
 
-        Update(new PlayerData(name, startTime, timeAmount, permanent));
+        return Update(new PlayerData(name, startTime, timeAmount, permanent));
     }
 
-    public void Remove(String name)
+    public CompletableFuture<Void> Remove(String name)
     {
-        _playersData.remove(name);
-        _provider.Remove(name);
+        return _provider.Remove(name).thenRun(() -> _playersData.remove(name));
     }
-    public void SetPermanent(String name, boolean permanent)
+    public CompletableFuture<Void> SetPermanent(String name, boolean permanent)
     {
         PlayerData playerData = getPlayerData(name);
-        if (playerData.Permanent == permanent) return;
-        Update(new PlayerData(playerData.Name, playerData.StartTime, playerData.TimeAmount, permanent));
+        if (playerData.Permanent == permanent) return CompletableFuture.completedFuture(null);
+        return Update(new PlayerData(playerData.Name, playerData.StartTime, playerData.TimeAmount, permanent));
     }
     public List<PlayerData> ActiveList()
     {

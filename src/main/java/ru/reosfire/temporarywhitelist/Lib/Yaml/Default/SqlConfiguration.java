@@ -29,7 +29,7 @@ public class SqlConfiguration extends YamlConfig implements ISqlConfiguration
         UseUnicode = getBoolean("UseUnicode", true);
         AutoReconnect = getBoolean("AutoReconnect", true);
         FailOverReadOnly = getBoolean("FailOverReadOnly", false);
-        MaxReconnects = getInt("MaxReconnects", 8);
+        MaxReconnects = getInt("MaxReconnects", 2);
     }
 
     @Override

@@ -42,25 +42,34 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            try
+            if(args.length == 1)
             {
-                if(args.length == 1)
+                if (_database.CanJoin(args[0]))
                 {
-                    _database.Add(args[0]);
-                    sender.sendMessage(args[0] + " success added to white list");
+                    sender.sendMessage("Already whitelisted. Nothing will changed. Maybe you want /twl permanent set");
                     return true;
                 }
-                else if(args.length == 2)
+                _database.Add(args[0]).whenComplete((result, exception) ->
                 {
-                    _database.Add(args[0], _timeConverter.ParseTime(args[1]));
-                    sender.sendMessage(args[0] + " success added to white list for " + args[1]);
-                    return true;
-                }
+                    if (exception == null) sender.sendMessage(args[0] + " success added to white list");
+                    else
+                    {
+                        sender.sendMessage("Error while adding " + args[0] + " to whitelist. Watch console");
+                        exception.printStackTrace();
+                    }
+                });
             }
-            catch (Exception e)
+            else if(args.length == 2)
             {
-                e.printStackTrace();
-                return false;
+                _database.Add(args[0], _timeConverter.ParseTime(args[1])).whenComplete((result, exception) ->
+                {
+                    if (exception == null) sender.sendMessage(args[0] + " success added to white list for " + args[1]);
+                    else
+                    {
+                        sender.sendMessage("Error while adding " + args[0] + " to whitelist. Watch console");
+                        exception.printStackTrace();
+                    }
+                });
             }
             return true;
         }
@@ -73,16 +82,16 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            try
+            _database.Remove(args[0]).whenComplete((result, exception) ->
             {
-                _database.Remove(args[0]);
-                sender.sendMessage(args[0] + " success removed from white list");
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
+                if (exception == null) sender.sendMessage(args[0] + " success removed from white list");
+                else
+                {
+                    sender.sendMessage("Error while removing " + args[0] + " from whitelist. Watch console");
+                    exception.printStackTrace();
+                }
+            });
+            return true;
         }
     }
 
@@ -103,16 +112,16 @@ public class TwlCommand extends CommandNode
             @Override
             public boolean execute(CommandSender sender, String[] args)
             {
-                try
+                _database.SetPermanent(args[0], true).whenComplete((result, exception) ->
                 {
-                    _database.SetPermanent(args[0], true);
-                    sender.sendMessage(args[0] + "'s subscribe set permanent");
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+                    if (exception == null) sender.sendMessage(args[0] + " is whitelisted permanent now");
+                    else
+                    {
+                        sender.sendMessage("Error while making " + args[0] + " whitelisted permanent");
+                        exception.printStackTrace();
+                    }
+                });
+                return true;
             }
 
         }
@@ -124,18 +133,17 @@ public class TwlCommand extends CommandNode
             @Override
             public boolean execute(CommandSender sender, String[] args)
             {
-                try
+                _database.SetPermanent(args[0], false).whenComplete((result, exception) ->
                 {
-                    _database.SetPermanent(args[0], false);
-                    sender.sendMessage(args[0] + "'s subscribe set permanent");
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
+                    if (exception == null) sender.sendMessage(args[0] + " is not whitelisted permanent now");
+                    else
+                    {
+                        sender.sendMessage("Error while making " + args[0] + " not whitelisted permanent");
+                        exception.printStackTrace();
+                    }
+                });
+                return true;
             }
-
         }
     }
 
@@ -159,7 +167,7 @@ public class TwlCommand extends CommandNode
                     }
                     else
                     {
-                        //TODO for players only
+                        sender.sendMessage("For players only");
                     }
                 }
                 else if (args.length == 1)
@@ -168,7 +176,7 @@ public class TwlCommand extends CommandNode
                     {
                         noPermissionAction(sender);
                     }
-                    else sender.sendMessage(_database.Check(args[0]));
+                    else sender.sendMessage(Text.SetColors(_database.Check(args[0])));
                 }
                 return true;
             }

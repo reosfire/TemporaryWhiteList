@@ -11,6 +11,13 @@ Mysql:
   Password: "pass"
   Database: "WhiteListDB"
   Table: "WhiteListTable"
+  #optional
+  Port: 3306
+  UseSsl: false
+  UseUnicode: true
+  AutoReconnect: true
+  FailOverReadOnly: false
+  MaxReconnects: 2
 
 Translation: "en.yml"
 
