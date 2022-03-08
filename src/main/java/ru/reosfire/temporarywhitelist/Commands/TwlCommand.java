@@ -163,58 +163,6 @@ public class TwlCommand extends CommandNode
         }
     }
 
-    @CommandName("permanent")
-    @CommandPermission("TemporaryWhiteList.Permanent")
-    public class Permanent extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            return true;
-        }
-
-        @CommandName("set")
-        @CommandPermission("TemporaryWhiteList.Permanent.Set")
-        public class Set extends CommandNode
-        {
-            @Override
-            public boolean execute(CommandSender sender, String[] args)
-            {
-                _database.SetPermanent(args[0], true).whenComplete((result, exception) ->
-                {
-                    if (exception == null) sender.sendMessage(args[0] + " is whitelisted permanent now");
-                    else
-                    {
-                        sender.sendMessage("Error while making " + args[0] + " whitelisted permanent");
-                        exception.printStackTrace();
-                    }
-                });
-                return true;
-            }
-
-        }
-
-        @CommandName("reset")
-        @CommandPermission("TemporaryWhiteList.Permanent.Reset")
-        public class Reset extends CommandNode
-        {
-            @Override
-            public boolean execute(CommandSender sender, String[] args)
-            {
-                _database.SetPermanent(args[0], false).whenComplete((result, exception) ->
-                {
-                    if (exception == null) sender.sendMessage(args[0] + " is not whitelisted permanent now");
-                    else
-                    {
-                        sender.sendMessage("Error while making " + args[0] + " not whitelisted permanent");
-                        exception.printStackTrace();
-                    }
-                });
-                return true;
-            }
-        }
-    }
-
     @CommandName("check")
     @CommandPermission("TemporaryWhiteList.Check")
     public class Check extends CommandNode

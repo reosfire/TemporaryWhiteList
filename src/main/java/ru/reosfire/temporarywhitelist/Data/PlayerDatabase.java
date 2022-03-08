@@ -91,12 +91,7 @@ public class PlayerDatabase
     {
         return _provider.Remove(name).thenRun(() -> _playersData.remove(name));
     }
-    public CompletableFuture<Void> SetPermanent(String name, boolean permanent)
-    {
-        PlayerData playerData = getPlayerData(name);
-        if (playerData.Permanent == permanent) return CompletableFuture.completedFuture(null);
-        return Update(new PlayerData(playerData.Name, playerData.StartTime, playerData.TimeAmount, permanent));
-    }
+
     public List<PlayerData> ActiveList()
     {
         List<PlayerData> result = new ArrayList<>();

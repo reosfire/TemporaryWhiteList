@@ -25,7 +25,7 @@ CommandResults:
         Color: RED
 
       - Content:
-        - Content: "Use: "
+        - Content: "   Use: "
           Color: RED
         - Content: "/twl add <nick>"
           Color: AQUA
@@ -38,7 +38,7 @@ CommandResults:
             Value: "/twl add "
 
       - Content:
-        - Content: "or: "
+        - Content: "   or:  "
           Color: RED
         - Content: "/twl add <nick> <time>"
           Color: AQUA
@@ -51,8 +51,10 @@ CommandResults:
             Value: "/twl add "
 
     NothingChanged:
+      - Content: "Player {player} already whitelisted. Nothing changed."
+        Color: GREEN
       - Content:
-        - Content: "Player {player} already whitelisted. Nothing will changed. Maybe you want "
+        - Content: "   Maybe you want: "
           Color: GREEN
         - Content: "/twl permanent set {player}"
           Color: AQUA
@@ -63,6 +65,19 @@ CommandResults:
           Click:
             Action: SUGGEST_COMMAND
             Value: "/twl permanent set {player}"
+      - Content:
+        - Content: "   or: "
+          Color: GREEN
+        - Content: "/twl permanent reset {player}"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl permanent reset {player}"
+
     IncorrectTime:
       - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
         Color: RED
@@ -84,7 +99,7 @@ CommandResults:
       - Content: "Incorrect arguments count"
         Color: RED
       - Content:
-        - Content: "Use: "
+        - Content: "   Use: "
           Color: RED
         - Content: "/twl set <nick> <time>"
           Color: AQUA

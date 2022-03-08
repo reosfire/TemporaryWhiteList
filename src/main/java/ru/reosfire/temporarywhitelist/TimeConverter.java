@@ -45,6 +45,7 @@ public class TimeConverter
                 case "y":
                     result += Long.parseLong(split[0]) * secondsInYear;
                     break;
+                default: throw new RuntimeException("Invalid time unit");
             }
         }
         return result;
