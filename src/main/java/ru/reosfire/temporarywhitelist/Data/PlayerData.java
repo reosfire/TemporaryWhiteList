@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.Objects;
 
 public class PlayerData
 {
@@ -48,5 +49,20 @@ public class PlayerData
     public long TimeLeft()
     {
         return EndTime() - Instant.now().getEpochSecond();
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (!(o instanceof PlayerData)) return false;
+        PlayerData that = (PlayerData) o;
+        return Permanent == that.Permanent && StartTime == that.StartTime && TimeAmount == that.TimeAmount && Name.equals(that.Name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(Name, Permanent, StartTime, TimeAmount);
     }
 }

@@ -7,8 +7,9 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 public class AddCommandResultsConfig extends YamlConfig
 {
     public final MultilineMessage Usage;
-    public final MultilineMessage NothingChanged;
+    public final MultilineMessage AlreadyPermanent;
     public final MultilineMessage IncorrectTime;
+
     public final MultilineMessage SuccessfullyAddedPermanent;
     public final MultilineMessage ErrorWhileAddingPermanent;
     public final MultilineMessage SuccessfullyAdded;
@@ -19,7 +20,7 @@ public class AddCommandResultsConfig extends YamlConfig
         super(configurationSection);
 
         Usage = getMultilineMessage("Usage");
-        NothingChanged = getMultilineMessage("NothingChanged");
+        AlreadyPermanent = getMultilineMessage("AlreadyPermanent");
         IncorrectTime = getMultilineMessage("IncorrectTime");
         SuccessfullyAddedPermanent = getMultilineMessage("SuccessfullyAddedPermanent");
         ErrorWhileAddingPermanent = getMultilineMessage("ErrorWhileAddingPermanent");

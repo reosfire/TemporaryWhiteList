@@ -27,7 +27,7 @@ CommandResults:
       - Content:
         - Content: "   Use: "
           Color: RED
-        - Content: "/twl add <nick>"
+        - Content: "/twl add <nick> permanent"
           Color: AQUA
           Underlined: true
           Hover:
@@ -50,33 +50,9 @@ CommandResults:
             Action: SUGGEST_COMMAND
             Value: "/twl add "
 
-    NothingChanged:
-      - Content: "Player {player} already whitelisted. Nothing changed."
-        Color: GREEN
-      - Content:
-        - Content: "   Maybe you want: "
-          Color: GREEN
-        - Content: "/twl permanent set {player}"
-          Color: AQUA
-          Underlined: true
-          Hover:
-            Action: SHOW_TEXT
-            Value: "Click to auto complete"
-          Click:
-            Action: SUGGEST_COMMAND
-            Value: "/twl permanent set {player}"
-      - Content:
-        - Content: "   or: "
-          Color: GREEN
-        - Content: "/twl permanent reset {player}"
-          Color: AQUA
-          Underlined: true
-          Hover:
-            Action: SHOW_TEXT
-            Value: "Click to auto complete"
-          Click:
-            Action: SUGGEST_COMMAND
-            Value: "/twl permanent reset {player}"
+    AlreadyPermanent:
+      - Content: "Player {player} already whitelisted permanent. Nothing changed."
+        Color: GRAY
 
     IncorrectTime:
       - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"

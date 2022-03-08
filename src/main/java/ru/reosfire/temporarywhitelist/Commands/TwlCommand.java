@@ -1,5 +1,7 @@
 package ru.reosfire.temporarywhitelist.Commands;
 
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
@@ -10,9 +12,10 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
-import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text.TextComponentConfig;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
+
+import java.util.Collections;
 
 @CommandName("twl")
 public class TwlCommand extends CommandNode
@@ -43,7 +46,7 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            if (args.length < 1 || args.length > 2)
+            if (args.length != 2)
             {
                 _messages.CommandResults.Add.Usage.Send(sender);
                 return true;
@@ -51,15 +54,16 @@ public class TwlCommand extends CommandNode
 
             Replacement playerReplacement = new Replacement("{player}", args[0]);
 
-            if (_database.CanJoin(args[0]))
+            PlayerData playerData = _database.getPlayerData(args[0]);
+            if (playerData != null && playerData.Permanent)
             {
-                _messages.CommandResults.Add.NothingChanged.Send(sender,playerReplacement);
+                _messages.CommandResults.Add.AlreadyPermanent.Send(sender, playerReplacement);
                 return true;
             }
 
-            if(args.length == 1)
+            if (args[1].equals("permanent"))
             {
-                _database.Add(args[0]).whenComplete((result, exception) ->
+                _database.AddPermanent(args[0]).whenComplete((changed, exception) ->
                 {
                     if (exception == null)
                         _messages.CommandResults.Add.SuccessfullyAddedPermanent.Send(sender, playerReplacement);
@@ -95,6 +99,14 @@ public class TwlCommand extends CommandNode
                 });
             }
             return true;
+        }
+
+        @Override
+        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+        {
+            if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
+
+            return super.onTabComplete(sender, command, alias, args);
         }
     }
     @CommandName("set")

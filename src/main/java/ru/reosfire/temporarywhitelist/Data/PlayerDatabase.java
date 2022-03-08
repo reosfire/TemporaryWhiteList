@@ -1,6 +1,5 @@
 package ru.reosfire.temporarywhitelist.Data;
 
-import org.bukkit.OfflinePlayer;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
@@ -28,12 +27,13 @@ public class PlayerDatabase
     {
         return _playersData.get(name);
     }
-    public CompletableFuture<Void> Update(PlayerData playerData)
+
+    public CompletableFuture<Boolean> Update(PlayerData playerData)
     {
-        return _provider.Update(playerData).thenRun(() ->
-        {
-            _playersData.put(playerData.Name, playerData);
-        });
+        PlayerData oldData = _playersData.get(playerData.Name);
+        if (oldData != null && oldData.equals(playerData)) return CompletableFuture.completedFuture(false);
+        return _provider.Update(playerData).thenRun(() -> _playersData.put(playerData.Name, playerData))
+                        .thenApply(res -> true);
     }
 
     public boolean CanJoin(String name)
@@ -44,12 +44,8 @@ public class PlayerDatabase
 
         return !playerData.isTimedOut();
     }
-    public boolean CanJoin(OfflinePlayer player)
-    {
-        return CanJoin(player.getName());
-    }
 
-    public CompletableFuture<Void> Add(String name, long addedTime)
+    public CompletableFuture<Boolean> Add(String name, long addedTime)
     {
         PlayerData playerData = getPlayerData(name);
 
@@ -70,7 +66,8 @@ public class PlayerDatabase
 
         return Update(new PlayerData(name, startTime, timeAmount, permanent));
     }
-    public CompletableFuture<Void> Add(String name)
+
+    public CompletableFuture<Boolean> AddPermanent(String name)
     {
         long startTime = Instant.now().getEpochSecond();
         long timeAmount = 0;
@@ -79,7 +76,7 @@ public class PlayerDatabase
         return Update(new PlayerData(name, startTime, timeAmount, permanent));
     }
 
-    public CompletableFuture<Void> Set(String name, long time)
+    public CompletableFuture<Boolean> Set(String name, long time)
     {
         long startTime = Instant.now().getEpochSecond();
         boolean permanent = false;
@@ -87,9 +84,10 @@ public class PlayerDatabase
         return Update(new PlayerData(name, startTime, time, permanent));
     }
 
-    public CompletableFuture<Void> Remove(String name)
+    public CompletableFuture<Boolean> Remove(String name)
     {
-        return _provider.Remove(name).thenRun(() -> _playersData.remove(name));
+        if (_playersData.get(name) == null) return CompletableFuture.completedFuture(false);
+        return _provider.Remove(name).thenRun(() -> _playersData.remove(name)).thenApply(res -> true);
     }
 
     public List<PlayerData> ActiveList()
@@ -103,6 +101,7 @@ public class PlayerDatabase
 
         return result;
     }
+
     public List<PlayerData> AllList()
     {
         return new ArrayList<>(_playersData.values());
@@ -112,9 +111,9 @@ public class PlayerDatabase
     {
         if (!_playersData.containsKey(name)) return _messages.DataBase.PlayerUndefined;
         PlayerData playerData = _playersData.get(name);
-        if(playerData.Permanent) return _messages.DataBase.SubscribeNeverEnd;
+        if (playerData.Permanent) return _messages.DataBase.SubscribeNeverEnd;
         long timeLeft = playerData.TimeLeft();
-        if(timeLeft < 0) return _messages.DataBase.SubscribeEnd;
+        if (timeLeft < 0) return _messages.DataBase.SubscribeEnd;
         return _timeConverter.ReadableTime(timeLeft);
     }
 
