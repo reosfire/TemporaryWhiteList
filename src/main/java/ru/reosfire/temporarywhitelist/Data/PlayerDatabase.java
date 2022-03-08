@@ -79,6 +79,14 @@ public class PlayerDatabase
         return Update(new PlayerData(name, startTime, timeAmount, permanent));
     }
 
+    public CompletableFuture<Void> Set(String name, long time)
+    {
+        long startTime = Instant.now().getEpochSecond();
+        boolean permanent = false;
+
+        return Update(new PlayerData(name, startTime, time, permanent));
+    }
+
     public CompletableFuture<Void> Remove(String name)
     {
         return _provider.Remove(name).thenRun(() -> _playersData.remove(name));

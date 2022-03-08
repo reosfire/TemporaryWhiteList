@@ -7,6 +7,7 @@ public class MessagesConfig extends YamlConfig
 {
     public final DatabaseMessagesConfig DataBase;
     public final KickMessagesConfig Kick;
+    public final CommandResultsConfig CommandResults;
     public final String NoPermission;
     public final String CheckMessageFormat;
     public final String WhiteListEnabledStatus;
@@ -18,6 +19,8 @@ public class MessagesConfig extends YamlConfig
 
         DataBase = new DatabaseMessagesConfig(getSection("DataBase"));
         Kick = new KickMessagesConfig(getSection("Kick"));
+        CommandResults = new CommandResultsConfig(getSection("CommandResults"));
+
         NoPermission = getColoredString("NoPermission");
         CheckMessageFormat = getColoredString("CheckMessageFormat");
         WhiteListEnabledStatus = getColoredString("WhiteListStatuses.Enabled");

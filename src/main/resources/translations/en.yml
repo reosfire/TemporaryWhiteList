@@ -16,3 +16,114 @@ DataBase:
   PlayerUndefined: "Player not found"
   SubscribeNeverEnd: "never end"
   SubscribeEnd: "ended"
+
+
+CommandResults:
+  Add:
+    Usage:
+      - Content: "Incorrect arguments count"
+        Color: RED
+
+      - Content:
+        - Content: "Use: "
+          Color: RED
+        - Content: "/twl add <nick>"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl add "
+
+      - Content:
+        - Content: "or: "
+          Color: RED
+        - Content: "/twl add <nick> <time>"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl add "
+
+    NothingChanged:
+      - Content:
+        - Content: "Player {player} already whitelisted. Nothing will changed. Maybe you want "
+          Color: GREEN
+        - Content: "/twl permanent set {player}"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl permanent set {player}"
+    IncorrectTime:
+      - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
+        Color: RED
+    SuccessfullyAddedPermanent:
+      - Content: "{player} successfully added to white list."
+        Color: GREEN
+    ErrorWhileAddingPermanent:
+      - Content: "Error while adding {player} to whitelist. Watch console."
+        Color: RED
+    SuccessfullyAdded:
+      - Content: "{player} successfully added to white list for {time}."
+        Color: GREEN
+    ErrorWhileAdding:
+      - Content: "Error while adding {player} to whitelist for {time}. Watch console."
+        Color: RED
+
+  Set:
+    Usage:
+      - Content: "Incorrect arguments count"
+        Color: RED
+      - Content:
+        - Content: "Use: "
+          Color: RED
+        - Content: "/twl set <nick> <time>"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl set "
+    Success:
+      - Content: "{player} now whitelisted for {time}."
+        Color: GREEN
+    Error:
+      - Content: "Error while setting {player} whitelisted time to {time}. Watch console."
+        Color: RED
+    IncorrectTime:
+      - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
+        Color: RED
+
+  Remove:
+    Usage:
+      - Content: "Incorrect arguments count"
+        Color: RED
+      - Content:
+        - Content: "Use: "
+          Color: RED
+        - Content: "/twl remove <nick>"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl remove "
+    Success:
+      - Content: "{player} success removed from white list."
+        Color: GREEN
+    Error:
+      - Content: "Error while removing {player} from whitelist. Watch console."
+        Color: RED

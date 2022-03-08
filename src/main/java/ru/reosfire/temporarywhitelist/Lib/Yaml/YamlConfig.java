@@ -8,6 +8,8 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text.MultilineMessage;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text.TextComponentConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -282,5 +284,10 @@ public abstract class YamlConfig
     public boolean isList(String path)
     {
         return getSection().isList(path);
+    }
+
+    public MultilineMessage getMultilineMessage(String path)
+    {
+        return new MultilineMessage(getList(TextComponentConfig::new, path));
     }
 }

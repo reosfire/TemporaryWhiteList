@@ -10,6 +10,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text.TextComponentConfig;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
@@ -42,35 +43,95 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
+            if (args.length < 1 || args.length > 2)
+            {
+                _messages.CommandResults.Add.Usage.Send(sender);
+                return true;
+            }
+
+            Replacement playerReplacement = new Replacement("{player}", args[0]);
+
+            if (_database.CanJoin(args[0]))
+            {
+                _messages.CommandResults.Add.NothingChanged.Send(sender,playerReplacement);
+                return true;
+            }
+
             if(args.length == 1)
             {
-                if (_database.CanJoin(args[0]))
-                {
-                    sender.sendMessage("Already whitelisted. Nothing will changed. Maybe you want /twl permanent set");
-                    return true;
-                }
                 _database.Add(args[0]).whenComplete((result, exception) ->
                 {
-                    if (exception == null) sender.sendMessage(args[0] + " success added to white list");
+                    if (exception == null)
+                        _messages.CommandResults.Add.SuccessfullyAddedPermanent.Send(sender, playerReplacement);
                     else
                     {
-                        sender.sendMessage("Error while adding " + args[0] + " to whitelist. Watch console");
+                        _messages.CommandResults.Add.ErrorWhileAddingPermanent.Send(sender, playerReplacement);
                         exception.printStackTrace();
                     }
                 });
             }
-            else if(args.length == 2)
+            else
             {
-                _database.Add(args[0], _timeConverter.ParseTime(args[1])).whenComplete((result, exception) ->
+                long time;
+                try
                 {
-                    if (exception == null) sender.sendMessage(args[0] + " success added to white list for " + args[1]);
+                    time = _timeConverter.ParseTime(args[1]);
+                }
+                catch (Exception e)
+                {
+                    _messages.CommandResults.Add.IncorrectTime.Send(sender);
+                    return true;
+                }
+                _database.Add(args[0], time).whenComplete((result, exception) ->
+                {
+                    Replacement timeReplacement = new Replacement("{time}", args[1]);
+                    if (exception == null)
+                        _messages.CommandResults.Add.SuccessfullyAdded.Send(sender, playerReplacement, timeReplacement);
                     else
                     {
-                        sender.sendMessage("Error while adding " + args[0] + " to whitelist. Watch console");
+                        _messages.CommandResults.Add.ErrorWhileAdding.Send(sender, playerReplacement, timeReplacement);
                         exception.printStackTrace();
                     }
                 });
             }
+            return true;
+        }
+    }
+    @CommandName("set")
+    @CommandPermission("TemporaryWhiteList.Set")
+    public class Set extends CommandNode
+    {
+        @Override
+        public boolean execute(CommandSender sender, String[] args)
+        {
+            if (args.length != 2)
+            {
+                _messages.CommandResults.Set.Usage.Send(sender);
+                return true;
+            }
+
+            long time;
+            try
+            {
+                time = _timeConverter.ParseTime(args[1]);
+            }
+            catch (Exception e)
+            {
+                _messages.CommandResults.Set.IncorrectTime.Send(sender);
+                return true;
+            }
+
+            _database.Set(args[0], time).whenComplete((result, exception) ->
+            {
+                Replacement playerReplacement = new Replacement("{player}", args[0]);
+                Replacement timeReplacement = new Replacement("{time}", args[1]);
+                if (exception == null) _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
+                else
+                {
+                    _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
+                    exception.printStackTrace();
+                }
+            });
             return true;
         }
     }
@@ -82,12 +143,19 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
+            if (args.length != 1)
+            {
+                _messages.CommandResults.Remove.Usage.Send(sender);
+                return true;
+            }
+
             _database.Remove(args[0]).whenComplete((result, exception) ->
             {
-                if (exception == null) sender.sendMessage(args[0] + " success removed from white list");
+                Replacement playerReplacement = new Replacement("{player}", args[0]);
+                if (exception == null) _messages.CommandResults.Remove.Success.Send(sender, playerReplacement);
                 else
                 {
-                    sender.sendMessage("Error while removing " + args[0] + " from whitelist. Watch console");
+                    _messages.CommandResults.Remove.Error.Send(sender, playerReplacement);
                     exception.printStackTrace();
                 }
             });
