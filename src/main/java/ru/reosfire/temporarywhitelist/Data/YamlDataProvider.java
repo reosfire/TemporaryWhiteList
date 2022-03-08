@@ -8,14 +8,13 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class YamlDataProvider implements IDataProvider
 {
     private final File _yamlDataFile;
-    private final YamlConfiguration _yamlDataConfig;
+    private YamlConfiguration _yamlDataConfig;
 
     public YamlDataProvider(File yamlFile) throws IOException, InvalidConfigurationException
     {
@@ -23,11 +22,25 @@ public class YamlDataProvider implements IDataProvider
         _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
     }
 
+    private void ReloadYaml()
+    {
+        try
+        {
+            _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Error while reloading yaml data file", e);
+        }
+    }
+
     @Override
     public CompletableFuture<Void> Update(PlayerData playerData)
     {
         return CompletableFuture.runAsync(() ->
         {
+            ReloadYaml();
+
             ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
 
             ConfigurationSection playerSection = playersSection.getConfigurationSection(playerData.Name);
@@ -54,6 +67,8 @@ public class YamlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
+            ReloadYaml();
+
             ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
             playersSection.set(playerName, null);
 
@@ -71,6 +86,8 @@ public class YamlDataProvider implements IDataProvider
     @Override
     public PlayerData Get(String playerName)
     {
+        ReloadYaml();
+
         ConfigurationSection players = _yamlDataConfig.getConfigurationSection("Players");
         return new PlayerData(players.getConfigurationSection(playerName));
     }
@@ -78,6 +95,8 @@ public class YamlDataProvider implements IDataProvider
     @Override
     public List<PlayerData> GetAll()
     {
+        ReloadYaml();
+
         ArrayList<PlayerData> result = new ArrayList<>();
 
         ConfigurationSection players = _yamlDataConfig.getConfigurationSection("Players");
