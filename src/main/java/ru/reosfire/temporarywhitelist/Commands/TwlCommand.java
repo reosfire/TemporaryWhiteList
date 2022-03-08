@@ -1,6 +1,5 @@
 package ru.reosfire.temporarywhitelist.Commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -15,7 +14,9 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @CommandName("twl")
 public class TwlCommand extends CommandNode
@@ -53,6 +54,7 @@ public class TwlCommand extends CommandNode
             }
 
             Replacement playerReplacement = new Replacement("{player}", args[0]);
+            Replacement timeReplacement = new Replacement("{time}", args[1]);
 
             PlayerData playerData = _database.getPlayerData(args[0]);
             if (playerData != null && playerData.Permanent)
@@ -63,13 +65,13 @@ public class TwlCommand extends CommandNode
 
             if (args[1].equals("permanent"))
             {
-                _database.AddPermanent(args[0]).whenComplete((changed, exception) ->
+                _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
                 {
                     if (exception == null)
-                        _messages.CommandResults.Add.SuccessfullyAddedPermanent.Send(sender, playerReplacement);
+                        _messages.CommandResults.Add.Success.Send(sender, playerReplacement, timeReplacement);
                     else
                     {
-                        _messages.CommandResults.Add.ErrorWhileAddingPermanent.Send(sender, playerReplacement);
+                        _messages.CommandResults.Add.Error.Send(sender, playerReplacement, timeReplacement);
                         exception.printStackTrace();
                     }
                 });
@@ -88,12 +90,11 @@ public class TwlCommand extends CommandNode
                 }
                 _database.Add(args[0], time).whenComplete((result, exception) ->
                 {
-                    Replacement timeReplacement = new Replacement("{time}", args[1]);
                     if (exception == null)
-                        _messages.CommandResults.Add.SuccessfullyAdded.Send(sender, playerReplacement, timeReplacement);
+                        _messages.CommandResults.Add.Success.Send(sender, playerReplacement, timeReplacement);
                     else
                     {
-                        _messages.CommandResults.Add.ErrorWhileAdding.Send(sender, playerReplacement, timeReplacement);
+                        _messages.CommandResults.Add.Error.Send(sender, playerReplacement, timeReplacement);
                         exception.printStackTrace();
                     }
                 });
@@ -122,29 +123,66 @@ public class TwlCommand extends CommandNode
                 return true;
             }
 
-            long time;
-            try
-            {
-                time = _timeConverter.ParseTime(args[1]);
-            }
-            catch (Exception e)
-            {
-                _messages.CommandResults.Set.IncorrectTime.Send(sender);
-                return true;
-            }
+            Replacement playerReplacement = new Replacement("{player}", args[0]);
+            Replacement timeReplacement = new Replacement("{time}", args[1]);
 
-            _database.Set(args[0], time).whenComplete((result, exception) ->
+            if (args[1].equals("permanent"))
             {
-                Replacement playerReplacement = new Replacement("{player}", args[0]);
-                Replacement timeReplacement = new Replacement("{time}", args[1]);
-                if (exception == null) _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
-                else
+                _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
                 {
-                    _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
-                    exception.printStackTrace();
+                    if (!changed) _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
+                    if (exception == null)
+                        _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
+                    else
+                    {
+                        _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
+                        exception.printStackTrace();
+                    }
+                });
+            }
+            else
+            {
+                long time;
+                try
+                {
+                    time = _timeConverter.ParseTime(args[1]);
                 }
-            });
+                catch (Exception e)
+                {
+                    _messages.CommandResults.Set.IncorrectTime.Send(sender);
+                    return true;
+                }
+
+                _database.Set(args[0], time).whenComplete((changed, exception) ->
+                {
+                    if (!changed) _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
+                    else if (exception == null) _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
+                    else
+                    {
+                        _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
+                        exception.printStackTrace();
+                    }
+                });
+            }
             return true;
+        }
+
+        @Override
+        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+        {
+            if (args.length == 1)
+            {
+                ArrayList<String> result = new ArrayList<>();
+
+                for (PlayerData playerData : _database.AllList())
+                {
+                    if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
+                }
+
+                return result;
+            }
+            else if(args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
+            return super.onTabComplete(sender, command, alias, args);
         }
     }
 
@@ -161,10 +199,11 @@ public class TwlCommand extends CommandNode
                 return true;
             }
 
-            _database.Remove(args[0]).whenComplete((result, exception) ->
+            _database.Remove(args[0]).whenComplete((changed, exception) ->
             {
                 Replacement playerReplacement = new Replacement("{player}", args[0]);
-                if (exception == null) _messages.CommandResults.Remove.Success.Send(sender, playerReplacement);
+                if (!changed) _messages.CommandResults.Remove.NothingChanged.Send(sender, playerReplacement);
+                else if (exception == null) _messages.CommandResults.Remove.Success.Send(sender, playerReplacement);
                 else
                 {
                     _messages.CommandResults.Remove.Error.Send(sender, playerReplacement);
@@ -172,6 +211,22 @@ public class TwlCommand extends CommandNode
                 }
             });
             return true;
+        }
+        @Override
+        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+        {
+            if (args.length == 1)
+            {
+                ArrayList<String> result = new ArrayList<>();
+
+                for (PlayerData playerData : _database.AllList())
+                {
+                    if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
+                }
+
+                return result;
+            }
+            return super.onTabComplete(sender, command, alias, args);
         }
     }
 

@@ -1,5 +1,6 @@
 package ru.reosfire.temporarywhitelist.Data;
 
+import org.apache.commons.lang.NullArgumentException;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
@@ -30,8 +31,12 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> Update(PlayerData playerData)
     {
-        PlayerData oldData = _playersData.get(playerData.Name);
-        if (oldData != null && oldData.equals(playerData)) return CompletableFuture.completedFuture(false);
+        if (playerData == null) throw new NullArgumentException("playerName");
+
+        RefreshPlayer(playerData.Name);
+
+        PlayerData oldData = getPlayerData(playerData.Name);
+        if (oldData != null && oldData.isSame(playerData)) return CompletableFuture.completedFuture(false);
         return _provider.Update(playerData).thenRun(() -> _playersData.put(playerData.Name, playerData))
                         .thenApply(res -> true);
     }
@@ -67,7 +72,7 @@ public class PlayerDatabase
         return Update(new PlayerData(name, startTime, timeAmount, permanent));
     }
 
-    public CompletableFuture<Boolean> AddPermanent(String name)
+    public CompletableFuture<Boolean> SetPermanent(String name)
     {
         long startTime = Instant.now().getEpochSecond();
         long timeAmount = 0;
@@ -86,7 +91,8 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> Remove(String name)
     {
-        if (_playersData.get(name) == null) return CompletableFuture.completedFuture(false);
+        RefreshPlayer(name);
+        if (!_playersData.containsKey(name)) return CompletableFuture.completedFuture(false);
         return _provider.Remove(name).thenRun(() -> _playersData.remove(name)).thenApply(res -> true);
     }
 
@@ -110,7 +116,7 @@ public class PlayerDatabase
     public String Check(String name)
     {
         if (!_playersData.containsKey(name)) return _messages.DataBase.PlayerUndefined;
-        PlayerData playerData = _playersData.get(name);
+        PlayerData playerData = getPlayerData(name);
         if (playerData.Permanent) return _messages.DataBase.SubscribeNeverEnd;
         long timeLeft = playerData.TimeLeft();
         if (timeLeft < 0) return _messages.DataBase.SubscribeEnd;
@@ -123,5 +129,12 @@ public class PlayerDatabase
         {
             _playersData.put(playerData.Name, playerData);
         }
+    }
+
+    public void RefreshPlayer(String name)
+    {
+        PlayerData actualData = _provider.Get(name);
+        if (actualData == null) return;
+        _playersData.put(name, actualData);
     }
 }

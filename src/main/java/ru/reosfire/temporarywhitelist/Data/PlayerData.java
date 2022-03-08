@@ -51,13 +51,21 @@ public class PlayerData
         return EndTime() - Instant.now().getEpochSecond();
     }
 
+    public boolean isSame(PlayerData other)
+    {
+        if (!Name.equals(other.Name)) return false;
+        if (Permanent && other.Permanent) return true;
+        return Permanent == other.Permanent && TimeLeft() == other.TimeLeft();
+    }
+
     @Override
     public boolean equals(Object o)
     {
         if (this == o) return true;
         if (!(o instanceof PlayerData)) return false;
         PlayerData that = (PlayerData) o;
-        return Permanent == that.Permanent && StartTime == that.StartTime && TimeAmount == that.TimeAmount && Name.equals(that.Name);
+
+        return Permanent == that.Permanent && TimeAmount == that.TimeAmount && StartTime == that.StartTime && Name.equals(that.Name);
     }
 
     @Override

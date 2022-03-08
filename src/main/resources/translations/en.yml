@@ -57,16 +57,10 @@ CommandResults:
     IncorrectTime:
       - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
         Color: RED
-    SuccessfullyAddedPermanent:
-      - Content: "{player} successfully added to white list."
-        Color: GREEN
-    ErrorWhileAddingPermanent:
-      - Content: "Error while adding {player} to whitelist. Watch console."
-        Color: RED
-    SuccessfullyAdded:
+    Success:
       - Content: "{player} successfully added to white list for {time}."
         Color: GREEN
-    ErrorWhileAdding:
+    Error:
       - Content: "Error while adding {player} to whitelist for {time}. Watch console."
         Color: RED
 
@@ -74,6 +68,7 @@ CommandResults:
     Usage:
       - Content: "Incorrect arguments count"
         Color: RED
+
       - Content:
         - Content: "   Use: "
           Color: RED
@@ -86,6 +81,22 @@ CommandResults:
           Click:
             Action: SUGGEST_COMMAND
             Value: "/twl set "
+
+      - Content:
+        - Content: "   or:  "
+          Color: RED
+        - Content: "/twl set <nick> <time>"
+          Color: AQUA
+          Underlined: true
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl set "
+    NothingChanged:
+      - Content: "Nothing changed about {player}."
+        Color: GRAY
     Success:
       - Content: "{player} now whitelisted for {time}."
         Color: GREEN
@@ -112,6 +123,9 @@ CommandResults:
           Click:
             Action: SUGGEST_COMMAND
             Value: "/twl remove "
+    NothingChanged:
+      - Content: "Nothing changed about {player}."
+        Color: GRAY
     Success:
       - Content: "{player} success removed from white list."
         Color: GREEN

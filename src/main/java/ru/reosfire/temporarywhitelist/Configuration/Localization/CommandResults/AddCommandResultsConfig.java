@@ -10,10 +10,8 @@ public class AddCommandResultsConfig extends YamlConfig
     public final MultilineMessage AlreadyPermanent;
     public final MultilineMessage IncorrectTime;
 
-    public final MultilineMessage SuccessfullyAddedPermanent;
-    public final MultilineMessage ErrorWhileAddingPermanent;
-    public final MultilineMessage SuccessfullyAdded;
-    public final MultilineMessage ErrorWhileAdding;
+    public final MultilineMessage Success;
+    public final MultilineMessage Error;
 
     public AddCommandResultsConfig(ConfigurationSection configurationSection)
     {
@@ -22,9 +20,7 @@ public class AddCommandResultsConfig extends YamlConfig
         Usage = getMultilineMessage("Usage");
         AlreadyPermanent = getMultilineMessage("AlreadyPermanent");
         IncorrectTime = getMultilineMessage("IncorrectTime");
-        SuccessfullyAddedPermanent = getMultilineMessage("SuccessfullyAddedPermanent");
-        ErrorWhileAddingPermanent = getMultilineMessage("ErrorWhileAddingPermanent");
-        SuccessfullyAdded = getMultilineMessage("SuccessfullyAdded");
-        ErrorWhileAdding = getMultilineMessage("ErrorWhileAdding");
+        Success = getMultilineMessage("Success");
+        Error = getMultilineMessage("Error");
     }
 }

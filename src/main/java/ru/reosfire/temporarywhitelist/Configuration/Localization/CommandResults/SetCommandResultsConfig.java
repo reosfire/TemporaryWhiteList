@@ -7,6 +7,7 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 public class SetCommandResultsConfig extends YamlConfig
 {
     public final MultilineMessage Usage;
+    public final MultilineMessage NothingChanged;
     public final MultilineMessage Success;
     public final MultilineMessage Error;
     public final MultilineMessage IncorrectTime;
@@ -16,6 +17,7 @@ public class SetCommandResultsConfig extends YamlConfig
         super(configurationSection);
 
         Usage = getMultilineMessage("Usage");
+        NothingChanged = getMultilineMessage("NothingChanged");
         Success = getMultilineMessage("Success");
         Error = getMultilineMessage("Error");
         IncorrectTime = getMultilineMessage("IncorrectTime");
