@@ -3,6 +3,7 @@ package ru.reosfire.temporarywhitelist.Commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.Add;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
@@ -32,83 +33,14 @@ public class TwlCommand extends CommandNode
         _messages = messages;
         _pluginInstance = pluginInstance;
         _timeConverter = timeConverter;
+
+        AddChildren(new Add(_messages.CommandResults.Add, _database, _timeConverter));
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
         return true;
-    }
-
-    @CommandName("add")
-    @CommandPermission("TemporaryWhiteList.Add")
-    public class Add extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            if (args.length != 2)
-            {
-                _messages.CommandResults.Add.Usage.Send(sender);
-                return true;
-            }
-
-            Replacement playerReplacement = new Replacement("{player}", args[0]);
-            Replacement timeReplacement = new Replacement("{time}", args[1]);
-
-            PlayerData playerData = _database.getPlayerData(args[0]);
-            if (playerData != null && playerData.Permanent)
-            {
-                _messages.CommandResults.Add.AlreadyPermanent.Send(sender, playerReplacement);
-                return true;
-            }
-
-            if (args[1].equals("permanent"))
-            {
-                _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
-                {
-                    if (exception == null)
-                        _messages.CommandResults.Add.Success.Send(sender, playerReplacement, timeReplacement);
-                    else
-                    {
-                        _messages.CommandResults.Add.Error.Send(sender, playerReplacement, timeReplacement);
-                        exception.printStackTrace();
-                    }
-                });
-            }
-            else
-            {
-                long time;
-                try
-                {
-                    time = _timeConverter.ParseTime(args[1]);
-                }
-                catch (Exception e)
-                {
-                    _messages.CommandResults.Add.IncorrectTime.Send(sender);
-                    return true;
-                }
-                _database.Add(args[0], time).whenComplete((result, exception) ->
-                {
-                    if (exception == null)
-                        _messages.CommandResults.Add.Success.Send(sender, playerReplacement, timeReplacement);
-                    else
-                    {
-                        _messages.CommandResults.Add.Error.Send(sender, playerReplacement, timeReplacement);
-                        exception.printStackTrace();
-                    }
-                });
-            }
-            return true;
-        }
-
-        @Override
-        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
-        {
-            if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
-
-            return super.onTabComplete(sender, command, alias, args);
-        }
     }
 
     @CommandName("set")
