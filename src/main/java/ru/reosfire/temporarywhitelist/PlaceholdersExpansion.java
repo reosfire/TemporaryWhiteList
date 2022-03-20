@@ -65,7 +65,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
 
         PlayerData playerData = _database.getPlayerData(player.getName());
 
-        if (identifier.equals("subscription_status"))
+        if (identifier.equals("whitelist_status"))
         {
             if (playerData == null) return _messages.CheckStatuses.PlayerUndefined;
             if (playerData.Permanent) return _messages.CheckStatuses.SubscribeNeverEnd;
