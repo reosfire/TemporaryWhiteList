@@ -130,3 +130,7 @@ CommandResults:
         - Content: "Will end: "
         - Content: "{will_end}"
           Color: AQUA
+    ForPlayerOnly:
+      - Content: "&cFor players only"
+    InfoNotFound:
+      - Content: "&cInfo about player not found"

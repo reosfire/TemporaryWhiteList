@@ -238,7 +238,7 @@ public class TwlCommand extends CommandNode
             if (args.length == 0)
             {
                 if (sender instanceof Player) SendInfo(sender, sender.getName());
-                else sender.sendMessage("For players only");
+                else _messages.CommandResults.Check.ForPlayerOnly.Send(sender);
             }
             else if (args.length == 1)
             {
@@ -253,7 +253,7 @@ public class TwlCommand extends CommandNode
             PlayerData playerData = _database.getPlayerData(about);
             if (playerData == null)
             {
-                to.sendMessage("Info about player not found");
+                _messages.CommandResults.Check.InfoNotFound.Send(to);
                 return;
             }
 
