@@ -4,19 +4,21 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {
     private final MessagesConfig _messages;
     private final PlayerDatabase _database;
+    private final TimeConverter _timeConverter;
     private final TemporaryWhiteList _pluginInstance;
 
-    public PlaceholdersExpansion(MessagesConfig messages, PlayerDatabase database, TemporaryWhiteList pluginInstance)
+    public PlaceholdersExpansion(MessagesConfig messages, PlayerDatabase database, TimeConverter timeConverter, TemporaryWhiteList pluginInstance)
     {
         _messages = messages;
         _database = database;
+        _timeConverter = timeConverter;
         _pluginInstance = pluginInstance;
     }
 
@@ -54,23 +56,22 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     public String onPlaceholderRequest(Player player, @NotNull String identifier)
     {
         if (player == null) return "";
-        if (identifier.equals("subscription_status"))
-        {
-            try
-            {
-                //TODO move logic from database here
-                //return _database.Check(player.getName());
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                return "";
-            }
-        }
+
         if (identifier.equals("status"))
         {
             return _pluginInstance.isWhiteListEnabled() ? _messages.WhiteListEnabledStatus :
                     _messages.WhiteListDisabledStatus;
+        }
+
+        PlayerData playerData = _database.getPlayerData(player.getName());
+
+        if (identifier.equals("subscription_status"))
+        {
+            if (playerData == null) return _messages.DataBase.PlayerUndefined;
+            if (playerData.Permanent) return _messages.DataBase.SubscribeNeverEnd;
+            long timeLeft = playerData.TimeLeft();
+            if (timeLeft < 0) return _messages.DataBase.SubscribeEnd;
+            return _timeConverter.DurationToString(timeLeft);
         }
 
         return "";

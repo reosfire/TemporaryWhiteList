@@ -56,7 +56,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         TimeConverter timeConverter = new TimeConverter(_configuration);
 
         getLogger().info("Loading data...");
-        _database = LoadDatabase(_configuration, timeConverter);
+        _database = LoadDatabase(_configuration);
 
         getLogger().info("Loading commands...");
         TwlCommand commands = new TwlCommand(_messages, _database, this, timeConverter);
@@ -70,7 +70,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
         else
         {
-            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _database, this);
+            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _database, timeConverter, this);
             _placeholdersExpansion.register();
             Text.placeholderApiEnabled = true;
         }
@@ -110,7 +110,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    private PlayerDatabase LoadDatabase(Config config, TimeConverter converter)
+    private PlayerDatabase LoadDatabase(Config config)
     {
         IDataProvider dataProvider;
 
@@ -133,7 +133,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
         else throw new RuntimeException("cannot load data provider of type: " + config.DataProvider);
 
-        return new PlayerDatabase(dataProvider, _messages, converter);
+        return new PlayerDatabase(dataProvider);
     }
 
     private YamlDataProvider LoadYamlData()
