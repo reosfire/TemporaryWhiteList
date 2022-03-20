@@ -369,23 +369,4 @@ public class TwlCommand extends CommandNode
             return true;
         }
     }
-
-    @CommandName("count")
-    @CommandPermission("TemporaryWhiteList.Administrate.Count")
-    public class Count extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            try
-            {
-                sender.sendMessage(Integer.toString(_database.ActiveList().size()));
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-        }
-    }
 }
