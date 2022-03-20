@@ -13,6 +13,7 @@ public class Config extends YamlConfig
     public final String SqlTable;
     public final String Translation;
     public final String DurationFormat;
+    public final String DateTimeFormat;
 
     public Config(ConfigurationSection configuration)
     {
@@ -25,5 +26,6 @@ public class Config extends YamlConfig
         SqlTable = getString("Mysql.Table");
         Translation = getString("Translation");
         DurationFormat = getString("DurationFormat");
+        DateTimeFormat = getString("DateTimeFormat");
     }
 }

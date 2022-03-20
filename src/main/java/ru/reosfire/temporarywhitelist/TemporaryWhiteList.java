@@ -53,7 +53,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         localizationsLoader.CopyDefaultTranslations();
         _messages = localizationsLoader.LoadMessages();
 
-        TimeConverter timeConverter = new TimeConverter(_configuration.DurationFormat);
+        TimeConverter timeConverter = new TimeConverter(_configuration);
 
         getLogger().info("Loading data...");
         _database = LoadDatabase(_configuration, timeConverter);

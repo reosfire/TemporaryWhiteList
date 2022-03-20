@@ -120,7 +120,7 @@ public class PlayerDatabase
         if (playerData.Permanent) return _messages.DataBase.SubscribeNeverEnd;
         long timeLeft = playerData.TimeLeft();
         if (timeLeft < 0) return _messages.DataBase.SubscribeEnd;
-        return _timeConverter.ReadableTime(timeLeft);
+        return _timeConverter.DurationToString(timeLeft);
     }
 
     private void LoadAll()

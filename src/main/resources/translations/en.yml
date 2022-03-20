@@ -8,7 +8,6 @@ Kick:
     - "&bYou are not whitelisted now!"
     - "&b----------------------------"
 NoPermission: "&cNo permission!"
-CheckMessageFormat: "Your subscription: {status}"
 WhiteListStatuses:
   Enabled: "&c&lenabled"
   Disabled: "&a&ldisabled"
@@ -132,3 +131,25 @@ CommandResults:
     Error:
       - Content: "Error while removing {player} from whitelist. Watch console."
         Color: RED
+  Check:
+    Format:
+      - Content:
+        - Content: "------"
+          Color: BLUE
+        - Content: "{player}"
+          Color: AQUA
+          Bold: true
+        - Content: "------"
+          Color: Blue
+      - Content:
+        - Content: "Time left: "
+        - Content: "{time_left}"
+          Color: AQUA
+      - Content:
+        - Content: "Started: "
+        - Content: "{started}"
+          Color: AQUA
+      - Content:
+        - Content: "Will end: "
+        - Content: "{will_end}"
+          Color: AQUA

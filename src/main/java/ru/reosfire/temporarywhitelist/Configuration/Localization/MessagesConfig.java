@@ -9,7 +9,6 @@ public class MessagesConfig extends YamlConfig
     public final KickMessagesConfig Kick;
     public final CommandResultsConfig CommandResults;
     public final String NoPermission;
-    public final String CheckMessageFormat;
     public final String WhiteListEnabledStatus;
     public final String WhiteListDisabledStatus;
 
@@ -22,7 +21,6 @@ public class MessagesConfig extends YamlConfig
         CommandResults = new CommandResultsConfig(getSection("CommandResults"));
 
         NoPermission = getColoredString("NoPermission");
-        CheckMessageFormat = getColoredString("CheckMessageFormat");
         WhiteListEnabledStatus = getColoredString("WhiteListStatuses.Enabled");
         WhiteListDisabledStatus = getColoredString("WhiteListStatuses.Disabled");
     }

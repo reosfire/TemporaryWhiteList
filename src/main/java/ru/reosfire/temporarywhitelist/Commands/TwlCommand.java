@@ -16,7 +16,6 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @CommandName("twl")
 public class TwlCommand extends CommandNode
@@ -26,7 +25,8 @@ public class TwlCommand extends CommandNode
     private final TemporaryWhiteList _pluginInstance;
     private final TimeConverter _timeConverter;
 
-    public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance, TimeConverter timeConverter)
+    public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance,
+                      TimeConverter timeConverter)
     {
         _database = dataProvider;
         _messages = messages;
@@ -110,6 +110,7 @@ public class TwlCommand extends CommandNode
             return super.onTabComplete(sender, command, alias, args);
         }
     }
+
     @CommandName("set")
     @CommandPermission("TemporaryWhiteList.Set")
     public class Set extends CommandNode
@@ -130,7 +131,8 @@ public class TwlCommand extends CommandNode
             {
                 _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
                 {
-                    if (!changed) _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
+                    if (!changed)
+                        _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
                     if (exception == null)
                         _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
                     else
@@ -155,8 +157,10 @@ public class TwlCommand extends CommandNode
 
                 _database.Set(args[0], time).whenComplete((changed, exception) ->
                 {
-                    if (!changed) _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
-                    else if (exception == null) _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
+                    if (!changed)
+                        _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
+                    else if (exception == null)
+                        _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
                     else
                     {
                         _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
@@ -181,7 +185,7 @@ public class TwlCommand extends CommandNode
 
                 return result;
             }
-            else if(args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
+            else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
             return super.onTabComplete(sender, command, alias, args);
         }
     }
@@ -212,6 +216,7 @@ public class TwlCommand extends CommandNode
             });
             return true;
         }
+
         @Override
         public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
         {
@@ -237,36 +242,37 @@ public class TwlCommand extends CommandNode
         @Override
         public boolean execute(CommandSender sender, String[] args)
         {
-            try
+            if (args.length == 0)
             {
-                if (args.length == 0)
-                {
-                    if (sender instanceof Player)
-                    {
-                        Player playerSender = (Player)sender;
+                if (sender instanceof Player) SendInfo(sender, sender.getName());
+                else sender.sendMessage("For players only");
+            }
+            else if (args.length == 1)
+            {
+                if (!sender.hasPermission("WMWhiteList.Check.Other")) noPermissionAction(sender);
+                else SendInfo(sender, args[0]);
+            }
+            return true;
+        }
 
-                        Replacement replacement = new Replacement("{status}", _database.Check(sender.getName()));
-                        sender.sendMessage(Text.Colorize(playerSender, _messages.CheckMessageFormat, replacement));
-                    }
-                    else
-                    {
-                        sender.sendMessage("For players only");
-                    }
-                }
-                else if (args.length == 1)
-                {
-                    if (!sender.hasPermission("WMWhiteList.Check.Other") && !sender.isOp())
-                    {
-                        noPermissionAction(sender);
-                    }
-                    else sender.sendMessage(Text.SetColors(_database.Check(args[0])));
-                }
-                return true;
-            }
-            catch (Exception e)
+        private void SendInfo(CommandSender to, String about)
+        {
+            PlayerData playerData = _database.getPlayerData(about);
+            if (playerData == null)
             {
-                return false;
+                to.sendMessage("Info about player not found");
+                return;
             }
+
+            Replacement[] replacements = new Replacement[]
+                    {
+                            new Replacement("{player}", about),
+                            new Replacement("{time_left}", _timeConverter.DurationToString(Math.max(playerData.TimeLeft(), 0))),
+                            new Replacement("{started}", _timeConverter.DateTimeToString(playerData.StartTime)),
+                            new Replacement("{will_end}", _timeConverter.DateTimeToString(playerData.EndTime())),
+                    };
+
+            _messages.CommandResults.Check.Format.Send(to, replacements);
         }
     }
 

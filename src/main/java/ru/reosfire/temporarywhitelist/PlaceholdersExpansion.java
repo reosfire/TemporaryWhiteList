@@ -58,7 +58,8 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         {
             try
             {
-                return _database.Check(player.getName());
+                //TODO move logic from database here
+                //return _database.Check(player.getName());
             }
             catch (Exception e)
             {

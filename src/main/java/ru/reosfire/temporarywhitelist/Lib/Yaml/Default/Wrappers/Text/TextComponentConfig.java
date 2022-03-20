@@ -104,7 +104,7 @@ public class TextComponentConfig extends YamlConfig implements WrapperConfig<Tex
 
     public String toString(Replacement... replacements)
     {
-        if (TextContent != null) return Replacement.Set(TextContent, replacements);
+        if (TextContent != null) return Text.SetColors(Replacement.Set(TextContent, replacements));
 
         StringBuilder resultBuilder = new StringBuilder();
 
@@ -113,7 +113,7 @@ public class TextComponentConfig extends YamlConfig implements WrapperConfig<Tex
             resultBuilder.append(subComponent.toString(replacements));
         }
 
-        return resultBuilder.toString();
+        return Text.SetColors(resultBuilder.toString());
     }
 
     @Override
