@@ -89,7 +89,9 @@ public class YamlDataProvider implements IDataProvider
         ReloadYaml();
 
         ConfigurationSection players = _yamlDataConfig.getConfigurationSection("Players");
-        return new PlayerData(players.getConfigurationSection(playerName));
+        ConfigurationSection player = players.getConfigurationSection(playerName);
+        if (player == null) return null;
+        return new PlayerData(player);
     }
 
     @Override

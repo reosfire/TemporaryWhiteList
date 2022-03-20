@@ -130,17 +130,7 @@ public class TwlCommand extends CommandNode
             if (args[1].equals("permanent"))
             {
                 _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
-                {
-                    if (!changed)
-                        _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
-                    if (exception == null)
-                        _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
-                    else
-                    {
-                        _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
-                        exception.printStackTrace();
-                    }
-                });
+                        HandleCompletion(changed, exception, sender,playerReplacement, timeReplacement));
             }
             else
             {
@@ -156,19 +146,22 @@ public class TwlCommand extends CommandNode
                 }
 
                 _database.Set(args[0], time).whenComplete((changed, exception) ->
-                {
-                    if (!changed)
-                        _messages.CommandResults.Set.NothingChanged.Send(sender, playerReplacement, timeReplacement);
-                    else if (exception == null)
-                        _messages.CommandResults.Set.Success.Send(sender, playerReplacement, timeReplacement);
-                    else
-                    {
-                        _messages.CommandResults.Set.Error.Send(sender, playerReplacement, timeReplacement);
-                        exception.printStackTrace();
-                    }
-                });
+                    HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
             }
             return true;
+        }
+
+        private void HandleCompletion(boolean changed, Throwable exception, CommandSender sender, Replacement... replacements)
+        {
+            if (!changed)
+                _messages.CommandResults.Set.NothingChanged.Send(sender, replacements);
+            else if (exception == null)
+                _messages.CommandResults.Set.Success.Send(sender, replacements);
+            else
+            {
+                _messages.CommandResults.Set.Error.Send(sender, replacements);
+                exception.printStackTrace();
+            }
         }
 
         @Override
@@ -275,6 +268,23 @@ public class TwlCommand extends CommandNode
                     };
 
             _messages.CommandResults.Check.Format.Send(to, replacements);
+        }
+
+        @Override
+        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+        {
+            if (args.length == 1)
+            {
+                ArrayList<String> result = new ArrayList<>();
+
+                for (PlayerData playerData : _database.AllList())
+                {
+                    if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
+                }
+
+                return result;
+            }
+            return super.onTabComplete(sender, command, alias, args);
         }
     }
 

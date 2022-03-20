@@ -22,15 +22,11 @@ CheckStatuses:
 CommandResults:
   Add:
     Usage:
-      - Content: "Incorrect arguments count"
-        Color: RED
+      - Content: "&cIncorrect arguments count"
 
       - Content:
-        - Content: "   Use: "
-          Color: RED
-        - Content: "/twl add <nick> permanent"
-          Color: AQUA
-          Underlined: true
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl add <nick> permanent"
           Hover:
             Action: SHOW_TEXT
             Value: "Click to auto complete"
@@ -39,11 +35,8 @@ CommandResults:
             Value: "/twl add "
 
       - Content:
-        - Content: "   or:  "
-          Color: RED
-        - Content: "/twl add <nick> <time>"
-          Color: AQUA
-          Underlined: true
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl add <nick> <time>"
           Hover:
             Action: SHOW_TEXT
             Value: "Click to auto complete"
@@ -52,30 +45,22 @@ CommandResults:
             Value: "/twl add "
 
     AlreadyPermanent:
-      - Content: "Player {player} already whitelisted permanent. Nothing changed."
-        Color: GRAY
+      - Content: "&7Player {player} already whitelisted permanent. Nothing changed."
 
     IncorrectTime:
-      - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
-        Color: RED
+      - Content: "&cInvalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
     Success:
-      - Content: "{player} successfully added to white list for {time}."
-        Color: GREEN
+      - Content: "&a{player} successfully added to white list for {time}."
     Error:
-      - Content: "Error while adding {player} to whitelist for {time}. Watch console."
-        Color: RED
+      - Content: "&cError while adding {player} to whitelist for {time}. Watch console."
 
   Set:
     Usage:
-      - Content: "Incorrect arguments count"
-        Color: RED
+      - Content: "&cIncorrect arguments count"
 
       - Content:
-        - Content: "   Use: "
-          Color: RED
-        - Content: "/twl set <nick> <time>"
-          Color: AQUA
-          Underlined: true
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl set <nick> <time>"
           Hover:
             Action: SHOW_TEXT
             Value: "Click to auto complete"
@@ -84,11 +69,8 @@ CommandResults:
             Value: "/twl set "
 
       - Content:
-        - Content: "   or:  "
-          Color: RED
-        - Content: "/twl set <nick> <time>"
-          Color: AQUA
-          Underlined: true
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl set <nick> <time>"
           Hover:
             Action: SHOW_TEXT
             Value: "Click to auto complete"
@@ -96,28 +78,20 @@ CommandResults:
             Action: SUGGEST_COMMAND
             Value: "/twl set "
     NothingChanged:
-      - Content: "Nothing changed about {player}."
-        Color: GRAY
+      - Content: "&7Nothing changed about {player}."
     Success:
-      - Content: "{player} now whitelisted for {time}."
-        Color: GREEN
+      - Content: "&a{player} now whitelisted for {time}."
     Error:
-      - Content: "Error while setting {player} whitelisted time to {time}. Watch console."
-        Color: RED
+      - Content: "&cError while setting {player} whitelisted time to {time}. Watch console."
     IncorrectTime:
-      - Content: "Invalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
-        Color: RED
+      - Content: "&cInvalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
 
   Remove:
     Usage:
-      - Content: "Incorrect arguments count"
-        Color: RED
+      - Content: "&cIncorrect arguments count"
       - Content:
-        - Content: "Use: "
-          Color: RED
-        - Content: "/twl remove <nick>"
-          Color: AQUA
-          Underlined: true
+        - Content: "&cUse: "
+        - Content: "&b&n/twl remove <nick>"
           Hover:
             Action: SHOW_TEXT
             Value: "Click to auto complete"
@@ -125,14 +99,11 @@ CommandResults:
             Action: SUGGEST_COMMAND
             Value: "/twl remove "
     NothingChanged:
-      - Content: "Nothing changed about {player}."
-        Color: GRAY
+      - Content: "&7Nothing changed about {player}."
     Success:
-      - Content: "{player} success removed from white list."
-        Color: GREEN
+      - Content: "&a{player} success removed from white list."
     Error:
-      - Content: "Error while removing {player} from whitelist. Watch console."
-        Color: RED
+      - Content: "&cError while removing {player} from whitelist. Watch console."
   Check:
     Format:
       - Content:

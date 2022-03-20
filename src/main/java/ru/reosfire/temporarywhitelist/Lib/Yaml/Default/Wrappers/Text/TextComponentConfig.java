@@ -57,7 +57,11 @@ public class TextComponentConfig extends YamlConfig implements WrapperConfig<Tex
 
     public void Send(CommandSender receiver, Replacement... replacements)
     {
-        if (receiver instanceof Player) ((Player)receiver).spigot().sendMessage(Unwrap(replacements));
+        if (receiver instanceof Player)
+        {
+            Player player = (Player) receiver;
+            player.spigot().sendMessage(Unwrap(player, replacements));
+        }
         else receiver.sendMessage(toString(replacements));
     }
 
@@ -80,7 +84,7 @@ public class TextComponentConfig extends YamlConfig implements WrapperConfig<Tex
     public TextComponent Unwrap(IColorizer colorizer)
     {
         TextComponent result;
-        if (Content == null) result = new TextComponent(colorizer.Colorize(TextContent));
+        if (Content == null) result = new TextComponent(TextComponent.fromLegacyText(colorizer.Colorize(TextContent)));
         else
         {
             TextComponent[] subComponents = new TextComponent[Content.size()];
