@@ -8,8 +8,6 @@ public class CheckStatusesConfig extends YamlConfig
     public final String PlayerUndefined;
     public final String SubscribeNeverEnd;
     public final String SubscribeEnd;
-    public final String PermanentTrue;
-    public final String PermanentFalse;
 
     public CheckStatusesConfig(ConfigurationSection configurationSection)
     {
@@ -18,7 +16,5 @@ public class CheckStatusesConfig extends YamlConfig
         PlayerUndefined = getColoredString("PlayerUndefined");
         SubscribeNeverEnd = getColoredString("SubscribeNeverEnd");
         SubscribeEnd = getColoredString("SubscribeEnd");
-        PermanentTrue = getColoredString("Permanent.True");
-        PermanentFalse = getColoredString("Permanent.False");
     }
 }

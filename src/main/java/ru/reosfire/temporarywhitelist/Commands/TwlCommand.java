@@ -1,223 +1,41 @@
 package ru.reosfire.temporarywhitelist.Commands;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import ru.reosfire.temporarywhitelist.Commands.Subcommands.Add;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.AddCommand;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.CheckCommand;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.RemoveCommand;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.SetCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
-import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
-import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
     private final PlayerDatabase _database;
-    private final MessagesConfig _messages;
     private final TemporaryWhiteList _pluginInstance;
-    private final TimeConverter _timeConverter;
 
     public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance,
                       TimeConverter timeConverter)
     {
         _database = dataProvider;
-        _messages = messages;
         _pluginInstance = pluginInstance;
-        _timeConverter = timeConverter;
 
-        AddChildren(new Add(_messages.CommandResults.Add, _database, _timeConverter));
+        AddChildren(new AddCommand(messages.CommandResults.Add, _database, timeConverter));
+        AddChildren(new SetCommand(messages.CommandResults.Set, _database, timeConverter));
+        AddChildren(new RemoveCommand(messages.CommandResults.Remove, _database));
+        AddChildren(new CheckCommand(messages.CommandResults.Check, _database, timeConverter));
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
         return true;
-    }
-
-    @CommandName("set")
-    @CommandPermission("TemporaryWhiteList.Set")
-    public class Set extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            if (args.length != 2)
-            {
-                _messages.CommandResults.Set.Usage.Send(sender);
-                return true;
-            }
-
-            Replacement playerReplacement = new Replacement("{player}", args[0]);
-            Replacement timeReplacement = new Replacement("{time}", args[1]);
-
-            if (args[1].equals("permanent"))
-            {
-                _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
-                        HandleCompletion(changed, exception, sender,playerReplacement, timeReplacement));
-            }
-            else
-            {
-                long time;
-                try
-                {
-                    time = _timeConverter.ParseTime(args[1]);
-                }
-                catch (Exception e)
-                {
-                    _messages.CommandResults.Set.IncorrectTime.Send(sender);
-                    return true;
-                }
-
-                _database.Set(args[0], time).whenComplete((changed, exception) ->
-                    HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
-            }
-            return true;
-        }
-
-        private void HandleCompletion(boolean changed, Throwable exception, CommandSender sender, Replacement... replacements)
-        {
-            if (!changed)
-                _messages.CommandResults.Set.NothingChanged.Send(sender, replacements);
-            else if (exception == null)
-                _messages.CommandResults.Set.Success.Send(sender, replacements);
-            else
-            {
-                _messages.CommandResults.Set.Error.Send(sender, replacements);
-                exception.printStackTrace();
-            }
-        }
-
-        @Override
-        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
-        {
-            if (args.length == 1)
-            {
-                ArrayList<String> result = new ArrayList<>();
-
-                for (PlayerData playerData : _database.AllList())
-                {
-                    if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
-                }
-
-                return result;
-            }
-            else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
-            return super.onTabComplete(sender, command, alias, args);
-        }
-    }
-
-    @CommandName("remove")
-    @CommandPermission("TemporaryWhiteList.Remove")
-    public class Remove extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            if (args.length != 1)
-            {
-                _messages.CommandResults.Remove.Usage.Send(sender);
-                return true;
-            }
-
-            _database.Remove(args[0]).whenComplete((changed, exception) ->
-            {
-                Replacement playerReplacement = new Replacement("{player}", args[0]);
-                if (!changed) _messages.CommandResults.Remove.NothingChanged.Send(sender, playerReplacement);
-                else if (exception == null) _messages.CommandResults.Remove.Success.Send(sender, playerReplacement);
-                else
-                {
-                    _messages.CommandResults.Remove.Error.Send(sender, playerReplacement);
-                    exception.printStackTrace();
-                }
-            });
-            return true;
-        }
-
-        @Override
-        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
-        {
-            if (args.length == 1)
-            {
-                ArrayList<String> result = new ArrayList<>();
-
-                for (PlayerData playerData : _database.AllList())
-                {
-                    if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
-                }
-
-                return result;
-            }
-            return super.onTabComplete(sender, command, alias, args);
-        }
-    }
-
-    @CommandName("check")
-    @CommandPermission("TemporaryWhiteList.Check")
-    public class Check extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            if (args.length == 0)
-            {
-                if (sender instanceof Player) SendInfo(sender, sender.getName());
-                else _messages.CommandResults.Check.ForPlayerOnly.Send(sender);
-            }
-            else if (args.length == 1)
-            {
-                if (!sender.hasPermission("WMWhiteList.Check.Other")) noPermissionAction(sender);
-                else SendInfo(sender, args[0]);
-            }
-            return true;
-        }
-
-        private void SendInfo(CommandSender to, String about)
-        {
-            PlayerData playerData = _database.getPlayerData(about);
-            if (playerData == null)
-            {
-                _messages.CommandResults.Check.InfoNotFound.Send(to);
-                return;
-            }
-
-            Replacement[] replacements = new Replacement[]
-                    {
-                            new Replacement("{player}", about),
-                            new Replacement("{time_left}", _timeConverter.DurationToString(Math.max(playerData.TimeLeft(), 0))),
-                            new Replacement("{started}", _timeConverter.DateTimeToString(playerData.StartTime)),
-                            new Replacement("{will_end}", _timeConverter.DateTimeToString(playerData.EndTime())),
-                            new Replacement("{permanent}", playerData.Permanent ?
-                                    _messages.CheckStatuses.PermanentTrue : _messages.CheckStatuses.PermanentFalse),
-                    };
-
-            _messages.CommandResults.Check.Format.Send(to, replacements);
-        }
-
-        @Override
-        public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
-        {
-            if (args.length == 1)
-            {
-                ArrayList<String> result = new ArrayList<>();
-
-                for (PlayerData playerData : _database.AllList())
-                {
-                    if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
-                }
-
-                return result;
-            }
-            return super.onTabComplete(sender, command, alias, args);
-        }
     }
 
     @CommandName("enable")

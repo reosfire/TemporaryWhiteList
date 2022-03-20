@@ -15,9 +15,6 @@ CheckStatuses:
   PlayerUndefined: "Player not found"
   SubscribeNeverEnd: "never end"
   SubscribeEnd: "ended"
-  Permanent:
-    'True': "Yes"
-    'False': "No"
 
 CommandResults:
   Add:
@@ -105,6 +102,9 @@ CommandResults:
     Error:
       - Content: "&cError while removing {player} from whitelist. Watch console."
   Check:
+    Permanent:
+      'True': "Yes"
+      'False': "No"
     Format:
       - Content:
         - Content: "------"
