@@ -60,7 +60,7 @@ CommandResults:
 
       - Content:
         - Content: "&c   Use: "
-        - Content: "&b&n/twl set <nick> <time>"
+        - Content: "&b&n/twl set <nick> permanent"
           Hover:
             Action: SHOW_TEXT
             Value: "Click to auto complete"
