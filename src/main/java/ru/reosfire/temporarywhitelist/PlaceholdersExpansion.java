@@ -67,10 +67,10 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
 
         if (identifier.equals("subscription_status"))
         {
-            if (playerData == null) return _messages.DataBase.PlayerUndefined;
-            if (playerData.Permanent) return _messages.DataBase.SubscribeNeverEnd;
+            if (playerData == null) return _messages.CheckStatuses.PlayerUndefined;
+            if (playerData.Permanent) return _messages.CheckStatuses.SubscribeNeverEnd;
             long timeLeft = playerData.TimeLeft();
-            if (timeLeft < 0) return _messages.DataBase.SubscribeEnd;
+            if (timeLeft < 0) return _messages.CheckStatuses.SubscribeEnd;
             return _timeConverter.DurationToString(timeLeft);
         }
 

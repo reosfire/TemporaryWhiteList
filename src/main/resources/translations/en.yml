@@ -11,11 +11,13 @@ NoPermission: "&cNo permission!"
 WhiteListStatuses:
   Enabled: "&c&lenabled"
   Disabled: "&a&ldisabled"
-DataBase:
+CheckStatuses:
   PlayerUndefined: "Player not found"
   SubscribeNeverEnd: "never end"
   SubscribeEnd: "ended"
-
+  Permanent:
+    'True': "Yes"
+    'False': "No"
 
 CommandResults:
   Add:
@@ -141,6 +143,10 @@ CommandResults:
           Bold: true
         - Content: "------"
           Color: Blue
+      - Content:
+        - Content: "Permanent: "
+        - Content: "{permanent}"
+          Color: AQUA
       - Content:
         - Content: "Time left: "
         - Content: "{time_left}"

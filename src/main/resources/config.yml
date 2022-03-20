@@ -22,4 +22,4 @@ Mysql:
 Translation: "en.yml"
 
 DurationFormat: "&bdd 'days' &cHH 'hours' &emm 'minutes' &ass 'seconds'"
-DateTimeFormat: "[yyyy dd [hh mm ss]"
+DateTimeFormat: "[dd MM yyyy] hh:mm:ss"

@@ -5,7 +5,7 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 public class MessagesConfig extends YamlConfig
 {
-    public final DatabaseMessagesConfig DataBase;
+    public final CheckStatusesConfig CheckStatuses;
     public final KickMessagesConfig Kick;
     public final CommandResultsConfig CommandResults;
     public final String NoPermission;
@@ -16,7 +16,7 @@ public class MessagesConfig extends YamlConfig
     {
         super(configuration);
 
-        DataBase = new DatabaseMessagesConfig(getSection("DataBase"));
+        CheckStatuses = new CheckStatusesConfig(getSection("CheckStatuses"));
         Kick = new KickMessagesConfig(getSection("Kick"));
         CommandResults = new CommandResultsConfig(getSection("CommandResults"));
 

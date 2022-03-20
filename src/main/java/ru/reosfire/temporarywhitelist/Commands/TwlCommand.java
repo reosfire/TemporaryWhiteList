@@ -270,6 +270,8 @@ public class TwlCommand extends CommandNode
                             new Replacement("{time_left}", _timeConverter.DurationToString(Math.max(playerData.TimeLeft(), 0))),
                             new Replacement("{started}", _timeConverter.DateTimeToString(playerData.StartTime)),
                             new Replacement("{will_end}", _timeConverter.DateTimeToString(playerData.EndTime())),
+                            new Replacement("{permanent}", playerData.Permanent ?
+                                    _messages.CheckStatuses.PermanentTrue : _messages.CheckStatuses.PermanentFalse),
                     };
 
             _messages.CommandResults.Check.Format.Send(to, replacements);
