@@ -14,6 +14,7 @@ public class Config extends YamlConfig
     public final String Translation;
     public final String DurationFormat;
     public final String DateTimeFormat;
+    public final int ListPageSize;
 
     public Config(ConfigurationSection configuration)
     {
@@ -27,5 +28,6 @@ public class Config extends YamlConfig
         Translation = getString("Translation");
         DurationFormat = getString("DurationFormat");
         DateTimeFormat = getString("DateTimeFormat");
+        ListPageSize = getInt("ListPageSize");
     }
 }

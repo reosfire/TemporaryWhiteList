@@ -1,12 +1,9 @@
 package ru.reosfire.temporarywhitelist.Commands;
 
 import org.bukkit.command.CommandSender;
-import ru.reosfire.temporarywhitelist.Commands.Subcommands.AddCommand;
-import ru.reosfire.temporarywhitelist.Commands.Subcommands.CheckCommand;
-import ru.reosfire.temporarywhitelist.Commands.Subcommands.RemoveCommand;
-import ru.reosfire.temporarywhitelist.Commands.Subcommands.SetCommand;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.*;
+import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
@@ -17,19 +14,18 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
-    private final PlayerDatabase _database;
     private final TemporaryWhiteList _pluginInstance;
 
     public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance,
-                      TimeConverter timeConverter)
+                      TimeConverter timeConverter, Config config)
     {
-        _database = dataProvider;
         _pluginInstance = pluginInstance;
 
-        AddChildren(new AddCommand(messages.CommandResults.Add, _database, timeConverter));
-        AddChildren(new SetCommand(messages.CommandResults.Set, _database, timeConverter));
-        AddChildren(new RemoveCommand(messages.CommandResults.Remove, _database));
-        AddChildren(new CheckCommand(messages.CommandResults.Check, _database, timeConverter));
+        AddChildren(new AddCommand(messages.CommandResults.Add, dataProvider, timeConverter));
+        AddChildren(new SetCommand(messages.CommandResults.Set, dataProvider, timeConverter));
+        AddChildren(new RemoveCommand(messages.CommandResults.Remove, dataProvider));
+        AddChildren(new CheckCommand(messages.CommandResults.Check, dataProvider, timeConverter));
+        AddChildren(new ListCommand(messages.CommandResults.List, dataProvider, config.ListPageSize));
     }
 
     @Override
@@ -89,33 +85,6 @@ public class TwlCommand extends CommandNode
         {
             _pluginInstance.Load();
             sender.sendMessage("reloaded");
-            return true;
-        }
-    }
-
-    @CommandName("list")
-    @CommandPermission("TemporaryWhiteList.Administrate.List")
-    public class List extends CommandNode
-    {
-        @Override
-        public boolean execute(CommandSender sender, String[] args)
-        {
-            try
-            {
-                StringBuilder result = new StringBuilder();
-
-                for (PlayerData playerData : _database.ActiveList())
-                {
-                    result.append(playerData.Name).append(", ");
-                }
-
-                result.replace(result.length() - 2, result.length() - 1, "");
-                sender.sendMessage(result.toString());
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
             return true;
         }
     }

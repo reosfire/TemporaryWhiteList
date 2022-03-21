@@ -42,6 +42,7 @@ public class CheckCommand extends CommandNode
             if (!sender.hasPermission("WMWhiteList.Check.Other")) noPermissionAction(sender);
             else SendInfo(sender, args[0]);
         }
+        else _commandResults.Usage.Send(sender);
         return true;
     }
 

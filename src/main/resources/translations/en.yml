@@ -101,36 +101,99 @@ CommandResults:
       - Content: "&a{player} success removed from white list."
     Error:
       - Content: "&cError while removing {player} from whitelist. Watch console."
+
   Check:
     Permanent:
       'True': "Yes"
       'False': "No"
+    Usage:
+      - Content: "&cIncorrect arguments count"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl check"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to use"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl check"
+
+      - Content:
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl check <nick>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl check "
     Format:
-      - Content:
-        - Content: "------"
-          Color: BLUE
-        - Content: "{player}"
-          Color: AQUA
-          Bold: true
-        - Content: "------"
-          Color: Blue
-      - Content:
-        - Content: "Permanent: "
-        - Content: "{permanent}"
-          Color: AQUA
-      - Content:
-        - Content: "Time left: "
-        - Content: "{time_left}"
-          Color: AQUA
-      - Content:
-        - Content: "Started: "
-        - Content: "{started}"
-          Color: AQUA
-      - Content:
-        - Content: "Will end: "
-        - Content: "{will_end}"
-          Color: AQUA
+      - Content: "&9------&b{player}&9------"
+      - Content: " Permanent: &b{permanent}"
+      - Content: " Time left: &b{time_left}"
+      - Content: " Started: &b{started}"
+      - Content: " Will end: &b{will_end}"
     ForPlayerOnly:
       - Content: "&cFor players only"
     InfoNotFound:
       - Content: "&cInfo about player not found"
+
+  List:
+    Usage:
+      - Content: "&cIncorrect arguments count"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl list"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to use"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list"
+
+      - Content:
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl list <page>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl check "
+    IncorrectPage:
+      - Content: "&cIncorrect page"
+    Header:
+      - Content: "&l--------  &bList&f&l  --------"
+    PlayerFormat:
+      - Content: " &9{number}) &b{player}"
+        Click:
+          Action: RUN_COMMAND
+          Value: "/twl check {player}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "&bClick to watch info"
+    PagesSwitch:
+      - Content:
+        - Content: "    <---    "
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list {previous_page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bPrevious page"
+        - Content: "    {page}    "
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl list {page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bEnter page"
+        - Content: "    --->"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list {next_page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bNext page"

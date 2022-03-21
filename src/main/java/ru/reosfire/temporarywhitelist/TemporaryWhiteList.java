@@ -18,6 +18,7 @@ import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
@@ -26,7 +27,25 @@ public final class TemporaryWhiteList extends JavaPlugin
     private Config _configuration;
     private PlayerDatabase _database;
     private MessagesConfig _messages;
+    private TimeConverter _timeConverter;
     private PlaceholdersExpansion _placeholdersExpansion;
+
+    public Config getConfiguration()
+    {
+        return _configuration;
+    }
+    public PlayerDatabase getDatabase()
+    {
+        return _database;
+    }
+    public MessagesConfig getMessages()
+    {
+        return _messages;
+    }
+    public TimeConverter getTimeConverter()
+    {
+        return _timeConverter;
+    }
 
     private BukkitTask _kickerTask;
 
@@ -53,13 +72,13 @@ public final class TemporaryWhiteList extends JavaPlugin
         localizationsLoader.CopyDefaultTranslations();
         _messages = localizationsLoader.LoadMessages();
 
-        TimeConverter timeConverter = new TimeConverter(_configuration);
+        _timeConverter = new TimeConverter(_configuration);
 
         getLogger().info("Loading data...");
         _database = LoadDatabase(_configuration);
 
         getLogger().info("Loading commands...");
-        TwlCommand commands = new TwlCommand(_messages, _database, this, timeConverter);
+        TwlCommand commands = new TwlCommand(_messages, _database, this, _timeConverter, _configuration);
         commands.Register(getCommand("twl"));
 
         getLogger().info("Loading placeholders...");
@@ -70,7 +89,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
         else
         {
-            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _database, timeConverter, this);
+            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _database, _timeConverter, this);
             _placeholdersExpansion.register();
             Text.placeholderApiEnabled = true;
         }

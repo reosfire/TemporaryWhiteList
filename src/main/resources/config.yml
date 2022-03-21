@@ -21,5 +21,7 @@ Mysql:
 
 Translation: "en.yml"
 
+ListPageSize: 4
+
 DurationFormat: "&bdd 'days' &cHH 'hours' &emm 'minutes' &ass 'seconds'"
 DateTimeFormat: "[dd MM yyyy] hh:mm:ss"

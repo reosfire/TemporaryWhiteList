@@ -6,6 +6,7 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 public class CheckCommandResultsConfig extends YamlConfig
 {
+    public final MultilineMessage Usage;
     public final MultilineMessage Format;
     public final MultilineMessage ForPlayerOnly;
     public final MultilineMessage InfoNotFound;
@@ -16,6 +17,7 @@ public class CheckCommandResultsConfig extends YamlConfig
     {
         super(configurationSection);
 
+        Usage = getMultilineMessage("Usage");
         Format = getMultilineMessage("Format");
         ForPlayerOnly = getMultilineMessage("ForPlayerOnly");
         InfoNotFound = getMultilineMessage("InfoNotFound");
