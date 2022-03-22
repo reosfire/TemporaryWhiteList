@@ -129,11 +129,11 @@ CommandResults:
             Action: SUGGEST_COMMAND
             Value: "/twl check "
     Format:
-      - Content: "&9------&b{player}&9------"
-      - Content: " Permanent: &b{permanent}"
-      - Content: " Time left: &b{time_left}"
-      - Content: " Started: &b{started}"
-      - Content: " Will end: &b{will_end}"
+      - Content: "&l------  &b{player}&f&l  ------"
+      - Content: " • Permanent: &b{permanent}"
+      - Content: " • Time left: &b{time_left}"
+      - Content: " • Started: &b{started}"
+      - Content: " • Will end: &b{will_end}"
     ForPlayerOnly:
       - Content: "&cFor players only"
     InfoNotFound:
@@ -167,7 +167,7 @@ CommandResults:
     Header:
       - Content: "&l--------  &bList&f&l  --------"
     PlayerFormat:
-      - Content: " &9{number}) &b{player}"
+      - Content: " {number}) &b{player}"
         Click:
           Action: RUN_COMMAND
           Value: "/twl check {player}"
@@ -183,7 +183,7 @@ CommandResults:
           Hover:
             Action: SHOW_TEXT
             Value: "&bPrevious page"
-        - Content: "    {page}    "
+        - Content: "   {page}/{total_pages}   "
           Click:
             Action: SUGGEST_COMMAND
             Value: "/twl list {page}"

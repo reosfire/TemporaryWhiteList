@@ -5,12 +5,12 @@ import org.apache.commons.lang.NullArgumentException;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class PlayerDatabase
 {
     private final IDataProvider _provider;
-    private final Map<String, PlayerData> _playersData = new ConcurrentHashMap<>();
+    private final Map<String, PlayerData> _playersData = new ConcurrentSkipListMap<>();
 
     public PlayerDatabase(IDataProvider provider)
     {
@@ -102,9 +102,9 @@ public class PlayerDatabase
         return result;
     }
 
-    public List<PlayerData> AllList()
+    public Collection<PlayerData> AllList()
     {
-        return new ArrayList<>(_playersData.values());
+        return _playersData.values();
     }
 
     private void LoadAll()

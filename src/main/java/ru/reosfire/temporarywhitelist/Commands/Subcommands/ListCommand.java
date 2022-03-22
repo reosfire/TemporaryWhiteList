@@ -9,6 +9,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 
+import java.util.Collection;
 import java.util.List;
 
 @CommandName("list")
@@ -44,7 +45,10 @@ public class ListCommand extends CommandNode
             }
         }
 
-        if (page < 1)
+        Collection<PlayerData> players = _database.AllList();
+        int totalPages = CeilDivide(players.size(), _pageSize);
+
+        if (page < 1 || page > totalPages)
         {
             _commandResults.IncorrectPage.Send(sender);
             return true;
@@ -52,13 +56,13 @@ public class ListCommand extends CommandNode
 
         _commandResults.Header.Send(sender);
 
-
-        List<PlayerData> players = _database.AllList();
-
         int sent = 0;
-        for (int i = _pageSize * (page - 1); i < players.size() && i < _pageSize * page; i++)
+        int i = -1;
+        for (PlayerData playerData : players)
         {
-            PlayerData playerData = players.get(i);
+            i++;
+            if (i < _pageSize * (page - 1)) continue;
+            if (i >= _pageSize * page) break;
             _commandResults.PlayerFormat.Send(sender,
                     new Replacement("{player}", playerData.Name),
                     new Replacement("{number}", Integer.toString(i + 1)));
@@ -66,14 +70,20 @@ public class ListCommand extends CommandNode
         }
         while (sent++ < _pageSize) sender.sendMessage("");
 
-        int previousPage = Math.max(1, page - 1);
-        int nextPage = Math.min(page + 1, players.size() / _pageSize + (players.size() % _pageSize == 0 ? 0 : 1));
+        int previousPage = Math.max(page - 1, 1);
+        int nextPage = Math.min(page + 1, totalPages);
 
         _commandResults.PagesSwitch.Send(sender,
                 new Replacement("{previous_page}", Integer.toString(previousPage)),
                 new Replacement("{page}", Integer.toString(page)),
+                new Replacement("{total_pages}", Integer.toString(totalPages)),
                 new Replacement("{next_page}", Integer.toString(nextPage)));
 
         return true;
+    }
+
+    private int CeilDivide(int a, int b)
+    {
+        return (a + b - 1) / b;
     }
 }
