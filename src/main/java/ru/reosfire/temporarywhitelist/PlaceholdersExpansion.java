@@ -1,8 +1,10 @@
 package ru.reosfire.temporarywhitelist;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
@@ -53,9 +55,9 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, @NotNull String identifier)
+    public @Nullable String onRequest(OfflinePlayer player, @NotNull String params)
     {
-        if (identifier.equals("plugin_status"))
+        if (params.equals("plugin_status"))
         {
             return _pluginInstance.isWhiteListEnabled() ? _messages.WhiteListEnabledStatus :
                     _messages.WhiteListDisabledStatus;
@@ -64,7 +66,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
         if (player == null) return null;
         PlayerData playerData = _database.getPlayerData(player.getName());
 
-        if (identifier.equals("player_status"))
+        if (params.equals("player_status"))
         {
             if (playerData == null) return _messages.PlayerStatuses.Undefined;
             if (playerData.Permanent) return _messages.PlayerStatuses.NeverEnd;
@@ -73,6 +75,11 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
             return _timeConverter.DurationToString(timeLeft);
         }
 
-        return null;
+        if (params.equals("start_time")) return _timeConverter.DateTimeToString(playerData.StartTime);
+        if (params.equals("left_time")) return _timeConverter.DurationToString(playerData.TimeLeft());
+        if (params.equals("end_time")) return _timeConverter.DateTimeToString(playerData.StartTime);
+        if (params.equals("permanent")) return Boolean.toString(playerData.Permanent);
+
+        return super.onRequest(player, params);
     }
 }
