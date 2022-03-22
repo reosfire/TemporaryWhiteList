@@ -11,10 +11,10 @@ NoPermission: "&cNo permission!"
 WhiteListStatuses:
   Enabled: "&c&lenabled"
   Disabled: "&a&ldisabled"
-CheckStatuses:
-  PlayerUndefined: "Player not found"
-  SubscribeNeverEnd: "never end"
-  SubscribeEnd: "ended"
+PlayerStatuses:
+  Undefined: "Info not found"
+  NeverEnd: "never end"
+  Ended: "ended"
 
 CommandResults:
   Add:

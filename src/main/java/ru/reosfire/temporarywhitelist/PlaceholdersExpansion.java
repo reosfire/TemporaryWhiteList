@@ -55,25 +55,24 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String identifier)
     {
-        if (player == null) return "";
-
-        if (identifier.equals("status"))
+        if (identifier.equals("plugin_status"))
         {
             return _pluginInstance.isWhiteListEnabled() ? _messages.WhiteListEnabledStatus :
                     _messages.WhiteListDisabledStatus;
         }
 
+        if (player == null) return null;
         PlayerData playerData = _database.getPlayerData(player.getName());
 
-        if (identifier.equals("whitelist_status"))
+        if (identifier.equals("player_status"))
         {
-            if (playerData == null) return _messages.CheckStatuses.PlayerUndefined;
-            if (playerData.Permanent) return _messages.CheckStatuses.SubscribeNeverEnd;
+            if (playerData == null) return _messages.PlayerStatuses.Undefined;
+            if (playerData.Permanent) return _messages.PlayerStatuses.NeverEnd;
             long timeLeft = playerData.TimeLeft();
-            if (timeLeft < 0) return _messages.CheckStatuses.SubscribeEnd;
+            if (timeLeft < 0) return _messages.PlayerStatuses.Ended;
             return _timeConverter.DurationToString(timeLeft);
         }
 
-        return "";
+        return null;
     }
 }
