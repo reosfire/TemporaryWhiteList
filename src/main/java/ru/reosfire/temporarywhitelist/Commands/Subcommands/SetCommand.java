@@ -3,11 +3,13 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.SetCommandResultsConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
+import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
@@ -16,15 +18,17 @@ import java.util.Collections;
 
 @CommandName("set")
 @CommandPermission("TemporaryWhiteList.Set")
+@ExecuteAsync
 public class SetCommand extends CommandNode
 {
     private final SetCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
 
-    public SetCommand(SetCommandResultsConfig commandResults, PlayerDatabase database, TimeConverter timeConverter)
+    public SetCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
     {
-        _commandResults = commandResults;
+        super(messagesConfig.NoPermission);
+        _commandResults = messagesConfig.CommandResults.Set;
         _database = database;
         _timeConverter = timeConverter;
     }

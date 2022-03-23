@@ -2,7 +2,6 @@ package ru.reosfire.temporarywhitelist;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;

@@ -3,25 +3,29 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.RemoveCommandResultsConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
+import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 
 import java.util.ArrayList;
 
 @CommandName("remove")
 @CommandPermission("TemporaryWhiteList.Remove")
+@ExecuteAsync
 public class RemoveCommand extends CommandNode
 {
     private final RemoveCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
 
-    public RemoveCommand(RemoveCommandResultsConfig commandResults, PlayerDatabase database)
+    public RemoveCommand(MessagesConfig messagesConfig, PlayerDatabase database)
     {
-        _commandResults = commandResults;
+        super(messagesConfig.NoPermission);
+        _commandResults = messagesConfig.CommandResults.Remove;
         _database = database;
     }
 

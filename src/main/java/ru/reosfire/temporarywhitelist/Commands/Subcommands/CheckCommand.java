@@ -4,11 +4,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.CheckCommandResultsConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
+import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
@@ -16,15 +18,17 @@ import java.util.ArrayList;
 
 @CommandName("check")
 @CommandPermission("TemporaryWhiteList.Check")
+@ExecuteAsync
 public class CheckCommand extends CommandNode
 {
     private final CheckCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
 
-    public CheckCommand(CheckCommandResultsConfig commandResults, PlayerDatabase database, TimeConverter timeConverter)
+    public CheckCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
     {
-        _commandResults = commandResults;
+        super(messagesConfig.NoPermission);
+        _commandResults = messagesConfig.CommandResults.Check;
         _database = database;
         _timeConverter = timeConverter;
     }

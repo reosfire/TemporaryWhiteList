@@ -2,26 +2,30 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ListCommandResultsConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
+import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 
 import java.util.Collection;
 
 @CommandName("list")
 @CommandPermission("TemporaryWhiteList.Administrate.List")
+@ExecuteAsync
 public class ListCommand extends CommandNode
 {
     private final ListCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
     private final int _pageSize;
 
-    public ListCommand(ListCommandResultsConfig commandResults, PlayerDatabase database, int pageSize)
+    public ListCommand(MessagesConfig messagesConfig, PlayerDatabase database, int pageSize)
     {
-        _commandResults = commandResults;
+        super(messagesConfig.NoPermission);
+        _commandResults = messagesConfig.CommandResults.List;
         _database = database;
         _pageSize = pageSize;
     }

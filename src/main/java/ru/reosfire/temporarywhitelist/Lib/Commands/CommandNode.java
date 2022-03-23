@@ -5,14 +5,17 @@ import org.bukkit.command.*;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class CommandNode implements CommandExecutor, TabCompleter
 {
-    public static String noPermissionMessage = "You can't do that!";
+    private final String _noPermissionMessage;
     private List<CommandNode> _children = null;
 
-    public CommandNode()
+    public CommandNode(String noPermission)
     {
+        _noPermissionMessage = noPermission;
+
         Class<? extends CommandNode> currentExtendedClass = this.getClass();
         Class<?>[] declaredClasses = currentExtendedClass.getDeclaredClasses();
         for (Class<?> declaredClass : declaredClasses)
@@ -35,9 +38,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         }
     }
 
-    public CommandNode(PluginCommand command)
+    public CommandNode(PluginCommand command, String noPermission)
     {
-        this();
+        this(noPermission);
         Register(command);
     }
 
@@ -68,7 +71,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
                 }
             }
         }
-        if (!executorFound) return execute(sender, args);
+        if (!executorFound) return execute(sender, args, isAsync());
         return lastExecutionResult;
     }
 
@@ -111,13 +114,15 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         _children.add(child);
     }
 
-    protected String getName()
+    private boolean execute(CommandSender sender, String[] args, boolean async)
     {
-        CommandName annotation = this.getClass().getAnnotation(CommandName.class);
-        if (annotation == null) return null;
-        return annotation.value();
+        if (async)
+        {
+            CompletableFuture.runAsync(() -> execute(sender, args));
+            return true;
+        }
+        return execute(sender, args);
     }
-
     protected abstract boolean execute(CommandSender sender, String[] args);
 
     protected List<String> completeTab(String[] args)
@@ -125,16 +130,27 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         return new ArrayList<>();
     }
 
+    protected String getName()
+    {
+        CommandName annotation = this.getClass().getAnnotation(CommandName.class);
+        if (annotation == null) return null;
+        return annotation.value();
+    }
     protected String getPermission()
     {
         CommandPermission annotation = this.getClass().getAnnotation(CommandPermission.class);
         if (annotation == null) return null;
         return annotation.value();
     }
+    private boolean isAsync()
+    {
+        ExecuteAsync annotation = this.getClass().getAnnotation(ExecuteAsync.class);
+        return  annotation != null;
+    }
 
     protected void noPermissionAction(CommandSender sender)
     {
-        sender.sendMessage(noPermissionMessage);
+        sender.sendMessage(_noPermissionMessage);
     }
 
     public final void Register(PluginCommand command)
