@@ -16,8 +16,7 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
@@ -97,7 +96,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         EventsListener eventsListener = new EventsListener(_messages, _database, this);
         getServer().getPluginManager().registerEvents(eventsListener, this);
 
-        _enabled = _configuration.getBoolean("Enabled");
+        _enabled = GetEnabledInFile();
         if (_enabled)
         {
             getLogger().info("Enabling...");
@@ -167,11 +166,11 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public boolean Enable() throws IOException, InvalidConfigurationException
+    public boolean Enable() throws IOException
     {
         if (_enabled) return false;
 
-        SetEnabledInConfiguration(true);
+        SetEnabledInFile(true);
         _enabled = true;
         return true;
     }
@@ -190,27 +189,50 @@ public final class TemporaryWhiteList extends JavaPlugin
         }, 0, _configuration.SubscriptionEndCheckTicks);
     }
 
-    public boolean Disable() throws IOException, InvalidConfigurationException
+    public boolean Disable() throws IOException
     {
         if (!_enabled) return false;
 
         _kickerTask.cancel();
 
-        SetEnabledInConfiguration(false);
+        SetEnabledInFile(false);
         _enabled = false;
 
         return true;
     }
 
-    private void SetEnabledInConfiguration(boolean enabled) throws IOException, InvalidConfigurationException
+    private void SetEnabledInFile(boolean enabled) throws IOException
     {
-        File configFile = new File(this.getDataFolder(), "config.yml");
-        YamlConfiguration yamlConfiguration = new YamlConfiguration();
-        yamlConfiguration.load(configFile);
+        File configFile = new File(this.getDataFolder(), "enabled.txt");
+        if (!configFile.exists()) configFile.createNewFile();
 
-        if (enabled == yamlConfiguration.getBoolean("Enabled")) return;
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile)))
+        {
+            writer.write(enabled ? "true" : "false");
+        }
 
-        yamlConfiguration.save(configFile);
         _enabled = enabled;
+    }
+
+    private boolean GetEnabledInFile()
+    {
+        try
+        {
+            File configFile = new File(this.getDataFolder(), "enabled.txt");
+            if (!configFile.exists())
+            {
+                SetEnabledInFile(true);
+                return true;
+            }
+            try(BufferedReader reader = new BufferedReader(new FileReader(configFile)))
+            {
+                return reader.readLine().equals("true");
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return true;
+        }
     }
 }
