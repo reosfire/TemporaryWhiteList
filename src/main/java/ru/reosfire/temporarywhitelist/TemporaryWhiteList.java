@@ -18,7 +18,6 @@ import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
