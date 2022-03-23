@@ -73,4 +73,9 @@ public class PlayerData
     {
         return Objects.hash(Name, Permanent, StartTime, TimeAmount);
     }
+
+    public boolean CanJoin()
+    {
+        return Permanent || !isTimedOut();
+    }
 }

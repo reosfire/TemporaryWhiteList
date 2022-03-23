@@ -12,6 +12,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 
 import java.util.Collection;
+import java.util.List;
 
 @CommandName("list")
 @CommandPermission("TemporaryWhitelist.Administrate.List")
@@ -33,7 +34,11 @@ public class ListCommand extends CommandNode
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length > 1) _commandResults.Usage.Send(sender);
+        if (args.length > 1)
+        {
+            _commandResults.Usage.Send(sender);
+            return true;
+        }
         int page = 1;
         if (args.length == 1)
         {
@@ -48,7 +53,7 @@ public class ListCommand extends CommandNode
             }
         }
 
-        Collection<PlayerData> players = _database.AllList();
+        List<PlayerData> players = _database.ActiveList();
         int totalPages = CeilDivide(players.size(), _pageSize);
 
         if (page < 1 || page > totalPages)
@@ -59,19 +64,18 @@ public class ListCommand extends CommandNode
 
         _commandResults.Header.Send(sender);
 
-        int sent = 0;
-        int i = -1;
-        for (PlayerData playerData : players)
+        int pageEnd = _pageSize * page;
+        int pageStart = pageEnd - _pageSize;
+        for (int i = pageStart; i < pageEnd; i++)
         {
-            i++;
-            if (i < _pageSize * (page - 1)) continue;
-            if (i >= _pageSize * page) break;
-            _commandResults.PlayerFormat.Send(sender,
-                    new Replacement("{player}", playerData.Name),
-                    new Replacement("{number}", Integer.toString(i + 1)));
-            sent++;
+            if (i < players.size())
+            {
+                _commandResults.PlayerFormat.Send(sender,
+                        new Replacement("{player}", players.get(i).Name),
+                        new Replacement("{number}", Integer.toString(i + 1)));
+            }
+            else sender.sendMessage("");
         }
-        while (sent++ < _pageSize) sender.sendMessage("");
 
         int previousPage = Math.max(page - 1, 1);
         int nextPage = Math.min(page + 1, totalPages);

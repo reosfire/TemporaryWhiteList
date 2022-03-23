@@ -39,9 +39,7 @@ public class PlayerDatabase
     {
         PlayerData playerData = getPlayerData(name);
         if (playerData == null) return false;
-        if (playerData.Permanent) return true;
-
-        return !playerData.isTimedOut();
+        return playerData.CanJoin();
     }
 
     public CompletableFuture<Boolean> Add(String name, long addedTime)
@@ -96,9 +94,8 @@ public class PlayerDatabase
 
         for (PlayerData playerData : AllList())
         {
-            if (CanJoin(playerData.Name)) result.add(playerData);
+            if (playerData.CanJoin()) result.add(playerData);
         }
-
         return result;
     }
 
