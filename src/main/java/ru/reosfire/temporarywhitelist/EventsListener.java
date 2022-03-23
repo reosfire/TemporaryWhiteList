@@ -32,6 +32,8 @@ public class EventsListener implements Listener
         if (_database.CanJoin(event.getName())) return;
         if (player.isOp()) return;
 
+        if (player.hasPlayedBefore() && player.getPlayer().hasPermission("TemporaryWhitelist.Bypass")) return;
+
         String message = String.join("\n", Text.Colorize(player, _messages.Kick.Connecting));
         event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, message);
     }

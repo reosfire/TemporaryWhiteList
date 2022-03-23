@@ -8,3 +8,27 @@ softdepend:
   - PlaceholderAPI
 commands:
   twl: {}
+permissions:
+  'TemporaryWhitelist.Bypass':
+    description: "Not whitelisted players with this permission can join."
+
+  'TemporaryWhitelist.Administrate.Add':
+    description: "Add player to whitelist"
+  'TemporaryWhitelist.Administrate.Set':
+    description: "Set player whitelist status"
+  'TemporaryWhitelist.Administrate.Remove':
+    description: "Remove player from whitelist"
+
+  'TemporaryWhitelist.Administrate.List':
+    description: "View whitelist"
+  'TemporaryWhitelist.Administrate.CheckOther':
+    description: "Check whitelist info about other player."
+
+  'TemporaryWhitelist.CheckSelf':
+    description: "Check whitelist info"
+    default: true
+
+  'TemporaryWhitelist.Administrate.Reload':
+    description: "Reload plugin"
+  'TemporaryWhitelist.Administrate.EnableDisable':
+    description: "Enable/disable plugin"

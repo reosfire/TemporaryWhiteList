@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @CommandName("set")
-@CommandPermission("TemporaryWhiteList.Set")
+@CommandPermission("TemporaryWhitelist.Administrate.Set")
 @ExecuteAsync
 public class SetCommand extends CommandNode
 {

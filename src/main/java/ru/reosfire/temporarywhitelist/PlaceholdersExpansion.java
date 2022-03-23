@@ -76,7 +76,7 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
 
         if (params.equals("start_time")) return _timeConverter.DateTimeToString(playerData.StartTime);
         if (params.equals("left_time")) return _timeConverter.DurationToString(playerData.TimeLeft());
-        if (params.equals("end_time")) return _timeConverter.DateTimeToString(playerData.StartTime);
+        if (params.equals("end_time")) return _timeConverter.DateTimeToString(playerData.EndTime());
         if (params.equals("permanent")) return Boolean.toString(playerData.Permanent);
 
         return super.onRequest(player, params);

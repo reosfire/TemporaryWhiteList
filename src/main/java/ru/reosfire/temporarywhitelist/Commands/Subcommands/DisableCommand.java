@@ -9,7 +9,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 @CommandName("disable")
-@CommandPermission("TemporaryWhiteList.Administrate.Disable")
+@CommandPermission("TemporaryWhitelist.Administrate.EnableDisable")
 public class DisableCommand extends CommandNode
 {
     private final TemporaryWhiteList _pluginInstance;

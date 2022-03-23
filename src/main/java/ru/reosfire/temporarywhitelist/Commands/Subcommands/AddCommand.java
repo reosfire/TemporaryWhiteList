@@ -6,10 +6,7 @@ import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
-import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
-import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
-import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
-import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
+import ru.reosfire.temporarywhitelist.Lib.Commands.*;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
@@ -17,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 @CommandName("add")
-@CommandPermission("TemporaryWhiteList.Add")
+@CommandPermission("TemporaryWhitelist.Administrate.Add")
 @ExecuteAsync
 public class AddCommand extends CommandNode
 {

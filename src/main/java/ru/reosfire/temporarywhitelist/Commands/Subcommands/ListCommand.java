@@ -14,7 +14,7 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import java.util.Collection;
 
 @CommandName("list")
-@CommandPermission("TemporaryWhiteList.Administrate.List")
+@CommandPermission("TemporaryWhitelist.Administrate.List")
 @ExecuteAsync
 public class ListCommand extends CommandNode
 {

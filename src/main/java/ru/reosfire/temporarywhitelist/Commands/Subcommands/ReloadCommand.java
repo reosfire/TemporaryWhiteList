@@ -9,7 +9,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 @CommandName("reload")
-@CommandPermission("TemporaryWhiteList.Administrate.Reload")
+@CommandPermission("TemporaryWhitelist.Administrate.Reload")
 public class ReloadCommand extends CommandNode
 {
     private final TemporaryWhiteList _pluginInstance;

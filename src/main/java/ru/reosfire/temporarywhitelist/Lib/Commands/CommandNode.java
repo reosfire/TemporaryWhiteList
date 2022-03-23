@@ -71,7 +71,8 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
                 }
             }
         }
-        if (!executorFound) return execute(sender, args, isAsync());
+        if (!executorFound && (getArgsCount() < 0 || getArgsCount() == args.length))
+            return execute(sender, args, isAsync());
         return lastExecutionResult;
     }
 
@@ -146,6 +147,12 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
     {
         ExecuteAsync annotation = this.getClass().getAnnotation(ExecuteAsync.class);
         return  annotation != null;
+    }
+    private int getArgsCount()
+    {
+        ArgsCount annotation = this.getClass().getAnnotation(ArgsCount.class);
+        if (annotation == null) return -1;
+        return annotation.value();
     }
 
     protected void noPermissionAction(CommandSender sender)

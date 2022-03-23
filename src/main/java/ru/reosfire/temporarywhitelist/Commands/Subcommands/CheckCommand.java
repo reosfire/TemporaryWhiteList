@@ -17,7 +17,7 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 import java.util.ArrayList;
 
 @CommandName("check")
-@CommandPermission("TemporaryWhiteList.Check")
+@CommandPermission("TemporaryWhitelist.CheckSelf")
 @ExecuteAsync
 public class CheckCommand extends CommandNode
 {
@@ -43,7 +43,7 @@ public class CheckCommand extends CommandNode
         }
         else if (args.length == 1)
         {
-            if (!sender.hasPermission("WMWhiteList.Check.Other")) noPermissionAction(sender);
+            if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther")) noPermissionAction(sender);
             else SendInfo(sender, args[0]);
         }
         else _commandResults.Usage.Send(sender);
@@ -75,6 +75,8 @@ public class CheckCommand extends CommandNode
     @Override
     public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
     {
+        if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther"))
+            return super.onTabComplete(sender, command, alias, args);
         if (args.length == 1)
         {
             ArrayList<String> result = new ArrayList<>();
