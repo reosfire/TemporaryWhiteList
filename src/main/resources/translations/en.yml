@@ -219,3 +219,10 @@ CommandResults:
       - Content: "&aWhitelist successfully reloaded"
     Error:
       - Content: "&cError while reloading whitelist"
+
+  Twl:
+    Usage:
+      - Content: "&cPlease use correct subcommand:"
+      - Content: " • add / set / remove"
+      - Content: " • list / check"
+      - Content: " • enable / disable / reload"

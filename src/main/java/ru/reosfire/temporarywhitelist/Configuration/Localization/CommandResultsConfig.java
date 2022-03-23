@@ -6,6 +6,7 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 public class CommandResultsConfig extends YamlConfig
 {
+    public final TwlCommandResultsConfig Twl;
     public final AddCommandResultsConfig Add;
     public final SetCommandResultsConfig Set;
     public final RemoveCommandResultsConfig Remove;
@@ -19,6 +20,7 @@ public class CommandResultsConfig extends YamlConfig
     {
         super(configurationSection);
 
+        Twl = new TwlCommandResultsConfig(getSection("Twl"));
         Add = new AddCommandResultsConfig(getSection("Add"));
         Set = new SetCommandResultsConfig(getSection("Set"));
         Remove = new RemoveCommandResultsConfig(getSection("Remove"));
