@@ -197,3 +197,25 @@ CommandResults:
           Hover:
             Action: SHOW_TEXT
             Value: "&bNext page"
+
+  Enable:
+    Success:
+      - Content: "&aWhitelist successfully enabled"
+    NothingChanged:
+      - Content: "&7Whitelist already enabled"
+    Error:
+      - Content: "&cError while enabling whitelist"
+
+  Disable:
+    Success:
+      - Content: "&aWhitelist successfully disabled"
+    NothingChanged:
+      - Content: "&7Whitelist already disabled"
+    Error:
+      - Content: "&cError while disabling whitelist"
+
+  Reload:
+    Success:
+      - Content: "&aWhitelist successfully reloaded"
+    Error:
+      - Content: "&cError while reloading whitelist"

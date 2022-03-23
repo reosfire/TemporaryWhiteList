@@ -1,6 +1,7 @@
 package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 
 import org.bukkit.command.CommandSender;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ReloadCommandResultsConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
@@ -12,18 +13,27 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 public class ReloadCommand extends CommandNode
 {
     private final TemporaryWhiteList _pluginInstance;
+    private final ReloadCommandResultsConfig _commandResults;
 
     public ReloadCommand(MessagesConfig messagesConfig, TemporaryWhiteList pluginInstance)
     {
         super(messagesConfig.NoPermission);
+        _commandResults = messagesConfig.CommandResults.Reload;
         _pluginInstance = pluginInstance;
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        _pluginInstance.Load();
-        sender.sendMessage("reloaded");
+        try
+        {
+            _pluginInstance.Load();
+            _commandResults.Success.Send(sender);
+        }
+        catch (Exception e)
+        {
+            _commandResults.Error.Send(sender);
+        }
         return true;
     }
 }

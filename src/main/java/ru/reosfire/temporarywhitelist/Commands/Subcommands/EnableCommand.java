@@ -1,6 +1,7 @@
 package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 
 import org.bukkit.command.CommandSender;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.EnableCommandResultsConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
@@ -12,10 +13,12 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 public class EnableCommand extends CommandNode
 {
     private final TemporaryWhiteList _pluginInstance;
+    private final EnableCommandResultsConfig _commandResults;
 
     public EnableCommand(MessagesConfig messagesConfig, TemporaryWhiteList pluginInstance)
     {
         super(messagesConfig.NoPermission);
+        _commandResults = messagesConfig.CommandResults.Enable;
         _pluginInstance = pluginInstance;
     }
 
@@ -24,12 +27,12 @@ public class EnableCommand extends CommandNode
     {
         try
         {
-            _pluginInstance.Enable();
-            sender.sendMessage("enabled");
+            if (_pluginInstance.Enable()) _commandResults.Success.Send(sender);
+            else _commandResults.NothingChanged.Send(sender);
         }
         catch (Exception e)
         {
-            sender.sendMessage("Error! Watch console");
+            _commandResults.Error.Send(sender);
             e.printStackTrace();
         }
         return true;

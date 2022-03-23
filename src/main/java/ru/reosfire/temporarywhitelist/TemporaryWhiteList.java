@@ -168,11 +168,13 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public void Enable() throws IOException, InvalidConfigurationException
+    public boolean Enable() throws IOException, InvalidConfigurationException
     {
-        if (_enabled) return;
+        if (_enabled) return false;
 
         SetEnabledInConfiguration(true);
+        _enabled = true;
+        return true;
     }
 
     private void RunKickerTask()
@@ -189,13 +191,16 @@ public final class TemporaryWhiteList extends JavaPlugin
         }, 0, _configuration.SubscriptionEndCheckTicks);
     }
 
-    public void Disable() throws IOException, InvalidConfigurationException
+    public boolean Disable() throws IOException, InvalidConfigurationException
     {
-        if (!_enabled) return;
-
-        SetEnabledInConfiguration(false);
+        if (!_enabled) return false;
 
         _kickerTask.cancel();
+
+        SetEnabledInConfiguration(false);
+        _enabled = false;
+
+        return true;
     }
 
     private void SetEnabledInConfiguration(boolean enabled) throws IOException, InvalidConfigurationException
