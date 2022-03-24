@@ -89,7 +89,7 @@ public class SqlDataProvider implements IDataProvider
         {
             ResultSet player = _sqlConnection.Select(_configuration.SqlTable, AllColumns, new Where("Player",
                     Comparer.Equal, playerName));
-            if (player.isAfterLast()) return null;
+            if (!player.next()) return null;
             return new PlayerData(player);
         }
         catch (Exception e)

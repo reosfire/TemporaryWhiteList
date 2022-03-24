@@ -62,12 +62,12 @@ public class PlaceholdersExpansion extends PlaceholderExpansion
                     _messages.WhiteListDisabledStatus;
         }
 
-        if (player == null) return null;
+        if (player == null) return "";
         PlayerData playerData = _database.getPlayerData(player.getName());
+        if (playerData == null) return _messages.PlayerStatuses.Undefined;
 
         if (params.equals("player_status"))
         {
-            if (playerData == null) return _messages.PlayerStatuses.Undefined;
             if (playerData.Permanent) return _messages.PlayerStatuses.NeverEnd;
             long timeLeft = playerData.TimeLeft();
             if (timeLeft < 0) return _messages.PlayerStatuses.Ended;
