@@ -5,21 +5,26 @@ import org.apache.commons.lang.NullArgumentException;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 public class PlayerDatabase
 {
     private final IDataProvider _provider;
     private final Map<String, PlayerData> _playersData = new ConcurrentSkipListMap<>();
+    private final Map<String, Long> _lastRefresh = new ConcurrentHashMap<>();
+    private final long _refreshInterval;
 
-    public PlayerDatabase(IDataProvider provider)
+    public PlayerDatabase(IDataProvider provider, long refreshInterval)
     {
         _provider = provider;
+        _refreshInterval = refreshInterval;
         LoadAll();
     }
 
     public PlayerData getPlayerData(String name)
     {
+        TryRefreshPlayer(name);
         return _playersData.get(name);
     }
 
@@ -27,7 +32,7 @@ public class PlayerDatabase
     {
         if (playerData == null) throw new NullArgumentException("playerName");
 
-        RefreshPlayer(playerData.Name);
+        TryRefreshPlayer(playerData.Name);
 
         PlayerData oldData = getPlayerData(playerData.Name);
         if (oldData != null && oldData.isSame(playerData)) return CompletableFuture.completedFuture(false);
@@ -83,7 +88,7 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> Remove(String name)
     {
-        RefreshPlayer(name);
+        TryRefreshPlayer(name);
         if (!_playersData.containsKey(name)) return CompletableFuture.completedFuture(false);
         return _provider.Remove(name).thenRun(() -> _playersData.remove(name)).thenApply(res -> true);
     }
@@ -106,16 +111,26 @@ public class PlayerDatabase
 
     private void LoadAll()
     {
+        long nowTime = Instant.now().getEpochSecond();
+        _playersData.clear();
+        _lastRefresh.clear();
         for (PlayerData playerData : _provider.GetAll())
         {
             _playersData.put(playerData.Name, playerData);
+            _lastRefresh.put(playerData.Name, nowTime);
         }
     }
 
-    public void RefreshPlayer(String name)
+    private void TryRefreshPlayer(String name)
     {
+        long nowTime = Instant.now().getEpochSecond();
+        long timePassed = nowTime - _lastRefresh.getOrDefault(name, nowTime);
+        if (timePassed < _refreshInterval) return;
+
         PlayerData actualData = _provider.Get(name);
-        if (actualData == null) return;
-        _playersData.put(name, actualData);
+        if (actualData == null) _playersData.remove(name);
+        else _playersData.put(name, actualData);
+
+        _lastRefresh.put(name, nowTime);
     }
 }

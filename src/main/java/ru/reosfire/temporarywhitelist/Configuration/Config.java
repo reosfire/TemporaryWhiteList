@@ -8,6 +8,7 @@ public class Config extends YamlConfig
 {
     public final String DataFile;
     public final int SubscriptionEndCheckTicks;
+    public final long RefreshAfter;
     public final String DataProvider;
     public final SqlConfiguration SqlConfiguration;
     public final String SqlTable;
@@ -22,6 +23,7 @@ public class Config extends YamlConfig
 
         DataFile = getString("DataFile");
         SubscriptionEndCheckTicks = getInt("SubscriptionEndCheckTicks");
+        RefreshAfter = getLong("RefreshAfter");
         DataProvider = getString("DataProvider");
         SqlConfiguration = new SqlConfiguration(getSection("Mysql"));
         SqlTable = getString("Mysql.Table");

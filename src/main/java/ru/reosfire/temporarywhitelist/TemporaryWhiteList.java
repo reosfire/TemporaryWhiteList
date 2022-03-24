@@ -148,7 +148,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
         else throw new RuntimeException("cannot load data provider of type: " + config.DataProvider);
 
-        return new PlayerDatabase(dataProvider);
+        return new PlayerDatabase(dataProvider, config.RefreshAfter);
     }
 
     private YamlDataProvider LoadYamlData()

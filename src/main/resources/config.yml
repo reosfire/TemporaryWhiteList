@@ -1,9 +1,17 @@
+#Time between checks if online player become not whitelisted in ticks
 SubscriptionEndCheckTicks: 100
+#Time to pass between actual-data requests per player. in seconds
+#Negative values disables any updates (recommended when data in DataProvider can't be changed)
+#0 value enforce plugin to always get actual data (not recommended)
+RefreshAfter: 60
 
 #yaml mysql
 DataProvider: yaml
 
+#File name to store data about players when DataProvider: yaml
 DataFile: "data.yml"
+
+#Data to connect to database when DataProvider: mysql
 Mysql:
   Ip: 111.222.333.444
   User: "root"
@@ -18,9 +26,12 @@ Mysql:
   FailOverReadOnly: false
   MaxReconnects: 2
 
+#File in `translations` folder to use
 Translation: "en.yml"
 
+#Players per list when used /twl list command
 ListPageSize: 4
 
+#Time formats used in placeholders
 DurationFormat: "&bdd 'days' &cHH 'hours' &emm 'minutes' &ass 'seconds'"
 DateTimeFormat: "[dd MM yyyy] hh:mm:ss"
