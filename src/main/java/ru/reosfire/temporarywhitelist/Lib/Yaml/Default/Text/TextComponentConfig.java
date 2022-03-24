@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text;
+package ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Text;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -9,13 +9,12 @@ import org.bukkit.entity.Player;
 import ru.reosfire.temporarywhitelist.Lib.Text.IColorizer;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
-import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.WrapperConfig;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 import java.util.List;
 import java.util.Locale;
 
-public class TextComponentConfig extends YamlConfig implements WrapperConfig<TextComponent>
+public class TextComponentConfig extends YamlConfig
 {
     public final String TextContent;
     public final List<TextComponentConfig> Content;
@@ -65,20 +64,9 @@ public class TextComponentConfig extends YamlConfig implements WrapperConfig<Tex
         else receiver.sendMessage(toString(replacements));
     }
 
-    public TextComponent Unwrap(Replacement... replacements)
-    {
-        return Unwrap(s -> Replacement.Set(s, replacements));
-    }
-
     public TextComponent Unwrap(OfflinePlayer player, Replacement... replacements)
     {
         return Unwrap(s -> Text.Colorize(player, s, replacements));
-    }
-
-    @Override
-    public TextComponent Unwrap()
-    {
-        return Unwrap(s -> s);
     }
 
     public TextComponent Unwrap(IColorizer colorizer)

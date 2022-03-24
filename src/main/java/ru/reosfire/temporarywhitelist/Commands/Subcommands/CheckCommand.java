@@ -3,6 +3,7 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.CheckCommandResultsConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
@@ -73,7 +74,7 @@ public class CheckCommand extends CommandNode
     }
 
     @Override
-    public java.util.List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+    public java.util.List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
     {
         if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther"))
             return super.onTabComplete(sender, command, alias, args);

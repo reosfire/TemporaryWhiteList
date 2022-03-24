@@ -2,7 +2,7 @@ package ru.reosfire.temporarywhitelist.Lib.Sql.Selection;
 
 public class Where implements ISelectionAttribute
 {
-    private StringBuilder result = new StringBuilder("WHERE ");
+    private final StringBuilder result = new StringBuilder("WHERE ");
 
     public Where(String var, Comparer comparer, String value)
     {

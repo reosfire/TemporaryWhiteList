@@ -1,9 +1,11 @@
 package ru.reosfire.temporarywhitelist.Lib.Commands;
 
 import org.bukkit.command.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -38,14 +40,8 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         }
     }
 
-    public CommandNode(PluginCommand command, String noPermission)
-    {
-        this(noPermission);
-        Register(command);
-    }
-
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args)
     {
         String requiredPermission = getPermission();
         if (!(sender instanceof ConsoleCommandSender) && requiredPermission != null && !sender.hasPermission(requiredPermission))
@@ -77,7 +73,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
     {
         String requiredPermission = getPermission();
         if (!(sender instanceof ConsoleCommandSender) && requiredPermission != null && !sender.hasPermission(requiredPermission) && !sender.isOp())
@@ -128,7 +124,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
 
     protected List<String> completeTab(String[] args)
     {
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     protected String getName()

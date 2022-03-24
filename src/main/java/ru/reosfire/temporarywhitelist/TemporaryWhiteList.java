@@ -15,6 +15,7 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
 
 import java.io.*;
+import java.util.Objects;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
@@ -23,24 +24,11 @@ public final class TemporaryWhiteList extends JavaPlugin
     private Config _configuration;
     private PlayerDatabase _database;
     private MessagesConfig _messages;
-    private TimeConverter _timeConverter;
     private PlaceholdersExpansion _placeholdersExpansion;
 
     public Config getConfiguration()
     {
         return _configuration;
-    }
-    public PlayerDatabase getDatabase()
-    {
-        return _database;
-    }
-    public MessagesConfig getMessages()
-    {
-        return _messages;
-    }
-    public TimeConverter getTimeConverter()
-    {
-        return _timeConverter;
     }
 
     private BukkitTask _kickerTask;
@@ -68,14 +56,14 @@ public final class TemporaryWhiteList extends JavaPlugin
         localizationsLoader.CopyDefaultTranslations();
         _messages = localizationsLoader.LoadMessages();
 
-        _timeConverter = new TimeConverter(_configuration);
+        TimeConverter _timeConverter = new TimeConverter(_configuration);
 
         getLogger().info("Loading data...");
         _database = LoadDatabase(_configuration);
 
         getLogger().info("Loading commands...");
         TwlCommand commands = new TwlCommand(_messages, _database, this, _timeConverter, _configuration);
-        commands.Register(getCommand("twl"));
+        commands.Register(Objects.requireNonNull(getCommand("twl")));
 
         getLogger().info("Loading placeholders...");
         Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");

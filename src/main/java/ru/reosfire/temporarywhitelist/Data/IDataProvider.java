@@ -1,7 +1,5 @@
 package ru.reosfire.temporarywhitelist.Data;
 
-import org.bukkit.OfflinePlayer;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

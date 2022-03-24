@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text;
+package ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Text;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;

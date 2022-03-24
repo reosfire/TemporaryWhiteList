@@ -34,6 +34,20 @@ public class YamlDataProvider implements IDataProvider
         }
     }
 
+    private ConfigurationSection getPlayersSection()
+    {
+        ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
+        if (playersSection == null) playersSection = _yamlDataConfig.createSection("Players");
+        return playersSection;
+    }
+    private ConfigurationSection getPlayerSection(String player)
+    {
+        ConfigurationSection playersSection = getPlayersSection();
+        ConfigurationSection playerSection = playersSection.getConfigurationSection(player);
+        if (playerSection == null) playerSection = playersSection.createSection(player);
+        return playerSection;
+    }
+
     @Override
     public CompletableFuture<Void> Update(PlayerData playerData)
     {
@@ -41,11 +55,7 @@ public class YamlDataProvider implements IDataProvider
         {
             ReloadYaml();
 
-            ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
-
-            ConfigurationSection playerSection = playersSection.getConfigurationSection(playerData.Name);
-            if (playerSection == null) playerSection = playersSection.createSection(playerData.Name);
-
+            ConfigurationSection playerSection = getPlayerSection(playerData.Name);
 
             playerSection.set("lastStartTime", playerData.StartTime);
             playerSection.set("permanent", playerData.Permanent);
@@ -69,8 +79,7 @@ public class YamlDataProvider implements IDataProvider
         {
             ReloadYaml();
 
-            ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
-            playersSection.set(playerName, null);
+            getPlayersSection().set(playerName, null);
 
             try
             {
@@ -88,8 +97,7 @@ public class YamlDataProvider implements IDataProvider
     {
         ReloadYaml();
 
-        ConfigurationSection players = _yamlDataConfig.getConfigurationSection("Players");
-        ConfigurationSection player = players.getConfigurationSection(playerName);
+        ConfigurationSection player = getPlayersSection().getConfigurationSection(playerName);
         if (player == null) return null;
         return new PlayerData(player);
     }
@@ -101,11 +109,10 @@ public class YamlDataProvider implements IDataProvider
 
         ArrayList<PlayerData> result = new ArrayList<>();
 
-        ConfigurationSection players = _yamlDataConfig.getConfigurationSection("Players");
+        ConfigurationSection players = getPlayersSection();
         for (String player : players.getKeys(false))
         {
-            ConfigurationSection playerSection = players.getConfigurationSection(player);
-            result.add(new PlayerData(playerSection));
+            result.add(new PlayerData(getPlayerSection(player)));
         }
 
         return result;

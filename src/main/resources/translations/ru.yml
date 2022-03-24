@@ -42,7 +42,7 @@ CommandResults:
               Value: "/twl add "
 
     AlreadyPermanent:
-      - Content: "&7Игрок {player} уженаходится в вайтлисте"
+      - Content: "&7Игрок {player} уже находится в вайтлисте"
 
     IncorrectTime:
       - Content: "&cНекорректное время. Используйте: <кол-во>:<единица времени>,<кол-во>:<единица времени>..."

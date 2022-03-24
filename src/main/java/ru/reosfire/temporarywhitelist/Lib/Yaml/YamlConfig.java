@@ -8,8 +8,8 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
-import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text.MultilineMessage;
-import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Wrappers.Text.TextComponentConfig;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Text.MultilineMessage;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Text.TextComponentConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,11 +21,6 @@ import java.util.Map;
 
 public abstract class YamlConfig
 {
-    public static <T extends YamlConfig> T Create(ConfigurationSection configurationSection, IConfigCreator<T> creator)
-    {
-        return creator.Create(configurationSection);
-    }
-
     public static YamlConfiguration LoadOrCreate(String resultFileName, String defaultConfigurationResource,
                                                  JavaPlugin plugin) throws IOException, InvalidConfigurationException
     {
@@ -81,18 +76,6 @@ public abstract class YamlConfig
     {
         if (configurationSection == null) throw new NullArgumentException("configurationSection");
         this._configurationSection = configurationSection;
-    }
-
-    public <T extends YamlConfig> List<T> getNestedConfigs(IConfigCreator<T> creator, String path)
-    {
-        ArrayList<T> result = new ArrayList<>();
-        ConfigurationSection configsParent = getSection(path, null);
-        if (configsParent == null) return result;
-        return getNestedConfigs(creator, configsParent);
-    }
-    public <T extends YamlConfig> List<T> getNestedConfigs(IConfigCreator<T> creator)
-    {
-        return getNestedConfigs(creator, getSection());
     }
     private  <T extends YamlConfig> List<T> getNestedConfigs(IConfigCreator<T> creator, ConfigurationSection section)
     {
@@ -158,36 +141,10 @@ public abstract class YamlConfig
     {
         return _configurationSection.getLong(path);
     }
-    public long getLong(String path, long def)
-    {
-        return _configurationSection.getLong(path, def);
-    }
-
-    public boolean getBoolean(String path)
-    {
-        return _configurationSection.getBoolean(path);
-    }
 
     public boolean getBoolean(String path, boolean def)
     {
         return _configurationSection.getBoolean(path, def);
-    }
-
-    public double getDouble(String path)
-    {
-        return _configurationSection.getDouble(path);
-    }
-
-    public double getDouble(String path, double def)
-    {
-        return _configurationSection.getDouble(path, def);
-    }
-
-    public float getFloat(String path, float def)
-    {
-        String string = getString(path);
-        if (string == null) return def;
-        return Float.parseFloat(string);
     }
 
     public ConfigurationSection getSection(String path)
@@ -206,7 +163,7 @@ public abstract class YamlConfig
     public List<String> getStringList(String path)
     {
         List<String> stringList = _configurationSection.getStringList(path);
-        if (stringList == null || stringList.isEmpty())
+        if (stringList.isEmpty())
         {
             String string = getString(path);
             if (string != null)
@@ -219,68 +176,12 @@ public abstract class YamlConfig
         return stringList;
     }
 
-    public List<String> getStringList(String path, List<String> def)
-    {
-        List<String> stringList = getStringList(path);
-        if (stringList == null || stringList.isEmpty()) return def;
-        return stringList;
-    }
-
     public List<String> getColoredStringList(String path)
     {
         return Text.SetColors(getStringList(path));
     }
 
-    public List<String> getColoredStringList(String path, List<String> def)
-    {
-        return Text.SetColors(getStringList(path, def));
-    }
 
-    public List<Integer> getIntegerList(String path)
-    {
-        List<String> stringList = getStringList(path);
-        if (stringList == null) return null;
-        List<Integer> result = new ArrayList<>();
-        for (String s : stringList)
-        {
-            result.add(Integer.parseInt(s));
-        }
-        return result;
-    }
-
-    public List<Integer> getIntegerList(String path, List<Integer> def)
-    {
-        List<String> stringList = getStringList(path);
-        if (stringList == null) return def;
-        List<Integer> result = new ArrayList<>();
-        for (String s : stringList)
-        {
-            result.add(Integer.parseInt(s));
-        }
-        return result.isEmpty() ? def : result;
-    }
-
-    public byte getByte(String path)
-    {
-        return (byte) getInt(path);
-    }
-
-    public byte getByte(String path, byte def)
-    {
-        try
-        {
-            return (byte) getInt(path, def);
-        }
-        catch (Exception e)
-        {
-            return def;
-        }
-    }
-
-    public boolean isSection(String path)
-    {
-        return getSection().isConfigurationSection(path);
-    }
     public boolean isList(String path)
     {
         return getSection().isList(path);
