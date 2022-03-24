@@ -161,7 +161,7 @@ CommandResults:
             Value: "Click to auto complete"
           Click:
             Action: SUGGEST_COMMAND
-            Value: "/twl check "
+            Value: "/twl list "
     IncorrectPage:
       - Content: "&cIncorrect page"
     Header:

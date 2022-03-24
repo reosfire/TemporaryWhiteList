@@ -4,14 +4,227 @@ Kick:
     - "&bВы не в вайтлисте!"
     - "&b------------------"
   WhilePlaying:
-    - "&b--------------------------"
-    - "&bВаша подписка закончилась!"
-    - "&b--------------------------"
-NoPermission: "&cНедостаточно прав."
+    - "&b-------------------------"
+    - "&bВы теперь не в вайтлисте!"
+    - "&b-------------------------"
+NoPermission: "&cНедостаточно прав!"
 WhiteListStatuses:
   Enabled: "&c&lвключен"
   Disabled: "&a&lвыключен"
-DataBase:
-  PlayerUndefined: "Игрок не найден"
-  SubscribeNeverEnd: "никогда не закончится."
-  SubscribeEnd: "уже закончилась."
+PlayerStatuses:
+  Undefined: "Информация не найдена"
+  NeverEnd: "никогда не закончится"
+  Ended: "закончилась"
+
+CommandResults:
+  Add:
+    Usage:
+      - Content: "&cНеправильное кол-во аргументов"
+
+      - Content:
+          - Content: "&c   Используйте: "
+          - Content: "&b&n/twl add <nick> permanent"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl add "
+
+      - Content:
+          - Content: "&c   или:  "
+          - Content: "&b&n/twl add <nick> <time>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl add "
+
+    AlreadyPermanent:
+      - Content: "&7Игрок {player} уженаходится в вайтлисте"
+
+    IncorrectTime:
+      - Content: "&cНекорректное время. Используйте: <кол-во>:<единица времени>,<кол-во>:<единица времени>..."
+      - Content: "&cДоступные единицы времени: s,m,h,d,y"
+    Success:
+      - Content: "&a{player} добавлен в вайтлист на {time}."
+    Error:
+      - Content: "&cОшибка во время добавления игрока {player} в вайтлист на {time}."
+
+  Set:
+    Usage:
+      - Content: "&cНеправильное кол-во аргументов"
+
+      - Content:
+          - Content: "&c   Используйте: "
+          - Content: "&b&n/twl set <nick> permanent"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl set "
+
+      - Content:
+          - Content: "&c   или:  "
+          - Content: "&b&n/twl set <nick> <time>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl set "
+    NothingChanged:
+      - Content: "&7Ничего не изменилось о {player}."
+    Success:
+      - Content: "&a{player} теперь в вайтлисте на {time}."
+    Error:
+      - Content: "&cОшибка во время выполнения команды /set {player} {time}."
+    IncorrectTime:
+      - Content: "&cНекорректное время. Используйте: <кол-во>:<единица времени>,<кол-во>:<единица времени>..."
+      - Content: "&cДоступные единицы времени: s,m,h,d,y"
+
+  Remove:
+    Usage:
+      - Content: "&cНеправильное кол-во аргументов"
+      - Content:
+          - Content: "&cИспользуйте: "
+          - Content: "&b&n/twl remove <nick>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl remove "
+    NothingChanged:
+      - Content: "&7{player} и так не в вайт листе."
+    Success:
+      - Content: "&a{player} успешно удален."
+    Error:
+      - Content: "&cОшибка во время удаления {player} из вайтлиста."
+
+  Check:
+    Permanent:
+      'True': "Да"
+      'False': "Нет"
+    Usage:
+      - Content: "&cНеправильное кол-во аргументов"
+
+      - Content:
+          - Content: "&c   Используйте: "
+          - Content: "&b&n/twl check"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите чтобы использовать"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl check"
+
+      - Content:
+          - Content: "&c   или:  "
+          - Content: "&b&n/twl check <nick>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl check "
+    Format:
+      - Content: "&l------  &b{player}&f&l  ------"
+      - Content: " • Навсегда: &b{permanent}"
+      - Content: " • Осталось: &b{time_left}"
+      - Content: " • Добавлен: &b{started}"
+      - Content: " • Будет удален: &b{will_end}"
+    ForPlayerOnly:
+      - Content: "&cТолько для игроков"
+    InfoNotFound:
+      - Content: "&cИнформация о игроке не найдена"
+
+  List:
+    Usage:
+      - Content: "&cНеправильное кол-во аргументов"
+
+      - Content:
+          - Content: "&c   Используйте: "
+          - Content: "&b&n/twl list"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите чтобы использовать"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl list"
+
+      - Content:
+          - Content: "&c   или:  "
+          - Content: "&b&n/twl list <page>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Нажмите для автодополнения команды"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl list "
+    IncorrectPage:
+      - Content: "&cНекорректная страница"
+    Header:
+      - Content: "&l--------  &bList&f&l  --------"
+    PlayerFormat:
+      - Content: " {number}) &b{player}"
+        Click:
+          Action: RUN_COMMAND
+          Value: "/twl check {player}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "&bНажмите чтобы увидеть подробную информацию"
+    PagesSwitch:
+      - Content:
+          - Content: "    <---    "
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl list {previous_page}"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "&bПредыдущая страница"
+          - Content: "   {page}/{total_pages}   "
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl list {page}"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "&bВвести страницу"
+          - Content: "    --->"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl list {next_page}"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "&bСледующая страница"
+
+  Enable:
+    Success:
+      - Content: "&aВайтлист успешно включен"
+    NothingChanged:
+      - Content: "&7Вайтлист и так был включен"
+    Error:
+      - Content: "&cОшибка во время включения вайтлиста"
+
+  Disable:
+    Success:
+      - Content: "&aВайтлист успешно выключен"
+    NothingChanged:
+      - Content: "&7Вайтлист и так был выключен"
+    Error:
+      - Content: "&cОшибка во время выключения вайтлиста"
+
+  Reload:
+    Success:
+      - Content: "&aВайтлист успешно перезагружен"
+    Error:
+      - Content: "&cОшибка во время перезагрузки вайтлиста"
+
+  Twl:
+    Usage:
+      - Content: "&cИспользуйте подкомманду из списка ниже:"
+      - Content: " • add / set / remove"
+      - Content: " • list / check"
+      - Content: " • enable / disable / reload"
