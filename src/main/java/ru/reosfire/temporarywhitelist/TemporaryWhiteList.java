@@ -94,11 +94,10 @@ public final class TemporaryWhiteList extends JavaPlugin
         EventsListener eventsListener = new EventsListener(_messages, _database, this);
         getServer().getPluginManager().registerEvents(eventsListener, this);
 
-        _enabled = GetEnabledInFile();
-        if (_enabled)
+        if (GetEnabledInFile())
         {
             getLogger().info("Enabling...");
-            RunKickerTask();
+            Enable();
         }
 
         _loaded = true;
@@ -164,11 +163,12 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public boolean Enable() throws IOException
+    public boolean Enable()
     {
         if (_enabled) return false;
 
         SetEnabledInFile(true);
+        RunKickerTask();
         _enabled = true;
         return true;
     }
@@ -179,34 +179,40 @@ public final class TemporaryWhiteList extends JavaPlugin
         {
             for (Player player : getServer().getOnlinePlayers())
             {
-                if (!_database.CanJoin(player.getName()) && !player.isOp())
-                {
-                    player.kickPlayer(String.join("\n", Text.Colorize(player, _messages.Kick.WhilePlaying)));
-                }
+                if (_database.CanJoin(player.getName())) continue;
+                if (player.isOp()) continue;
+
+                player.kickPlayer(String.join("\n", Text.Colorize(player, _messages.Kick.WhilePlaying)));
             }
         }, 0, _configuration.SubscriptionEndCheckTicks);
     }
 
-    public boolean Disable() throws IOException
+    public boolean Disable()
     {
         if (!_enabled) return false;
 
-        _kickerTask.cancel();
-
         SetEnabledInFile(false);
+        _kickerTask.cancel();
         _enabled = false;
-
         return true;
     }
 
-    private void SetEnabledInFile(boolean enabled) throws IOException
+    private void SetEnabledInFile(boolean enabled)
     {
         File configFile = new File(this.getDataFolder(), "enabled.txt");
-        if (!configFile.exists()) configFile.createNewFile();
 
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile)))
+        try
         {
-            writer.write(enabled ? "true" : "false");
+            if (!configFile.exists()) configFile.createNewFile();
+
+            try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile)))
+            {
+                writer.write(enabled ? "true" : "false");
+            }
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Error while setting enabled in file", e);
         }
 
         _enabled = enabled;
