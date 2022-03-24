@@ -181,6 +181,7 @@ public final class TemporaryWhiteList extends JavaPlugin
             {
                 if (_database.CanJoin(player.getName())) continue;
                 if (player.isOp()) continue;
+                if (player.hasPermission("TemporaryWhitelist.Bypass")) continue;
 
                 player.kickPlayer(String.join("\n", Text.Colorize(player, _messages.Kick.WhilePlaying)));
             }

@@ -1,11 +1,10 @@
 package ru.reosfire.temporarywhitelist;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
@@ -24,15 +23,16 @@ public class EventsListener implements Listener
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onJoin(AsyncPlayerPreLoginEvent event)
+    public void onLogin(PlayerLoginEvent event)
     {
         if (!_pluginInstance.isWhiteListEnabled()) return;
-        OfflinePlayer player = Bukkit.getOfflinePlayer(event.getUniqueId());
+        Player player = event.getPlayer();
 
-        if (_database.CanJoin(event.getName())) return;
+        if (_database.CanJoin(player.getName())) return;
         if (player.isOp()) return;
+        if (player.hasPermission("TemporaryWhitelist.Bypass")) return;
 
         String message = String.join("\n", Text.Colorize(player, _messages.Kick.Connecting));
-        event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_WHITELIST, message);
+        event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, message);
     }
 }

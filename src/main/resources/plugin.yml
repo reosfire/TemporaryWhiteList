@@ -10,6 +10,9 @@ softdepend:
 commands:
   twl: {}
 permissions:
+  'TemporaryWhitelist.Bypass':
+    description: "Not whitelisted players with this permission can join."
+
   'TemporaryWhitelist.Administrate.Add':
     description: "Add player to whitelist"
   'TemporaryWhitelist.Administrate.Set':
