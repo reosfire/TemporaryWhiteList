@@ -11,7 +11,6 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 
-import java.util.Collection;
 import java.util.List;
 
 @CommandName("list")
