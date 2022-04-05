@@ -42,6 +42,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     public void onEnable()
     {
         Load();
+        new Metrics(this, 14858);
     }
 
     public void Load()
