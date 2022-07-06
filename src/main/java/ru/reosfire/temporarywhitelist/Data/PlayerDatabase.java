@@ -14,16 +14,20 @@ public class PlayerDatabase
     private final Map<String, PlayerData> _playersData = new ConcurrentSkipListMap<>();
     private final Map<String, Long> _lastRefresh = new ConcurrentHashMap<>();
     private final long _refreshInterval;
+    private final boolean _ignoreCase;
 
-    public PlayerDatabase(IDataProvider provider, long refreshInterval)
+    public PlayerDatabase(IDataProvider provider, long refreshInterval, boolean ignoreCase)
     {
         _provider = provider;
         _refreshInterval = refreshInterval;
+        _ignoreCase = ignoreCase;
         LoadAll();
     }
 
     public PlayerData getPlayerData(String name)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         TryRefreshPlayer(name);
         return _playersData.get(name);
     }
@@ -32,16 +36,22 @@ public class PlayerDatabase
     {
         if (playerData == null) throw new NullArgumentException("playerName");
 
-        TryRefreshPlayer(playerData.Name);
+        String name = playerData.Name;
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
-        PlayerData oldData = getPlayerData(playerData.Name);
+        TryRefreshPlayer(name);
+
+        PlayerData oldData = getPlayerData(name);
         if (oldData != null && oldData.isSame(playerData)) return CompletableFuture.completedFuture(false);
-        return _provider.Update(playerData).thenRun(() -> _playersData.put(playerData.Name, playerData))
+        String finalName = name;
+        return _provider.Update(playerData).thenRun(() -> _playersData.put(finalName, playerData))
                         .thenApply(res -> true);
     }
 
     public boolean CanJoin(String name)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         PlayerData playerData = getPlayerData(name);
         if (playerData == null) return false;
         return playerData.CanJoin();
@@ -49,6 +59,8 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> Add(String name, long addedTime)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         PlayerData playerData = getPlayerData(name);
 
         long startTime = Instant.now().getEpochSecond();
@@ -71,6 +83,8 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> SetPermanent(String name)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         long startTime = Instant.now().getEpochSecond();
         long timeAmount = 0;
         boolean permanent = true;
@@ -80,6 +94,8 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> Set(String name, long time)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         long startTime = Instant.now().getEpochSecond();
         boolean permanent = false;
 
@@ -88,9 +104,12 @@ public class PlayerDatabase
 
     public CompletableFuture<Boolean> Remove(String name)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         TryRefreshPlayer(name);
         if (!_playersData.containsKey(name)) return CompletableFuture.completedFuture(false);
-        return _provider.Remove(name).thenRun(() -> _playersData.remove(name)).thenApply(res -> true);
+        String finalName = name;
+        return _provider.Remove(name).thenRun(() -> _playersData.remove(finalName)).thenApply(res -> true);
     }
 
     public List<PlayerData> ActiveList()
@@ -116,13 +135,18 @@ public class PlayerDatabase
         _lastRefresh.clear();
         for (PlayerData playerData : _provider.GetAll())
         {
-            _playersData.put(playerData.Name, playerData);
-            _lastRefresh.put(playerData.Name, nowTime);
+            String name = playerData.Name;
+            if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
+            _playersData.put(name, playerData);
+            _lastRefresh.put(name, nowTime);
         }
     }
 
     private void TryRefreshPlayer(String name)
     {
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+
         long nowTime = Instant.now().getEpochSecond();
         long timePassed = nowTime - _lastRefresh.getOrDefault(name, nowTime);
         if (timePassed < _refreshInterval) return;

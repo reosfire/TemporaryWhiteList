@@ -5,6 +5,9 @@ SubscriptionEndCheckTicks: 100
 #0 value enforce plugin to always get actual data (not recommended)
 RefreshAfter: 60
 
+#ignore case in nicknames
+IgnoreCase: false
+
 #yaml mysql
 DataProvider: yaml
 
@@ -29,7 +32,7 @@ Mysql:
 #File in `translations` folder to use
 Translation: "en.yml"
 
-#Players per list when used /twl list command
+#Players per page when used /twl list command
 ListPageSize: 4
 
 #Time formats used in placeholders
