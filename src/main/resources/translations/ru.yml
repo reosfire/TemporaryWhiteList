@@ -225,6 +225,6 @@ CommandResults:
   Twl:
     Usage:
       - Content: "&cИспользуйте подкомманду из списка ниже:"
-      - Content: " • add / set / remove"
+      - Content: " • add / set / remove / import"
       - Content: " • list / check"
       - Content: " • enable / disable / reload"
