@@ -33,3 +33,6 @@ permissions:
     description: "Reload plugin"
   'TemporaryWhitelist.Administrate.EnableDisable':
     description: "Enable/disable plugin"
+
+  'TemporaryWhitelist.Administrate.Import':
+    description: "Import data from other files"

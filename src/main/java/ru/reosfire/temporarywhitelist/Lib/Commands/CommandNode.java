@@ -1,5 +1,6 @@
 package ru.reosfire.temporarywhitelist.Lib.Commands;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -115,7 +116,15 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
     {
         if (async)
         {
-            CompletableFuture.runAsync(() -> execute(sender, args));
+            CompletableFuture.runAsync(() -> execute(sender, args)).handle((res, ex) ->
+            {
+                if (ex != null)
+                {
+                    sender.sendMessage(ChatColor.RED + "Unhandled exception while executing async command. More info in console");
+                    ex.printStackTrace();
+                }
+                return null;
+            });
             return true;
         }
         return execute(sender, args);
@@ -142,7 +151,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
     private boolean isAsync()
     {
         ExecuteAsync annotation = this.getClass().getAnnotation(ExecuteAsync.class);
-        return  annotation != null;
+        return annotation != null;
     }
     private int getArgsCount()
     {

@@ -27,6 +27,7 @@ public class TwlCommand extends CommandNode
         AddChildren(new RemoveCommand(messages, dataProvider));
         AddChildren(new CheckCommand(messages, dataProvider, timeConverter));
         AddChildren(new ListCommand(messages, dataProvider, config.ListPageSize));
+        AddChildren(new ImportCommand(messages, dataProvider, timeConverter));
         AddChildren(new EnableCommand(messages, pluginInstance));
         AddChildren(new DisableCommand(messages, pluginInstance));
         AddChildren(new ReloadCommand(messages, pluginInstance));
