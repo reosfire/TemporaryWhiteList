@@ -4,6 +4,8 @@ main: ru.reosfire.temporarywhitelist.TemporaryWhiteList
 prefix: TWL
 authors: [ reosfire ]
 description: Nicknames based temporary white list
+website: https://www.spigotmc.org/resources/temporarywhitelist.99914
+load: STARTUP
 api-version: 1.18
 softdepend:
   - PlaceholderAPI
