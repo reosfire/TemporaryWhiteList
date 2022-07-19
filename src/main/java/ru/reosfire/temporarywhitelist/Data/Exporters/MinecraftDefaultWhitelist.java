@@ -11,13 +11,13 @@ import java.util.List;
 public class MinecraftDefaultWhitelist implements IDataExporter
 {
     @Override
-    public List<PlayerData> GetAll()
+    public List<PlayerData> GetAll(long defaultTimeAmount, boolean defaultPermanent)
     {
         long currentTime = Instant.now().getEpochSecond();
         ArrayList<PlayerData> result = new ArrayList<>();
         for (OfflinePlayer player : Bukkit.getWhitelistedPlayers())
         {
-            result.add(new PlayerData(player.getName(), currentTime,0, true));
+            result.add(new PlayerData(player.getName(), currentTime, defaultTimeAmount, defaultPermanent));
         }
 
         return result;
