@@ -28,7 +28,7 @@ public class ImportCommand extends CommandNode
         _commandResults = plugin.getMessages().CommandResults.Import;
 
         AddChildren(new MinecraftDefaultImportCommand(plugin.getMessages(), database, timeConverter));
-        AddChildren(new SelfYamlImportCommand(plugin, database, timeConverter));
+        AddChildren(new SelfYamlImportCommand(plugin, database));
     }
 
     @Override

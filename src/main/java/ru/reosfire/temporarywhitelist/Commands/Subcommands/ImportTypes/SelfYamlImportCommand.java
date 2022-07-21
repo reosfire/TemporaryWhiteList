@@ -15,15 +15,13 @@ public class SelfYamlImportCommand extends CommandNode
     private final TemporaryWhiteList _plugin;
     private final ImportCommandResultConfig _commandResults;
     private final PlayerDatabase _database;
-    private final TimeConverter _timeConverter;
 
-    public SelfYamlImportCommand(TemporaryWhiteList plugin, PlayerDatabase database, TimeConverter timeConverter)
+    public SelfYamlImportCommand(TemporaryWhiteList plugin, PlayerDatabase database)
     {
         super(plugin.getMessages().NoPermission);
         _plugin = plugin;
         _commandResults = plugin.getMessages().CommandResults.Import;
         _database = database;
-        _timeConverter = timeConverter;
     }
 
     @Override

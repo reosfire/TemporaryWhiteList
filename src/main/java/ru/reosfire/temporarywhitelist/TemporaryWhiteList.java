@@ -52,6 +52,15 @@ public final class TemporaryWhiteList extends JavaPlugin
         Metrics metrics = new Metrics(this, 14858);
         metrics.addCustomChart(new SingleLineChart("whitelisted_players", () -> _database.AllList().size()));
         metrics.addCustomChart(new SimplePie("whitelisted_players_per_server", () -> Integer.toString(_database.AllList().size())));
+
+        UpdateChecker updateChecker = new UpdateChecker(this, 99914);
+        updateChecker.getVersion(version ->
+        {
+            if (version.equalsIgnoreCase(getDescription().getVersion()))
+                getLogger().info("Plugin is up to date");
+            else
+                getLogger().info("There is a new update available: https://www.spigotmc.org/resources/temporarywhitelist.99914");
+        });
     }
 
     public void Load()
