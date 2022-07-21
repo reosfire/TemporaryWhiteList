@@ -2,6 +2,7 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes.MinecraftDefaultImportCommand;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes.SelfYamlImportCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.AddCommandResultsConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
@@ -12,6 +13,7 @@ import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 @CommandName("import")
@@ -20,12 +22,13 @@ public class ImportCommand extends CommandNode
 {
     private final ImportCommandResultConfig _commandResults;
 
-    public ImportCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public ImportCommand(TemporaryWhiteList plugin, PlayerDatabase database, TimeConverter timeConverter)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Import;
+        super(plugin.getMessages().NoPermission);
+        _commandResults = plugin.getMessages().CommandResults.Import;
 
-        AddChildren(new MinecraftDefaultImportCommand(messagesConfig, database, timeConverter));
+        AddChildren(new MinecraftDefaultImportCommand(plugin.getMessages(), database, timeConverter));
+        AddChildren(new SelfYamlImportCommand(plugin, database, timeConverter));
     }
 
     @Override

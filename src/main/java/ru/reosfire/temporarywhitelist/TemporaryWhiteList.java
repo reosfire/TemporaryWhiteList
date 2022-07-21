@@ -33,6 +33,10 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         return _configuration;
     }
+    public MessagesConfig getMessages()
+    {
+        return _messages;
+    }
 
     private BukkitTask _kickerTask;
 
@@ -124,7 +128,7 @@ public final class TemporaryWhiteList extends JavaPlugin
 
         if (config.DataProvider.equals("yaml"))
         {
-            dataProvider = LoadYamlData();
+            dataProvider = LoadYamlData(config);
         }
         else if (config.DataProvider.equals("mysql"))
         {
@@ -136,7 +140,7 @@ public final class TemporaryWhiteList extends JavaPlugin
             {
                 e.printStackTrace();
                 Bukkit.getLogger().warning("Can't connect to mysql data base! This plugin will use yaml data storing");
-                dataProvider = LoadYamlData();
+                dataProvider = LoadYamlData(config);
             }
         }
         else throw new RuntimeException("cannot load data provider of type: " + config.DataProvider);
@@ -144,11 +148,11 @@ public final class TemporaryWhiteList extends JavaPlugin
         return new PlayerDatabase(dataProvider, config.RefreshAfter, config.IgnoreCase);
     }
 
-    private YamlDataProvider LoadYamlData()
+    public YamlDataProvider LoadYamlData(Config config)
     {
         try
         {
-            return new YamlDataProvider(YamlConfig.LoadOrCreateFile("data.yml", this));
+            return new YamlDataProvider(YamlConfig.LoadOrCreateFile(config.DataFile, this));
         }
         catch (Exception e)
         {

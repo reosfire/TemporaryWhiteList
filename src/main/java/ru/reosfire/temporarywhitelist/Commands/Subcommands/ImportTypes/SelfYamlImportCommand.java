@@ -2,25 +2,26 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
-import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
-import ru.reosfire.temporarywhitelist.Data.Exporters.MinecraftDefaultWhitelist;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
-@CommandName("minecraft")
-public class MinecraftDefaultImportCommand extends CommandNode
+@CommandName("self-yaml")
+public class SelfYamlImportCommand extends CommandNode
 {
+    private final TemporaryWhiteList _plugin;
     private final ImportCommandResultConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
 
-    public MinecraftDefaultImportCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public SelfYamlImportCommand(TemporaryWhiteList plugin, PlayerDatabase database, TimeConverter timeConverter)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Import;
+        super(plugin.getMessages().NoPermission);
+        _plugin = plugin;
+        _commandResults = plugin.getMessages().CommandResults.Import;
         _database = database;
         _timeConverter = timeConverter;
     }
@@ -28,36 +29,14 @@ public class MinecraftDefaultImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length != 2)
+        if (args.length != 0)
         {
             _commandResults.MinecraftDefaultUsage.Send(sender);
             return true;
         }
 
-        long defaultTime;
-        try
-        {
-            defaultTime = _timeConverter.ParseTime(args[0]);
-        }
-        catch (Exception e)
-        {
-            _commandResults.IncorrectTime.Send(sender);
-            return true;
-        }
 
-        boolean defaultPermanent;
-        try
-        {
-            defaultPermanent = Boolean.parseBoolean(args[1]);
-        }
-        catch (Exception e)
-        {
-            _commandResults.IncorrectPermanent.Send(sender);
-            return true;
-        }
-
-
-        IDataExporter dataExporter = new MinecraftDefaultWhitelist(defaultTime, defaultPermanent);
+        IDataExporter dataExporter = _plugin.LoadYamlData(_plugin.getConfiguration());
         dataExporter.ExportToAsync(_database).handle((res, ex) ->
         {
             if (ex == null) _commandResults.Success.Send(sender, res.getReplacements());
