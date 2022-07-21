@@ -49,8 +49,12 @@ public class PlayerDatabase
         PlayerData oldData = getPlayerData(name);
         if (oldData != null && oldData.isSame(playerData)) return CompletableFuture.completedFuture(false);
         String finalName = name;
-        return _provider.Update(playerData).thenRun(() -> _playersData.put(finalName, playerData))
-                        .thenApply(res -> true);
+        return _provider.Update(playerData).handle((res, ex) ->
+        {
+            if (ex != null) throw new RuntimeException(ex);
+            _playersData.put(finalName, playerData);
+            return true;
+        });
     }
 
     public boolean CanJoin(String name)

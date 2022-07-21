@@ -2,7 +2,6 @@ package ru.reosfire.temporarywhitelist.Data;
 
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface IDataProvider extends IDataExporter

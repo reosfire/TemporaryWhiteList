@@ -216,6 +216,19 @@ CommandResults:
       - Content: "&cInvalid permanent. Use true or false"
     Success:
       - Content: "&aData successfully imported"
+
+      - Content: " • Found: &b{found_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{found}"
+      - Content: " • Without error: &b{without_error_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{without_error}"
+      - Content: " • With error: &b{with_error_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{with_error}"
     Error:
       - Content: "&cError while importing"
 
@@ -231,7 +244,7 @@ CommandResults:
               Value: "Click to auto complete"
             Click:
               Action: SUGGEST_COMMAND
-              Value: "/twl import minecraft 0 true"
+              Value: "/twl import minecraft 0:s true"
 
 
   Enable:

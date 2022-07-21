@@ -9,6 +9,8 @@ public class ImportCommandResultConfig extends YamlConfig
     public final MultilineMessage Usage;
     public final MultilineMessage IncorrectTime;
     public final MultilineMessage IncorrectPermanent;
+    public final MultilineMessage Success;
+    public final MultilineMessage Error;
     public final MultilineMessage MinecraftDefaultUsage;
 
     public ImportCommandResultConfig(ConfigurationSection configurationSection)
@@ -17,6 +19,8 @@ public class ImportCommandResultConfig extends YamlConfig
         Usage = getMultilineMessage("Usage");
         IncorrectTime = getMultilineMessage("IncorrectTime");
         IncorrectPermanent = getMultilineMessage("IncorrectPermanent");
+        Success = getMultilineMessage("Success");
+        Error = getMultilineMessage("Error");
         MinecraftDefaultUsage = getMultilineMessage("MinecraftDefault.Usage");
     }
 }

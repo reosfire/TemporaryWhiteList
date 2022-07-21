@@ -53,21 +53,24 @@ public class YamlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
-            ReloadYaml();
-
-            ConfigurationSection playerSection = getPlayerSection(playerData.Name);
-
-            playerSection.set("lastStartTime", playerData.StartTime);
-            playerSection.set("permanent", playerData.Permanent);
-            playerSection.set("timeAmount", playerData.TimeAmount);
-
-            try
+            synchronized (_yamlDataFile)
             {
-                _yamlDataConfig.save(_yamlDataFile);
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException("Error while updating player data for: " + playerData.Name, e);
+                ReloadYaml();
+
+                ConfigurationSection playerSection = getPlayerSection(playerData.Name);
+
+                playerSection.set("lastStartTime", playerData.StartTime);
+                playerSection.set("permanent", playerData.Permanent);
+                playerSection.set("timeAmount", playerData.TimeAmount);
+
+                try
+                {
+                    _yamlDataConfig.save(_yamlDataFile);
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException("Error while updating player data for: " + playerData.Name, e);
+                }
             }
         });
     }

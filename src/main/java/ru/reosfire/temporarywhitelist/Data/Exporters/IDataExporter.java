@@ -1,5 +1,6 @@
 package ru.reosfire.temporarywhitelist.Data.Exporters;
 
+import ru.reosfire.temporarywhitelist.Data.ExportResult;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
@@ -7,7 +8,6 @@ import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public interface IDataExporter
 {
@@ -33,14 +33,7 @@ public interface IDataExporter
             });
         }
 
-        try
-        {
-            CompletableFuture.allOf(updates).wait();
-        }
-        catch (InterruptedException e)
-        {
-            e.printStackTrace();
-        }
+        CompletableFuture.allOf(updates).join();
         return exportResult;
     }
 
