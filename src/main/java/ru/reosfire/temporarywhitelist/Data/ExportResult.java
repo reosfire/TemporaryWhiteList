@@ -2,16 +2,19 @@ package ru.reosfire.temporarywhitelist.Data;
 
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 
+import java.time.Instant;
 import java.util.*;
 
 public class ExportResult
 {
     public final List<PlayerData> Found;
     public final Set<PlayerData> WithoutError = new HashSet<>();
+    public final long StartTime;
 
     public ExportResult(List<PlayerData> found)
     {
         Found = found;
+        StartTime = Instant.now().toEpochMilli();
     }
 
     public int WithErrorCount()
@@ -43,7 +46,13 @@ public class ExportResult
                     new Replacement("{found}", PlayersDataToString(Found)),
                     new Replacement("{with_error}", PlayersDataToString(WithError())),
                     new Replacement("{without_error}", PlayersDataToString(WithoutError)),
+                    new Replacement("{time_elapsed}", TimeElapsedToString(getElapsed())),
             };
+    }
+
+    public long getElapsed()
+    {
+        return Instant.now().toEpochMilli() - StartTime;
     }
 
     private static String PlayersDataToString(Collection<PlayerData> players)
@@ -56,5 +65,12 @@ public class ExportResult
         if (result.length() > 0) result.deleteCharAt(result.length() - 1);
 
         return result.toString();
+    }
+
+    private static String TimeElapsedToString(long ms)
+    {
+        long seconds = ms / 1000;
+        long milliSeconds = ms % 1000;
+        return seconds + "s " + milliSeconds + "ms";
     }
 }

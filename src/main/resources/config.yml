@@ -1,7 +1,7 @@
 #Time between checks if online player become not whitelisted in ticks
 SubscriptionEndCheckTicks: 100
 #Time to pass between actual-data requests per player. in seconds
-#Negative values disables any updates (recommended when data in DataProvider can't be changed)
+#Negative values disables any updates (recommended when data in DataProvider can't be changed by anything other than this plugin)
 #0 value enforce plugin to always get actual data (not recommended)
 RefreshAfter: 60
 

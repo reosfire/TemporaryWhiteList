@@ -134,6 +134,7 @@ public class PlayerDatabase
 
     public Collection<PlayerData> AllList()
     {
+        TryRefreshAll();
         return _playersData.values();
     }
 
@@ -154,16 +155,29 @@ public class PlayerDatabase
 
     private void TryRefreshPlayer(String name)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (_refreshInterval < 0) return;
 
         long nowTime = Instant.now().getEpochSecond();
-        long timePassed = nowTime - _lastRefresh.getOrDefault(name, nowTime);
-        if (timePassed < _refreshInterval) return;
+        if (_refreshInterval != 0)
+        {
+            long timePassed = nowTime - _lastRefresh.getOrDefault(name, 0L);
+            if (timePassed < _refreshInterval) return;
+        }
+
+        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
         PlayerData actualData = _provider.Get(name);
         if (actualData == null) _playersData.remove(name);
         else _playersData.put(name, actualData);
 
         _lastRefresh.put(name, nowTime);
+    }
+
+    private void TryRefreshAll()
+    {
+        for (String refresh : new ArrayList<>(_playersData.keySet()))
+        {
+            TryRefreshPlayer(refresh);
+        }
     }
 }
