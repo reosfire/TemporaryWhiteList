@@ -16,6 +16,11 @@ public class PlayerDatabase
     private final long _refreshInterval;
     private final boolean _ignoreCase;
 
+    public IDataProvider getProvider()
+    {
+        return _provider;
+    }
+
     public PlayerDatabase(IDataProvider provider, long refreshInterval, boolean ignoreCase)
     {
         _provider = provider;

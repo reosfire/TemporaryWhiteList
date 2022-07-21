@@ -32,11 +32,7 @@ public class ImportCommand extends CommandNode
     protected boolean execute(CommandSender sender, String[] args)
     {
         IDataExporter dataExporter = new MinecraftDefaultWhitelist(0, true);
-
-        for (PlayerData playerData : dataExporter.GetAll())
-        {
-            _database.Update(playerData);
-        }
+        dataExporter.ExportTo(_database);
 
         return false;
     }
