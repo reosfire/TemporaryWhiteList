@@ -2,6 +2,7 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes.MinecraftDefaultImportCommand;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes.SelfSqlImportCommand;
 import ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes.SelfYamlImportCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.AddCommandResultsConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
@@ -29,6 +30,7 @@ public class ImportCommand extends CommandNode
 
         AddChildren(new MinecraftDefaultImportCommand(plugin.getMessages(), database, timeConverter));
         AddChildren(new SelfYamlImportCommand(plugin, database));
+        AddChildren(new SelfSqlImportCommand(plugin, database));
     }
 
     @Override

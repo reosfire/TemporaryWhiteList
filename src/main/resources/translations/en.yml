@@ -212,6 +212,8 @@ CommandResults:
           Click:
             Action: SUGGEST_COMMAND
             Value: "/twl import"
+    ImportFromSelf:
+      - Content: "&cYou can't import from currently used data provider"
     IncorrectTime:
       - Content: "&cInvalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
     IncorrectPermanent:

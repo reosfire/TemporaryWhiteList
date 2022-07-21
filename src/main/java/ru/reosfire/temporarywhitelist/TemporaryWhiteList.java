@@ -170,6 +170,19 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
+    public SqlDataProvider LoadSqlData(Config config)
+    {
+        try
+        {
+            return new SqlDataProvider(config);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException("Error while loading sql database!");
+        }
+    }
+
     public boolean Enable()
     {
         if (_enabled) return false;
