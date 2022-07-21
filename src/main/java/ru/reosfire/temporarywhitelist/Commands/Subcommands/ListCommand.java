@@ -53,6 +53,11 @@ public class ListCommand extends CommandNode
         }
 
         List<PlayerData> players = _database.ActiveList();
+        if (players.size() == 0)
+        {
+            _commandResults.ListIsEmpty.Send(sender);
+            return true;
+        }
         int totalPages = CeilDivide(players.size(), _pageSize);
 
         if (page < 1 || page > totalPages)

@@ -164,6 +164,8 @@ CommandResults:
             Value: "/twl list "
     IncorrectPage:
       - Content: "&cIncorrect page"
+    ListIsEmpty:
+      - Content: "&cList is empty"
     Header:
       - Content: "&l--------  &bList&f&l  --------"
     PlayerFormat:
@@ -215,7 +217,7 @@ CommandResults:
     IncorrectPermanent:
       - Content: "&cInvalid permanent. Use true or false"
     Success:
-      - Content: "&aData successfully imported"
+      - Content: "&aData successfully imported in &b{time_elapsed}"
 
       - Content: " • Found: &b{found_count}"
         Hover:

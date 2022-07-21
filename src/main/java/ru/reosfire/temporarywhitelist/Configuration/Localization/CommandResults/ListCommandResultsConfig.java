@@ -8,6 +8,7 @@ public class ListCommandResultsConfig extends YamlConfig
 {
     public final MultilineMessage Usage;
     public final MultilineMessage IncorrectPage;
+    public final MultilineMessage ListIsEmpty;
     public final MultilineMessage Header;
     public final MultilineMessage PlayerFormat;
     public final MultilineMessage PagesSwitch;
@@ -18,6 +19,7 @@ public class ListCommandResultsConfig extends YamlConfig
 
         Usage = getMultilineMessage("Usage");
         IncorrectPage = getMultilineMessage("IncorrectPage");
+        ListIsEmpty = getMultilineMessage("ListIsEmpty");
         Header = getMultilineMessage("Header");
         PlayerFormat = getMultilineMessage("PlayerFormat");
         PagesSwitch = getMultilineMessage("PagesSwitch");
