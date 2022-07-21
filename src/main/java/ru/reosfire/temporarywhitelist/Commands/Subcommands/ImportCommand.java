@@ -1,7 +1,9 @@
 package ru.reosfire.temporarywhitelist.Commands.Subcommands;
 
 import org.bukkit.command.CommandSender;
+import ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes.MinecraftDefaultImportCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.AddCommandResultsConfig;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 import ru.reosfire.temporarywhitelist.Data.Exporters.MinecraftDefaultWhitelist;
@@ -16,24 +18,20 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 @CommandPermission("TemporaryWhitelist.Administrate.Import")
 public class ImportCommand extends CommandNode
 {
-    private final AddCommandResultsConfig _commandResults;
-    private final PlayerDatabase _database;
-    private final TimeConverter _timeConverter;
+    private final ImportCommandResultConfig _commandResults;
 
     public ImportCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
     {
         super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Add;
-        _database = database;
-        _timeConverter = timeConverter;
+        _commandResults = messagesConfig.CommandResults.Import;
+
+        AddChildren(new MinecraftDefaultImportCommand(messagesConfig, database, timeConverter));
     }
 
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        IDataExporter dataExporter = new MinecraftDefaultWhitelist(0, true);
-        dataExporter.ExportTo(_database);
-
-        return false;
+        _commandResults.Usage.Send(sender);
+        return true;
     }
 }

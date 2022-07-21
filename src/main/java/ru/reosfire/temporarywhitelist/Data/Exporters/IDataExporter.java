@@ -6,32 +6,59 @@ import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface IDataExporter
 {
     List<PlayerData> GetAll();
 
-    default void ExportTo(IDataProvider provider)
+    default ExportResult ExportWith(Function<PlayerData, CompletableFuture<?>> updater)
     {
-        for (PlayerData playerData : GetAll())
+        List<PlayerData> players = GetAll();
+        ExportResult exportResult = new ExportResult(players);
+
+        CompletableFuture<?>[] updates = new CompletableFuture<?>[players.size()];
+
+        for (int i = 0; i < players.size(); i++)
         {
-            provider.Update(playerData);
+            PlayerData playerData = players.get(i);
+            updates[i] = updater.apply(playerData);
+
+            updates[i].handle((res, ex) ->
+            {
+                if (ex == null) exportResult.WithoutError.add(playerData);
+                else ex.printStackTrace();
+                return null;
+            });
         }
-    }
-    default CompletableFuture<Void> ExportToAsync(IDataProvider provider)
-    {
-        return CompletableFuture.runAsync(() -> ExportTo(provider));
+
+        try
+        {
+            CompletableFuture.allOf(updates).wait();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+        return exportResult;
     }
 
-    default void ExportTo(PlayerDatabase database)
+    default ExportResult ExportTo(IDataProvider provider)
     {
-        for (PlayerData playerData : GetAll())
-        {
-            database.Update(playerData);
-        }
+        return ExportWith(provider::Update);
     }
-    default CompletableFuture<Void> ExportToAsync(PlayerDatabase database)
+    default CompletableFuture<ExportResult> ExportToAsync(IDataProvider provider)
     {
-        return CompletableFuture.runAsync(() -> ExportTo(database));
+        return CompletableFuture.supplyAsync(() -> ExportTo(provider));
+    }
+
+    default ExportResult ExportTo(PlayerDatabase database)
+    {
+        return ExportWith(database::Update);
+    }
+    default CompletableFuture<ExportResult> ExportToAsync(PlayerDatabase database)
+    {
+        return CompletableFuture.supplyAsync(() -> ExportTo(database));
     }
 }

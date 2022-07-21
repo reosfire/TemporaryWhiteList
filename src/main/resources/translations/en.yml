@@ -198,6 +198,40 @@ CommandResults:
             Action: SHOW_TEXT
             Value: "&bNext page"
   Import:
+    Usage:
+      - Content: "&cIncorrect arguments count"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl import <type> [type specific arguments]"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl import"
+    IncorrectTime:
+      - Content: "&cInvalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
+    IncorrectPermanent:
+      - Content: "&cInvalid permanent. Use true or false"
+    Success:
+      - Content: "&aData successfully imported"
+    Error:
+      - Content: "&cError while importing"
+
+    MinecraftDefault:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import minecraft <default time> <default permanent>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Click to auto complete"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl import minecraft 0 true"
 
 
   Enable:
