@@ -58,6 +58,8 @@ public class MinecraftDefaultImportCommand extends CommandNode
 
         IDataExporter dataExporter = new MinecraftDefaultWhitelist(defaultTime, defaultPermanent);
         dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
+
+        _commandResults.SuccessfullyStarted.Send(sender);
         return true;
     }
 }

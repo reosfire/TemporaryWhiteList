@@ -41,6 +41,7 @@ public class SelfYamlImportCommand extends CommandNode
 
         IDataExporter dataExporter = _plugin.LoadYamlData(_plugin.getConfiguration());
         dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
+        _commandResults.SuccessfullyStarted.Send(sender);
         return true;
     }
 }

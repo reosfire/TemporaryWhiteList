@@ -12,6 +12,7 @@ public class ImportCommandResultConfig extends YamlConfig
     public final MultilineMessage IncorrectPermanent;
     public final MultilineMessage Success;
     public final MultilineMessage Error;
+    public final MultilineMessage SuccessfullyStarted;
     public final MultilineMessage MinecraftDefaultUsage;
     public final MultilineMessage SelfSqlUsage;
     public final MultilineMessage SelfYamlUsage;
@@ -27,6 +28,7 @@ public class ImportCommandResultConfig extends YamlConfig
         IncorrectPermanent = getMultilineMessage("IncorrectPermanent");
         Success = getMultilineMessage("Success");
         Error = getMultilineMessage("Error");
+        SuccessfullyStarted = getMultilineMessage("SuccessfullyStarted");
         MinecraftDefaultUsage = getMultilineMessage("MinecraftDefault.Usage");
         SelfSqlUsage = getMultilineMessage("SelfSql.Usage");
         SelfYamlUsage = getMultilineMessage("SelfYaml.Usage");

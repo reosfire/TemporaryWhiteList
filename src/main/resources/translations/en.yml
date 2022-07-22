@@ -235,6 +235,8 @@ CommandResults:
           Value: "{with_error}"
     Error:
       - Content: "&cError while importing"
+    SuccessfullyStarted:
+      - Content: "&aImporting successfully started. Wait for results"
 
     MinecraftDefault:
       Usage:

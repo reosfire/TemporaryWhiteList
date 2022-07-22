@@ -62,10 +62,11 @@ public class EasyWhitelistImportCommand extends CommandNode
         {
             IDataExporter dataExporter = new EasyWhitelist(defaultTime, defaultPermanent);
             dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
+            _commandResults.SuccessfullyStarted.Send(sender);
         }
         catch (ReflectionException e)
         {
-
+            _commandResults.EasyWhiteListPluginNotFound.Send(sender);
             e.printStackTrace();
         }
         return true;
