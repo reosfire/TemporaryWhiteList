@@ -86,9 +86,6 @@ public class SetCommand extends CommandNode
                 _database.Set(args[0], time).whenComplete((changed, exception) ->
                         HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
             }
-
-            _database.Set(args[0], time).whenComplete((changed, exception) ->
-                    HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
         }
         return true;
     }
