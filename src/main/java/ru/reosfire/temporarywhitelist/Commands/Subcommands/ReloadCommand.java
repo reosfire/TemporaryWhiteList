@@ -15,10 +15,10 @@ public class ReloadCommand extends CommandNode
     private final TemporaryWhiteList _pluginInstance;
     private final ReloadCommandResultsConfig _commandResults;
 
-    public ReloadCommand(MessagesConfig messagesConfig, TemporaryWhiteList pluginInstance)
+    public ReloadCommand(TemporaryWhiteList pluginInstance)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Reload;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Reload;
         _pluginInstance = pluginInstance;
     }
 

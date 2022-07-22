@@ -16,12 +16,12 @@ public class SelfSqlImportCommand extends CommandNode
     private final ImportCommandResultConfig _commandResults;
     private final PlayerDatabase _database;
 
-    public SelfSqlImportCommand(TemporaryWhiteList plugin, PlayerDatabase database)
+    public SelfSqlImportCommand(TemporaryWhiteList pluginInstance)
     {
-        super(plugin.getMessages().NoPermission);
-        _plugin = plugin;
-        _commandResults = plugin.getMessages().CommandResults.Import;
-        _database = database;
+        super(pluginInstance.getMessages().NoPermission);
+        _plugin = pluginInstance;
+        _commandResults = pluginInstance.getMessages().CommandResults.Import;
+        _database = pluginInstance.getDatabase();
     }
 
     @Override

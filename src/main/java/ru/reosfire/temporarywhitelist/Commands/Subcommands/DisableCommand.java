@@ -15,10 +15,10 @@ public class DisableCommand extends CommandNode
     private final TemporaryWhiteList _pluginInstance;
     private final DisableCommandResultsConfig _commandResults;
 
-    public DisableCommand(MessagesConfig messagesConfig, TemporaryWhiteList pluginInstance)
+    public DisableCommand(TemporaryWhiteList pluginInstance)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Disable;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Disable;
         _pluginInstance = pluginInstance;
     }
 

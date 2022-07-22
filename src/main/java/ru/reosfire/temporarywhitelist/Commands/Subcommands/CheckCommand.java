@@ -13,6 +13,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.ArrayList;
@@ -25,13 +26,19 @@ public class CheckCommand extends CommandNode
     private final CheckCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
+    private final boolean _forceSync;
 
-    public CheckCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public CheckCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Check;
-        _database = database;
-        _timeConverter = timeConverter;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Check;
+        _database = pluginInstance.getDatabase();
+        _timeConverter = pluginInstance.getTimeConverter();
+        _forceSync = forceSync;
+    }
+    public CheckCommand(TemporaryWhiteList pluginInstance)
+    {
+        this(pluginInstance, false);
     }
 
     @Override

@@ -9,6 +9,7 @@ import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.*;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 import java.util.ArrayList;
 
@@ -19,12 +20,18 @@ public class RemoveCommand extends CommandNode
 {
     private final RemoveCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
+    private final boolean _forceSync;
 
-    public RemoveCommand(MessagesConfig messagesConfig, PlayerDatabase database)
+    public RemoveCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Remove;
-        _database = database;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Remove;
+        _database = pluginInstance.getDatabase();
+        _forceSync = forceSync;
+    }
+    public RemoveCommand(TemporaryWhiteList pluginInstance)
+    {
+        this(pluginInstance, false);
     }
 
 

@@ -16,12 +16,12 @@ public class SelfYamlImportCommand extends CommandNode
     private final ImportCommandResultConfig _commandResults;
     private final PlayerDatabase _database;
 
-    public SelfYamlImportCommand(TemporaryWhiteList plugin, PlayerDatabase database)
+    public SelfYamlImportCommand(TemporaryWhiteList pluginInstance)
     {
-        super(plugin.getMessages().NoPermission);
-        _plugin = plugin;
-        _commandResults = plugin.getMessages().CommandResults.Import;
-        _database = database;
+        super(pluginInstance.getMessages().NoPermission);
+        _plugin = pluginInstance;
+        _commandResults = pluginInstance.getMessages().CommandResults.Import;
+        _database = pluginInstance.getDatabase();
     }
 
     @Override

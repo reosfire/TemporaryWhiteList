@@ -15,10 +15,10 @@ public class EnableCommand extends CommandNode
     private final TemporaryWhiteList _pluginInstance;
     private final EnableCommandResultsConfig _commandResults;
 
-    public EnableCommand(MessagesConfig messagesConfig, TemporaryWhiteList pluginInstance)
+    public EnableCommand(TemporaryWhiteList pluginInstance)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Enable;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Enable;
         _pluginInstance = pluginInstance;
     }
 

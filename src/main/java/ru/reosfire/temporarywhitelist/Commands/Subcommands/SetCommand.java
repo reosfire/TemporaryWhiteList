@@ -12,6 +12,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.ArrayList;
@@ -25,13 +26,19 @@ public class SetCommand extends CommandNode
     private final SetCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
+    private final boolean _forceSync;
 
-    public SetCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public SetCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Set;
-        _database = database;
-        _timeConverter = timeConverter;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Set;
+        _database = pluginInstance.getDatabase();
+        _timeConverter = pluginInstance.getTimeConverter();
+        _forceSync = forceSync;
+    }
+    public SetCommand(TemporaryWhiteList pluginInstance)
+    {
+        this(pluginInstance, false);
     }
 
     @Override

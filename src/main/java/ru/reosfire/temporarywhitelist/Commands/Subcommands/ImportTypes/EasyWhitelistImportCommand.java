@@ -8,6 +8,7 @@ import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import javax.management.ReflectionException;
@@ -20,12 +21,12 @@ public class EasyWhitelistImportCommand extends CommandNode
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
 
-    public EasyWhitelistImportCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public EasyWhitelistImportCommand(TemporaryWhiteList pluginInstance)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Import;
-        _database = database;
-        _timeConverter = timeConverter;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Import;
+        _database = pluginInstance.getDatabase();
+        _timeConverter = pluginInstance.getTimeConverter();
     }
 
     @Override

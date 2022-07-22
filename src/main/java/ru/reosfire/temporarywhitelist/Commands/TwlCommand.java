@@ -15,22 +15,21 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 public class TwlCommand extends CommandNode
 {
     private final TwlCommandResultsConfig _commandResults;
-    public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance,
-                      TimeConverter timeConverter)
+    public TwlCommand(TemporaryWhiteList pluginInstance)
     {
-        super(messages.NoPermission);
+        super(pluginInstance.getMessages().NoPermission);
 
-        _commandResults = messages.CommandResults.Twl;
+        _commandResults = pluginInstance.getMessages().CommandResults.Twl;
 
-        AddChildren(new AddCommand(messages, dataProvider, timeConverter));
-        AddChildren(new SetCommand(messages, dataProvider, timeConverter));
-        AddChildren(new RemoveCommand(messages, dataProvider));
-        AddChildren(new CheckCommand(messages, dataProvider, timeConverter));
-        AddChildren(new ListCommand(messages, dataProvider, pluginInstance.getConfiguration().ListPageSize));
-        AddChildren(new ImportCommand(pluginInstance, dataProvider, timeConverter));
-        AddChildren(new EnableCommand(messages, pluginInstance));
-        AddChildren(new DisableCommand(messages, pluginInstance));
-        AddChildren(new ReloadCommand(messages, pluginInstance));
+        AddChildren(new AddCommand(pluginInstance));
+        AddChildren(new SetCommand(pluginInstance));
+        AddChildren(new RemoveCommand(pluginInstance));
+        AddChildren(new CheckCommand(pluginInstance));
+        AddChildren(new ListCommand(pluginInstance));
+        AddChildren(new ImportCommand(pluginInstance));
+        AddChildren(new EnableCommand(pluginInstance));
+        AddChildren(new DisableCommand(pluginInstance));
+        AddChildren(new ReloadCommand(pluginInstance));
     }
 
     @Override

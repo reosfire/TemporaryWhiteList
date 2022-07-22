@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import ru.reosfire.temporarywhitelist.Commands.Sync.TwlSyncCommand;
 import ru.reosfire.temporarywhitelist.Commands.TwlCommand;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
@@ -28,6 +29,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     private PlayerDatabase _database;
     private MessagesConfig _messages;
     private PlaceholdersExpansion _placeholdersExpansion;
+    private TimeConverter _timeConverter;
 
     public Config getConfiguration()
     {
@@ -36,6 +38,14 @@ public final class TemporaryWhiteList extends JavaPlugin
     public MessagesConfig getMessages()
     {
         return _messages;
+    }
+    public PlayerDatabase getDatabase()
+    {
+        return _database;
+    }
+    public TimeConverter getTimeConverter()
+    {
+        return _timeConverter;
     }
 
     private BukkitTask _kickerTask;
@@ -76,15 +86,16 @@ public final class TemporaryWhiteList extends JavaPlugin
         localizationsLoader.CopyDefaultTranslations();
         _messages = localizationsLoader.LoadMessages();
 
-        TimeConverter _timeConverter = new TimeConverter(_configuration);
+        _timeConverter = new TimeConverter(_configuration);
 
         getLogger().info("Loading data...");
         _database = LoadDatabase(_configuration);
 
         getLogger().info("Loading commands...");
-        TwlCommand commands = new TwlCommand(_messages, _database, this, _timeConverter);
+        TwlCommand commands = new TwlCommand(this);
         commands.Register(Objects.requireNonNull(getCommand("twl")));
-        commands.Register(Objects.requireNonNull(getCommand("/twl")));
+        TwlSyncCommand syncCommands = new TwlSyncCommand(this);
+        syncCommands.Register(Objects.requireNonNull(getCommand("twl-sync")));
 
         getLogger().info("Loading placeholders...");
         Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");

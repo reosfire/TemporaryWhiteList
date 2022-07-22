@@ -9,6 +9,7 @@ import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.*;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.ArrayList;
@@ -23,13 +24,19 @@ public class AddCommand extends CommandNode
     private final AddCommandResultsConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
+    private final boolean _forceSync;
 
-    public AddCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public AddCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.Add;
-        _database = database;
-        _timeConverter = timeConverter;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Add;
+        _database = pluginInstance.getDatabase();
+        _timeConverter = pluginInstance.getTimeConverter();
+        _forceSync = forceSync;
+    }
+    public AddCommand(TemporaryWhiteList pluginInstance)
+    {
+        this(pluginInstance, false);
     }
 
     @Override

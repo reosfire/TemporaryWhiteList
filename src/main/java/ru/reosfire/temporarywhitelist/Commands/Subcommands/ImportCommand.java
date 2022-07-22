@@ -24,15 +24,15 @@ public class ImportCommand extends CommandNode
 {
     private final ImportCommandResultConfig _commandResults;
 
-    public ImportCommand(TemporaryWhiteList plugin, PlayerDatabase database, TimeConverter timeConverter)
+    public ImportCommand(TemporaryWhiteList pluginInstance)
     {
-        super(plugin.getMessages().NoPermission);
-        _commandResults = plugin.getMessages().CommandResults.Import;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.Import;
 
-        AddChildren(new MinecraftDefaultImportCommand(plugin.getMessages(), database, timeConverter));
-        AddChildren(new EasyWhitelistImportCommand(plugin.getMessages(), database, timeConverter));
-        AddChildren(new SelfYamlImportCommand(plugin, database));
-        AddChildren(new SelfSqlImportCommand(plugin, database));
+        AddChildren(new MinecraftDefaultImportCommand(pluginInstance));
+        AddChildren(new EasyWhitelistImportCommand(pluginInstance));
+        AddChildren(new SelfYamlImportCommand(pluginInstance));
+        AddChildren(new SelfSqlImportCommand(pluginInstance));
     }
 
     @Override

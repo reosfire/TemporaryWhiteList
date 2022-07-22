@@ -10,6 +10,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandPermission;
 import ru.reosfire.temporarywhitelist.Lib.Commands.ExecuteAsync;
 import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 import java.util.List;
 
@@ -22,12 +23,12 @@ public class ListCommand extends CommandNode
     private final PlayerDatabase _database;
     private final int _pageSize;
 
-    public ListCommand(MessagesConfig messagesConfig, PlayerDatabase database, int pageSize)
+    public ListCommand(TemporaryWhiteList pluginInstance)
     {
-        super(messagesConfig.NoPermission);
-        _commandResults = messagesConfig.CommandResults.List;
-        _database = database;
-        _pageSize = pageSize;
+        super(pluginInstance.getMessages().NoPermission);
+        _commandResults = pluginInstance.getMessages().CommandResults.List;
+        _database = pluginInstance.getDatabase();
+        _pageSize = pluginInstance.getConfiguration().ListPageSize;
     }
 
     @Override
