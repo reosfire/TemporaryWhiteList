@@ -22,24 +22,24 @@ CommandResults:
       - Content: "&cНеправильное кол-во аргументов"
 
       - Content:
-          - Content: "&c   Используйте: "
-          - Content: "&b&n/twl add <nick> permanent"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl add "
+        - Content: "&c   Используйте: "
+        - Content: "&b&n/twl add <nick> permanent"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl add "
 
       - Content:
-          - Content: "&c   или:  "
-          - Content: "&b&n/twl add <nick> <time>"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl add "
+        - Content: "&c   или:  "
+        - Content: "&b&n/twl add <nick> <time>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl add "
 
     AlreadyPermanent:
       - Content: "&7Игрок {player} уже находится в вайтлисте"
@@ -57,24 +57,24 @@ CommandResults:
       - Content: "&cНеправильное кол-во аргументов"
 
       - Content:
-          - Content: "&c   Используйте: "
-          - Content: "&b&n/twl set <nick> permanent"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl set "
+        - Content: "&c   Используйте: "
+        - Content: "&b&n/twl set <nick> permanent"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl set "
 
       - Content:
-          - Content: "&c   или:  "
-          - Content: "&b&n/twl set <nick> <time>"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl set "
+        - Content: "&c   или:  "
+        - Content: "&b&n/twl set <nick> <time>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl set "
     NothingChanged:
       - Content: "&7Ничего не изменилось о {player}."
     Success:
@@ -89,14 +89,14 @@ CommandResults:
     Usage:
       - Content: "&cНеправильное кол-во аргументов"
       - Content:
-          - Content: "&cИспользуйте: "
-          - Content: "&b&n/twl remove <nick>"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl remove "
+        - Content: "&cИспользуйте: "
+        - Content: "&b&n/twl remove <nick>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl remove "
     NothingChanged:
       - Content: "&7{player} и так не в вайт листе."
     Success:
@@ -112,24 +112,24 @@ CommandResults:
       - Content: "&cНеправильное кол-во аргументов"
 
       - Content:
-          - Content: "&c   Используйте: "
-          - Content: "&b&n/twl check"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите чтобы использовать"
-            Click:
-              Action: RUN_COMMAND
-              Value: "/twl check"
+        - Content: "&c   Используйте: "
+        - Content: "&b&n/twl check"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите чтобы использовать"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl check"
 
       - Content:
-          - Content: "&c   или:  "
-          - Content: "&b&n/twl check <nick>"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl check "
+        - Content: "&c   или:  "
+        - Content: "&b&n/twl check <nick>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl check "
     Format:
       - Content: "&l------  &b{player}&f&l  ------"
       - Content: " • Навсегда: &b{permanent}"
@@ -146,24 +146,24 @@ CommandResults:
       - Content: "&cНеправильное кол-во аргументов"
 
       - Content:
-          - Content: "&c   Используйте: "
-          - Content: "&b&n/twl list"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите чтобы использовать"
-            Click:
-              Action: RUN_COMMAND
-              Value: "/twl list"
+        - Content: "&c   Используйте: "
+        - Content: "&b&n/twl list"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите чтобы использовать"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list"
 
       - Content:
-          - Content: "&c   или:  "
-          - Content: "&b&n/twl list <page>"
-            Hover:
-              Action: SHOW_TEXT
-              Value: "Нажмите для автодополнения команды"
-            Click:
-              Action: SUGGEST_COMMAND
-              Value: "/twl list "
+        - Content: "&c   или:  "
+        - Content: "&b&n/twl list <page>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Нажмите для автодополнения команды"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl list "
     IncorrectPage:
       - Content: "&cНекорректная страница"
     Header:
@@ -178,27 +178,120 @@ CommandResults:
           Value: "&bНажмите чтобы увидеть подробную информацию"
     PagesSwitch:
       - Content:
-          - Content: "    <---    "
-            Click:
-              Action: RUN_COMMAND
-              Value: "/twl list {previous_page}"
+        - Content: "    <---    "
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list {previous_page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bПредыдущая страница"
+        - Content: "   {page}/{total_pages}   "
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl list {page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bВвести страницу"
+        - Content: "    --->"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list {next_page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bСледующая страница"
+  Import:
+    Usage:
+      - Content: "&cIncorrect arguments count"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl import <type> [type specific arguments]"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Click to auto complete"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl import"
+    ImportFromSelf:
+      - Content: "&cYou can't import from currently used data provider"
+    IncorrectTime:
+      - Content: "&cInvalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
+    IncorrectPermanent:
+      - Content: "&cInvalid permanent. Use true or false"
+    Success:
+      - Content: "&aData successfully imported in &b{time_elapsed}"
+
+      - Content: " • Found: &b{found_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{found}"
+      - Content: " • Without error: &b{without_error_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{without_error}"
+      - Content: " • With error: &b{with_error_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{with_error}"
+    Error:
+      - Content: "&cError while importing"
+    SuccessfullyStarted:
+      - Content: "&aImporting successfully started. Wait for results"
+
+    MinecraftDefault:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import minecraft <default time> <default permanent>"
             Hover:
               Action: SHOW_TEXT
-              Value: "&bПредыдущая страница"
-          - Content: "   {page}/{total_pages}   "
+              Value: "Click to auto complete"
             Click:
               Action: SUGGEST_COMMAND
-              Value: "/twl list {page}"
+              Value: "/twl import minecraft 0:s true"
+    SelfSql:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import self-sql"
             Hover:
               Action: SHOW_TEXT
-              Value: "&bВвести страницу"
-          - Content: "    --->"
+              Value: "Click to use"
             Click:
               Action: RUN_COMMAND
-              Value: "/twl list {next_page}"
+              Value: "/twl import self-sql"
+    SelfYaml:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import self-yaml"
             Hover:
               Action: SHOW_TEXT
-              Value: "&bСледующая страница"
+              Value: "Click to use"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl import self-yaml"
+    EasyWhiteList:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import easy-whitelist <default time> <default permanent>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Click to auto complete"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl import easy-whitelist 0:s true"
+      PluginNotFound:
+        - Content: "&cError while getting EasyWhiteList plugin. Make sure that it is installed or try another version"
 
   Enable:
     Success:
