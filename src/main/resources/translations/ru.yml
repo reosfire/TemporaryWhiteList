@@ -166,6 +166,8 @@ CommandResults:
             Value: "/twl list "
     IncorrectPage:
       - Content: "&cНекорректная страница"
+    ListIsEmpty:
+      - Content: "&cЛист пуст"
     Header:
       - Content: "&l--------  &bList&f&l  --------"
     PlayerFormat:
@@ -201,97 +203,98 @@ CommandResults:
             Value: "&bСледующая страница"
   Import:
     Usage:
-      - Content: "&cIncorrect arguments count"
+      - Content: "&cНеправильное кол-во аргументов"
 
       - Content:
-        - Content: "&c   Use: "
+        - Content: "&c   Используйте: "
         - Content: "&b&n/twl import <type> [type specific arguments]"
           Hover:
             Action: SHOW_TEXT
-            Value: "Click to auto complete"
+            Value: "Нажмите для автодополнения команды"
           Click:
             Action: SUGGEST_COMMAND
             Value: "/twl import"
     ImportFromSelf:
-      - Content: "&cYou can't import from currently used data provider"
+      - Content: "&cВы не можете импортировать данные из источника данных используемого сейчас"
     IncorrectTime:
-      - Content: "&cInvalid time. Use <amount>:<time unit>,<amount>:<time unit>... where time units: s,m,h,d,y"
+      - Content: "&cНекорректное время. Используйте: <кол-во>:<единица времени>,<кол-во>:<единица времени>..."
+      - Content: "&cДоступные единицы времени: s,m,h,d,y"
     IncorrectPermanent:
-      - Content: "&cInvalid permanent. Use true or false"
+      - Content: "&cНекорректное значение permanent. Используйте true или false"
     Success:
-      - Content: "&aData successfully imported in &b{time_elapsed}"
+      - Content: "&aДанные успешно импортированы за &b{time_elapsed}"
 
-      - Content: " • Found: &b{found_count}"
+      - Content: " • Найдено: &b{found_count}"
         Hover:
           Action: SHOW_TEXT
           Value: "{found}"
-      - Content: " • Without error: &b{without_error_count}"
+      - Content: " • Без ошибок: &b{without_error_count}"
         Hover:
           Action: SHOW_TEXT
           Value: "{without_error}"
-      - Content: " • With error: &b{with_error_count}"
+      - Content: " • С ошибкой: &b{with_error_count}"
         Hover:
           Action: SHOW_TEXT
           Value: "{with_error}"
     Error:
-      - Content: "&cError while importing"
+      - Content: "&cОшибка во время импорта. Смотрите в консоль"
     SuccessfullyStarted:
-      - Content: "&aImporting successfully started. Wait for results"
+      - Content: "&aИмпортирование успешно запущено. Ждите результатов"
 
     MinecraftDefault:
       Usage:
-        - Content: "&cIncorrect arguments count"
+        - Content: "&cНеправильное кол-во аргументов"
 
         - Content:
-          - Content: "&c   Use: "
+          - Content: "&c   Используйте: "
           - Content: "&b&n/twl import minecraft <default time> <default permanent>"
             Hover:
               Action: SHOW_TEXT
-              Value: "Click to auto complete"
+              Value: "Нажмите для автодополнения команды"
             Click:
               Action: SUGGEST_COMMAND
               Value: "/twl import minecraft 0:s true"
     SelfSql:
       Usage:
-        - Content: "&cIncorrect arguments count"
+        - Content: "&cНеправильное кол-во аргументов"
 
         - Content:
-          - Content: "&c   Use: "
+          - Content: "&c   Используйте: "
           - Content: "&b&n/twl import self-sql"
             Hover:
               Action: SHOW_TEXT
-              Value: "Click to use"
+              Value: "Нажмите чтобы использовать"
             Click:
               Action: RUN_COMMAND
               Value: "/twl import self-sql"
     SelfYaml:
       Usage:
-        - Content: "&cIncorrect arguments count"
+        - Content: "&cНеправильное кол-во аргументов"
 
         - Content:
-          - Content: "&c   Use: "
+          - Content: "&c   Используйте: "
           - Content: "&b&n/twl import self-yaml"
             Hover:
               Action: SHOW_TEXT
-              Value: "Click to use"
+              Value: "Нажмите чтобы использовать"
             Click:
               Action: RUN_COMMAND
               Value: "/twl import self-yaml"
     EasyWhiteList:
       Usage:
-        - Content: "&cIncorrect arguments count"
+        - Content: "&cНеправильное кол-во аргументов"
 
         - Content:
-          - Content: "&c   Use: "
+          - Content: "&c   Используйте: "
           - Content: "&b&n/twl import easy-whitelist <default time> <default permanent>"
             Hover:
               Action: SHOW_TEXT
-              Value: "Click to auto complete"
+              Value: "Нажмите для автодополнения команды"
             Click:
               Action: SUGGEST_COMMAND
               Value: "/twl import easy-whitelist 0:s true"
       PluginNotFound:
-        - Content: "&cError while getting EasyWhiteList plugin. Make sure that it is installed or try another version"
+        - Content: "&cОшибка во время получения EasyWhiteList. Убедитесь что он установлен или попробуйте другую версию"
 
   Enable:
     Success:

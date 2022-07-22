@@ -24,13 +24,16 @@ public class YamlDataProvider implements IDataProvider
 
     private void ReloadYaml()
     {
-        try
+        synchronized (_yamlDataFile)
         {
-            _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException("Error while reloading yaml data file", e);
+            try
+            {
+                _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException("Error while reloading yaml data file", e);
+            }
         }
     }
 
@@ -84,13 +87,16 @@ public class YamlDataProvider implements IDataProvider
 
             getPlayersSection().set(playerName, null);
 
-            try
+            synchronized (_yamlDataFile)
             {
-                _yamlDataConfig.save(_yamlDataFile);
-            }
-            catch (Exception e)
-            {
-                throw new RuntimeException("Error while removing player data about: " + playerName, e);
+                try
+                {
+                    _yamlDataConfig.save(_yamlDataFile);
+                }
+                catch (Exception e)
+                {
+                    throw new RuntimeException("Error while removing player data about: " + playerName, e);
+                }
             }
         });
     }
