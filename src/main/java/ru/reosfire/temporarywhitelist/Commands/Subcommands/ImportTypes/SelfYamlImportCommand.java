@@ -26,7 +26,7 @@ public class SelfYamlImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (_plugin.getConfiguration().DataProvider.equalsIgnoreCase("mysql"))
+        if (_plugin.getConfiguration().DataProvider.equalsIgnoreCase("yaml"))
         {
             _commandResults.ImportFromSelf.Send(sender);
             return true;
