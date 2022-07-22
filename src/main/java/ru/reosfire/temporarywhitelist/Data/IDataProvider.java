@@ -4,9 +4,8 @@ import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 
 import java.util.concurrent.CompletableFuture;
 
-public interface IDataProvider extends IDataExporter
+public interface IDataProvider extends IDataExporter, IUpdatable
 {
-    CompletableFuture<Void> Update(PlayerData playerData);
     CompletableFuture<Void> Remove(String playerName);
     PlayerData Get(String playerName);
 }

@@ -33,16 +33,7 @@ public class SelfSqlImportCommand extends CommandNode
         }
 
         IDataExporter dataExporter = _plugin.LoadSqlData(_plugin.getConfiguration());
-        dataExporter.ExportToAsync(_database).handle((res, ex) ->
-        {
-            if (ex == null) _commandResults.Success.Send(sender, res.getReplacements());
-            else
-            {
-                _commandResults.Error.Send(sender);
-                ex.printStackTrace();
-            }
-            return null;
-        });
+        dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
         return true;
     }
 }

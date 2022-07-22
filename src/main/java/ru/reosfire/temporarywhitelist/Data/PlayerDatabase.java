@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class PlayerDatabase
+public class PlayerDatabase implements IUpdatable
 {
     private final IDataProvider _provider;
     private final Map<String, PlayerData> _playersData = new ConcurrentSkipListMap<>();
@@ -37,6 +37,7 @@ public class PlayerDatabase
         return _playersData.get(name);
     }
 
+    @Override
     public CompletableFuture<Boolean> Update(PlayerData playerData)
     {
         if (playerData == null) throw new NullArgumentException("playerName");

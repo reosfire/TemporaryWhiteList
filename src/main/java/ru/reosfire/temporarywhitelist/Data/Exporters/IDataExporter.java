@@ -1,9 +1,8 @@
 package ru.reosfire.temporarywhitelist.Data.Exporters;
 
-import ru.reosfire.temporarywhitelist.Data.ExportResult;
-import ru.reosfire.temporarywhitelist.Data.IDataProvider;
-import ru.reosfire.temporarywhitelist.Data.PlayerData;
-import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
+import org.bukkit.command.CommandSender;
+import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
+import ru.reosfire.temporarywhitelist.Data.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +12,7 @@ public interface IDataExporter
 {
     List<PlayerData> GetAll();
 
-    default ExportResult ExportWith(Function<PlayerData, CompletableFuture<?>> updater)
+    default ExportResult ExportTo(IUpdatable updatable)
     {
         List<PlayerData> players = GetAll();
         ExportResult exportResult = new ExportResult(players);
@@ -23,7 +22,7 @@ public interface IDataExporter
         for (int i = 0; i < players.size(); i++)
         {
             PlayerData playerData = players.get(i);
-            updates[i] = updater.apply(playerData);
+            updates[i] = updatable.Update(playerData);
 
             updates[i].handle((res, ex) ->
             {
@@ -36,22 +35,36 @@ public interface IDataExporter
         CompletableFuture.allOf(updates).join();
         return exportResult;
     }
-
-    default ExportResult ExportTo(IDataProvider provider)
-    {
-        return ExportWith(provider::Update);
-    }
-    default CompletableFuture<ExportResult> ExportToAsync(IDataProvider provider)
+    default CompletableFuture<ExportResult> ExportToAsync(IUpdatable provider)
     {
         return CompletableFuture.supplyAsync(() -> ExportTo(provider));
     }
 
-    default ExportResult ExportTo(PlayerDatabase database)
+    default void ExportAndHandle(IUpdatable updatable, ImportCommandResultConfig commandResults, CommandSender sender)
     {
-        return ExportWith(database::Update);
+        try
+        {
+            ExportResult exportResult = ExportTo(updatable);
+            commandResults.Success.Send(sender, exportResult.getReplacements());
+        }
+        catch (Exception e)
+        {
+            commandResults.Error.Send(sender);
+            e.printStackTrace();
+        }
     }
-    default CompletableFuture<ExportResult> ExportToAsync(PlayerDatabase database)
+
+    default void ExportAsyncAndHandle(IUpdatable updatable, ImportCommandResultConfig commandResults, CommandSender sender)
     {
-        return CompletableFuture.supplyAsync(() -> ExportTo(database));
+        ExportToAsync(updatable).handle((res, ex) ->
+        {
+            if (ex == null) commandResults.Success.Send(sender, res.getReplacements());
+            else
+            {
+                commandResults.Error.Send(sender);
+                ex.printStackTrace();
+            }
+            return null;
+        });
     }
 }
