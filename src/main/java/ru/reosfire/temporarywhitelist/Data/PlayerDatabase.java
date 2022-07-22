@@ -13,6 +13,7 @@ public class PlayerDatabase implements IUpdatable
     private final IDataProvider _provider;
     private final Map<String, PlayerData> _playersData = new ConcurrentSkipListMap<>();
     private final Map<String, Long> _lastRefresh = new ConcurrentHashMap<>();
+    private long _lastAllRefresh;
     private final long _refreshInterval;
     private final boolean _ignoreCase;
 
@@ -176,9 +177,9 @@ public class PlayerDatabase implements IUpdatable
 
     private void TryRefreshAll()
     {
-        for (String refresh : new ArrayList<>(_playersData.keySet()))
-        {
-            TryRefreshPlayer(refresh);
-        }
+        long nowTime = Instant.now().getEpochSecond();
+        if (nowTime - _lastAllRefresh < _refreshInterval) return;
+        LoadAll();
+        _lastAllRefresh = nowTime;
     }
 }

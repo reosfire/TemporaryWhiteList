@@ -16,7 +16,7 @@ public class TwlCommand extends CommandNode
 {
     private final TwlCommandResultsConfig _commandResults;
     public TwlCommand(MessagesConfig messages, PlayerDatabase dataProvider, TemporaryWhiteList pluginInstance,
-                      TimeConverter timeConverter, Config config)
+                      TimeConverter timeConverter)
     {
         super(messages.NoPermission);
 
@@ -26,7 +26,7 @@ public class TwlCommand extends CommandNode
         AddChildren(new SetCommand(messages, dataProvider, timeConverter));
         AddChildren(new RemoveCommand(messages, dataProvider));
         AddChildren(new CheckCommand(messages, dataProvider, timeConverter));
-        AddChildren(new ListCommand(messages, dataProvider, config.ListPageSize));
+        AddChildren(new ListCommand(messages, dataProvider, pluginInstance.getConfiguration().ListPageSize));
         AddChildren(new ImportCommand(pluginInstance, dataProvider, timeConverter));
         AddChildren(new EnableCommand(messages, pluginInstance));
         AddChildren(new DisableCommand(messages, pluginInstance));

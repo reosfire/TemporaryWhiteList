@@ -82,8 +82,9 @@ public final class TemporaryWhiteList extends JavaPlugin
         _database = LoadDatabase(_configuration);
 
         getLogger().info("Loading commands...");
-        TwlCommand commands = new TwlCommand(_messages, _database, this, _timeConverter, _configuration);
+        TwlCommand commands = new TwlCommand(_messages, _database, this, _timeConverter);
         commands.Register(Objects.requireNonNull(getCommand("twl")));
+        commands.Register(Objects.requireNonNull(getCommand("/twl")));
 
         getLogger().info("Loading placeholders...");
         Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");

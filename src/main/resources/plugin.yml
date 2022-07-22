@@ -12,6 +12,7 @@ softdepend:
   - EasyWhitelist
 commands:
   twl: {}
+  /twl: {}
 permissions:
   'TemporaryWhitelist.Bypass':
     description: "Not whitelisted players with this permission can join."
