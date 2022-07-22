@@ -52,6 +52,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         Metrics metrics = new Metrics(this, 14858);
         metrics.addCustomChart(new SingleLineChart("whitelisted_players", () -> _database.AllList().size()));
         metrics.addCustomChart(new SimplePie("whitelisted_players_per_server", () -> Integer.toString(_database.AllList().size())));
+        metrics.addCustomChart(new SimplePie("data_provider", () -> _configuration.DataProvider));
 
         UpdateChecker updateChecker = new UpdateChecker(this, 99914);
         updateChecker.getVersion(version ->
