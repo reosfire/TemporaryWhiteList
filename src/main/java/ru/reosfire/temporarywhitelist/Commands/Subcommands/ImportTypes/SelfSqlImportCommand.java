@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
+import ru.reosfire.temporarywhitelist.Data.SqlDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
@@ -26,7 +27,7 @@ public class SelfSqlImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (_plugin.getConfiguration().DataProvider.equalsIgnoreCase("mysql"))
+        if (_database.getProvider() instanceof SqlDataProvider)
         {
             _commandResults.ImportFromSelf.Send(sender);
             return true;
