@@ -3,6 +3,7 @@ package ru.reosfire.temporarywhitelist.Commands.Subcommands.ImportTypes;
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
+import ru.reosfire.temporarywhitelist.Data.Exporters.EasyWhitelist;
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 import ru.reosfire.temporarywhitelist.Data.Exporters.MinecraftDefaultWhitelist;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
@@ -10,14 +11,16 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
-@CommandName("minecraft")
-public class MinecraftDefaultImportCommand extends CommandNode
+import javax.management.ReflectionException;
+
+@CommandName("easy-whitelist")
+public class EasyWhitelistImportCommand extends CommandNode
 {
     private final ImportCommandResultConfig _commandResults;
     private final PlayerDatabase _database;
     private final TimeConverter _timeConverter;
 
-    public MinecraftDefaultImportCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
+    public EasyWhitelistImportCommand(MessagesConfig messagesConfig, PlayerDatabase database, TimeConverter timeConverter)
     {
         super(messagesConfig.NoPermission);
         _commandResults = messagesConfig.CommandResults.Import;
@@ -56,8 +59,16 @@ public class MinecraftDefaultImportCommand extends CommandNode
             return true;
         }
 
-        IDataExporter dataExporter = new MinecraftDefaultWhitelist(defaultTime, defaultPermanent);
-        dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
+        try
+        {
+            IDataExporter dataExporter = new EasyWhitelist(defaultTime, defaultPermanent);
+            dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
+        }
+        catch (ReflectionException e)
+        {
+
+            e.printStackTrace();
+        }
         return true;
     }
 }
