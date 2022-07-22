@@ -249,7 +249,47 @@ CommandResults:
             Click:
               Action: SUGGEST_COMMAND
               Value: "/twl import minecraft 0:s true"
+    SelfSql:
+      Usage:
+        - Content: "&cIncorrect arguments count"
 
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import self-sql"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Click to use"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl import self-sql"
+    SelfYaml:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import self-yaml"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Click to use"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl import self-yaml"
+    EasyWhiteList:
+      Usage:
+        - Content: "&cIncorrect arguments count"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import easy-whitelist <default time> <default permanent>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Click to auto complete"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl import easy-whitelist 0:s true"
+      PluginNotFound:
+        - Content: "&cError while getting EasyWhiteList plugin. Make sure that it is installed or try another version"
 
   Enable:
     Success:

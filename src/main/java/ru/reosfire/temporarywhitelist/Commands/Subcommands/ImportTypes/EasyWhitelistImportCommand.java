@@ -5,7 +5,6 @@ import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.Exporters.EasyWhitelist;
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
-import ru.reosfire.temporarywhitelist.Data.Exporters.MinecraftDefaultWhitelist;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
@@ -33,7 +32,7 @@ public class EasyWhitelistImportCommand extends CommandNode
     {
         if (args.length != 2)
         {
-            _commandResults.MinecraftDefaultUsage.Send(sender);
+            _commandResults.EasyWhiteListUsage.Send(sender);
             return true;
         }
 

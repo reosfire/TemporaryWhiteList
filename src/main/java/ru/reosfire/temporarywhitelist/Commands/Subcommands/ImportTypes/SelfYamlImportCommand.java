@@ -7,7 +7,6 @@ import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
-import ru.reosfire.temporarywhitelist.TimeConverter;
 
 @CommandName("self-yaml")
 public class SelfYamlImportCommand extends CommandNode
@@ -27,12 +26,17 @@ public class SelfYamlImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length != 0)
+        if (_plugin.getConfiguration().DataProvider.equalsIgnoreCase("mysql"))
         {
-            _commandResults.MinecraftDefaultUsage.Send(sender);
+            _commandResults.ImportFromSelf.Send(sender);
             return true;
         }
 
+        if (args.length != 0)
+        {
+            _commandResults.SelfYamlUsage.Send(sender);
+            return true;
+        }
 
         IDataExporter dataExporter = _plugin.LoadYamlData(_plugin.getConfiguration());
         dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);

@@ -13,6 +13,10 @@ public class ImportCommandResultConfig extends YamlConfig
     public final MultilineMessage Success;
     public final MultilineMessage Error;
     public final MultilineMessage MinecraftDefaultUsage;
+    public final MultilineMessage SelfSqlUsage;
+    public final MultilineMessage SelfYamlUsage;
+    public final MultilineMessage EasyWhiteListUsage;
+    public final MultilineMessage EasyWhiteListPluginNotFound;
 
     public ImportCommandResultConfig(ConfigurationSection configurationSection)
     {
@@ -24,5 +28,9 @@ public class ImportCommandResultConfig extends YamlConfig
         Success = getMultilineMessage("Success");
         Error = getMultilineMessage("Error");
         MinecraftDefaultUsage = getMultilineMessage("MinecraftDefault.Usage");
+        SelfSqlUsage = getMultilineMessage("SelfSql.Usage");
+        SelfYamlUsage = getMultilineMessage("SelfYaml.Usage");
+        EasyWhiteListUsage = getMultilineMessage("EasyWhiteList.Usage");
+        EasyWhiteListPluginNotFound = getMultilineMessage("EasyWhiteList.PluginNotFound");
     }
 }

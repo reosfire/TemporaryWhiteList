@@ -26,9 +26,15 @@ public class SelfSqlImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
+        if (_plugin.getConfiguration().DataProvider.equalsIgnoreCase("mysql"))
+        {
+            _commandResults.ImportFromSelf.Send(sender);
+            return true;
+        }
+
         if (args.length != 0)
         {
-            _commandResults.MinecraftDefaultUsage.Send(sender);
+            _commandResults.SelfSqlUsage.Send(sender);
             return true;
         }
 
