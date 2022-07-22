@@ -98,4 +98,11 @@ public class CheckCommand extends CommandNode
         }
         return super.onTabComplete(sender, command, alias, args);
     }
+
+    @Override
+    public boolean isAsync()
+    {
+        if (_forceSync) return false;
+        return super.isAsync();
+    }
 }

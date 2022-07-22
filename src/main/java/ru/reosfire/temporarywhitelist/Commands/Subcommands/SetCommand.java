@@ -103,4 +103,11 @@ public class SetCommand extends CommandNode
         else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
         return super.onTabComplete(sender, command, alias, args);
     }
+
+    @Override
+    public boolean isAsync()
+    {
+        if (_forceSync) return false;
+        return super.isAsync();
+    }
 }

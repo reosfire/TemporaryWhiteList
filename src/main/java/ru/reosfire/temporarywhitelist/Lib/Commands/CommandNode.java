@@ -152,7 +152,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         if (annotation == null) return null;
         return annotation.value();
     }
-    private boolean isAsync()
+    protected boolean isAsync()
     {
         ExecuteAsync annotation = this.getClass().getAnnotation(ExecuteAsync.class);
         return annotation != null;
