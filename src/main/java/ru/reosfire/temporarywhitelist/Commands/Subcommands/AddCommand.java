@@ -64,8 +64,24 @@ public class AddCommand extends CommandNode
                 _commandResults.IncorrectTime.Send(sender);
                 return true;
             }
-            _database.Add(args[0], time.get()).whenComplete((result, exception) ->
-                    HandleCompletion(sender, exception, playerReplacement, timeReplacement));
+            if (_forceSync)
+            {
+                try
+                {
+                    _database.Add(args[0], time.get()).join();
+                    _commandResults.Success.Send(sender, playerReplacement, timeReplacement);
+                }
+                catch (Exception e)
+                {
+                    _commandResults.Error.Send(sender, playerReplacement, timeReplacement);
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                _database.Add(args[0], time.get()).whenComplete((result, exception) ->
+                        HandleCompletion(sender, exception, playerReplacement, timeReplacement));
+            }
         }
         return true;
     }

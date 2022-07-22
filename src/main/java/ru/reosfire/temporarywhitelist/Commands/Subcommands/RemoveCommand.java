@@ -40,17 +40,35 @@ public class RemoveCommand extends CommandNode
     {
         if (SendMessageIf(args.length != 1, _commandResults.Usage, sender)) return true;
 
-        _database.Remove(args[0]).whenComplete((changed, exception) ->
+        Replacement playerReplacement = new Replacement("{player}", args[0]);
+
+        if (_forceSync)
         {
-            Replacement playerReplacement = new Replacement("{player}", args[0]);
-            if (!changed) _commandResults.NothingChanged.Send(sender, playerReplacement);
-            else if (exception == null) _commandResults.Success.Send(sender, playerReplacement);
-            else
+            try
+            {
+                boolean changed = _database.Remove(args[0]).join();
+                if (!changed) _commandResults.NothingChanged.Send(sender, playerReplacement);
+                else _commandResults.Success.Send(sender, playerReplacement);
+            }
+            catch (Exception e)
             {
                 _commandResults.Error.Send(sender, playerReplacement);
-                exception.printStackTrace();
+                e.printStackTrace();
             }
-        });
+        }
+        else
+        {
+            _database.Remove(args[0]).whenComplete((changed, exception) ->
+            {
+                if (!changed) _commandResults.NothingChanged.Send(sender, playerReplacement);
+                else if (exception == null) _commandResults.Success.Send(sender, playerReplacement);
+                else
+                {
+                    _commandResults.Error.Send(sender, playerReplacement);
+                    exception.printStackTrace();
+                }
+            });
+        }
         return true;
     }
 

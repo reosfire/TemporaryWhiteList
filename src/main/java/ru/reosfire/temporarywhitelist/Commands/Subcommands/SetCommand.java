@@ -67,6 +67,26 @@ public class SetCommand extends CommandNode
                 return true;
             }
 
+            if (_forceSync)
+            {
+                try
+                {
+                    Boolean changed = _database.Set(args[0], time).join();
+                    if (!changed) _commandResults.NothingChanged.Send(sender, playerReplacement, timeReplacement);
+                    else _commandResults.Success.Send(sender, playerReplacement, timeReplacement);
+                }
+                catch (Exception e)
+                {
+                    _commandResults.Error.Send(sender, playerReplacement, timeReplacement);
+                    e.printStackTrace();
+                }
+            }
+            else
+            {
+                _database.Set(args[0], time).whenComplete((changed, exception) ->
+                        HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
+            }
+
             _database.Set(args[0], time).whenComplete((changed, exception) ->
                     HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
         }
