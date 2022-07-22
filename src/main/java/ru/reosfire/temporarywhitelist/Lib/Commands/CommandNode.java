@@ -3,12 +3,18 @@ package ru.reosfire.temporarywhitelist.Lib.Commands;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
+import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Text.MultilineMessage;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class CommandNode implements CommandExecutor, TabCompleter
 {
@@ -169,5 +175,24 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
     {
         command.setExecutor(this);
         command.setTabCompleter(this);
+    }
+
+    protected final <T> boolean TryParse(Function<String, T> parser, String s, AtomicReference<T> container)
+    {
+        try
+        {
+            container.set(parser.apply(s));
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+    }
+
+    protected final boolean SendMessageIf(boolean send, MultilineMessage message, CommandSender sender, Replacement... replacements)
+    {
+        if (send) message.Send(sender, replacements);
+        return send;
     }
 }

@@ -31,11 +31,7 @@ public class RemoveCommand extends CommandNode
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length != 1)
-        {
-            _commandResults.Usage.Send(sender);
-            return true;
-        }
+        if (SendMessageIf(args.length != 1, _commandResults.Usage, sender)) return true;
 
         _database.Remove(args[0]).whenComplete((changed, exception) ->
         {

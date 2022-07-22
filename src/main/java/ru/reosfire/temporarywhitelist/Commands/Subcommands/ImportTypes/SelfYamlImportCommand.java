@@ -27,17 +27,8 @@ public class SelfYamlImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (_database.getProvider() instanceof YamlDataProvider)
-        {
-            _commandResults.ImportFromSelf.Send(sender);
-            return true;
-        }
-
-        if (args.length != 0)
-        {
-            _commandResults.SelfYamlUsage.Send(sender);
-            return true;
-        }
+        if (SendMessageIf(_database.getProvider() instanceof YamlDataProvider, _commandResults.ImportFromSelf, sender)) return true;
+        if (SendMessageIf(args.length != 0, _commandResults.SelfYamlUsage, sender)) return true;
 
         IDataExporter dataExporter = _plugin.LoadYamlData(_plugin.getConfiguration());
         dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);

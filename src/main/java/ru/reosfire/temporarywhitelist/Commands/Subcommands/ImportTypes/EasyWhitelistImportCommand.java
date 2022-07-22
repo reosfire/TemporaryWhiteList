@@ -11,6 +11,7 @@ import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import javax.management.ReflectionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 @CommandName("easy-whitelist")
 public class EasyWhitelistImportCommand extends CommandNode
@@ -30,29 +31,17 @@ public class EasyWhitelistImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length != 2)
-        {
-            _commandResults.EasyWhiteListUsage.Send(sender);
-            return true;
-        }
+        if (SendMessageIf(args.length != 2, _commandResults.EasyWhiteListUsage, sender)) return true;
 
-        long defaultTime;
-        try
-        {
-            defaultTime = _timeConverter.ParseTime(args[0]);
-        }
-        catch (Exception e)
+        AtomicReference<Long> defaultTime = new AtomicReference<>();
+        if (!TryParse(_timeConverter::ParseTime, args[0], defaultTime))
         {
             _commandResults.IncorrectTime.Send(sender);
             return true;
         }
 
-        boolean defaultPermanent;
-        try
-        {
-            defaultPermanent = Boolean.parseBoolean(args[1]);
-        }
-        catch (Exception e)
+        AtomicReference<Boolean> defaultPermanent = new AtomicReference<>();
+        if (!TryParse(Boolean::parseBoolean, args[1], defaultPermanent))
         {
             _commandResults.IncorrectPermanent.Send(sender);
             return true;
@@ -60,7 +49,7 @@ public class EasyWhitelistImportCommand extends CommandNode
 
         try
         {
-            IDataExporter dataExporter = new EasyWhitelist(defaultTime, defaultPermanent);
+            IDataExporter dataExporter = new EasyWhitelist(defaultTime.get(), defaultPermanent.get());
             dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
             _commandResults.SuccessfullyStarted.Send(sender);
         }

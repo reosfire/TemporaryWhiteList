@@ -37,11 +37,7 @@ public class SetCommand extends CommandNode
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length != 2)
-        {
-            _commandResults.Usage.Send(sender);
-            return true;
-        }
+        if (SendMessageIf(args.length != 2, _commandResults.Usage, sender)) return true;
 
         Replacement playerReplacement = new Replacement("{player}", args[0]);
         Replacement timeReplacement = new Replacement("{time}", args[1]);

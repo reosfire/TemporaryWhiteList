@@ -13,6 +13,7 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicReference;
 
 @CommandName("add")
 @CommandPermission("TemporaryWhitelist.Administrate.Add")
@@ -34,21 +35,14 @@ public class AddCommand extends CommandNode
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (args.length != 2)
-        {
-            _commandResults.Usage.Send(sender);
-            return true;
-        }
+        if (SendMessageIf(args.length != 2, _commandResults.Usage, sender)) return true;
 
         Replacement playerReplacement = new Replacement("{player}", args[0]);
         Replacement timeReplacement = new Replacement("{time}", args[1]);
 
         PlayerData playerData = _database.getPlayerData(args[0]);
-        if (playerData != null && playerData.Permanent)
-        {
-            _commandResults.AlreadyPermanent.Send(sender, playerReplacement);
+        if (SendMessageIf(playerData != null && playerData.Permanent, _commandResults.AlreadyPermanent, sender, playerReplacement))
             return true;
-        }
 
         if (args[1].equals("permanent"))
         {
@@ -57,17 +51,13 @@ public class AddCommand extends CommandNode
         }
         else
         {
-            long time;
-            try
-            {
-                time = _timeConverter.ParseTime(args[1]);
-            }
-            catch (Exception e)
+            AtomicReference<Long> time = new AtomicReference<>();
+            if (!TryParse(_timeConverter::ParseTime, args[1], time))
             {
                 _commandResults.IncorrectTime.Send(sender);
                 return true;
             }
-            _database.Add(args[0], time).whenComplete((result, exception) ->
+            _database.Add(args[0], time.get()).whenComplete((result, exception) ->
                     HandleCompletion(sender, exception, playerReplacement, timeReplacement));
         }
         return true;

@@ -27,17 +27,8 @@ public class SelfSqlImportCommand extends CommandNode
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (_database.getProvider() instanceof SqlDataProvider)
-        {
-            _commandResults.ImportFromSelf.Send(sender);
-            return true;
-        }
-
-        if (args.length != 0)
-        {
-            _commandResults.SelfSqlUsage.Send(sender);
-            return true;
-        }
+        if (SendMessageIf(_database.getProvider() instanceof SqlDataProvider, _commandResults.ImportFromSelf, sender)) return true;
+        if (SendMessageIf(args.length != 0, _commandResults.SelfSqlUsage, sender)) return true;
 
         IDataExporter dataExporter = _plugin.LoadSqlData(_plugin.getConfiguration());
         dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
