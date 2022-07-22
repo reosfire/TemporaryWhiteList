@@ -57,9 +57,9 @@ public final class TemporaryWhiteList extends JavaPlugin
         updateChecker.getVersion(version ->
         {
             if (version.equalsIgnoreCase(getDescription().getVersion()))
-                getLogger().info("Plugin is up to date");
+                getLogger().info("Plugin is up to date. Please rate it: https://www.spigotmc.org/resources/temporarywhitelist.99914");
             else
-                getLogger().info("There is a new update available: https://www.spigotmc.org/resources/temporarywhitelist.99914");
+                getLogger().info("There is a new version (" + version + ") available: https://www.spigotmc.org/resources/temporarywhitelist.99914");
         });
     }
 
