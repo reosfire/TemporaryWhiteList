@@ -11,8 +11,10 @@ softdepend:
   - PlaceholderAPI
   - EasyWhitelist
 commands:
-  twl: {}
-  twl-sync: {}
+  twl:
+    description: Base command of temporary white list
+  twl-sync:
+    description: Sync version of twl command (use it with RCON)
 permissions:
   'TemporaryWhitelist.Bypass':
     description: "Not whitelisted players with this permission can join."
