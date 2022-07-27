@@ -20,6 +20,7 @@ public class HoverConfig extends YamlConfig
 
     public HoverEvent Unwrap(IColorizer colorizer)
     {
+        //noinspection deprecation because 1.12.2
         return new HoverEvent(Action, new BaseComponent[] {new TextComponent(colorizer.Colorize(Value))});
     }
 }

@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.CheckCommandResultsConfig;
-import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
@@ -16,7 +15,6 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @CommandName("check")

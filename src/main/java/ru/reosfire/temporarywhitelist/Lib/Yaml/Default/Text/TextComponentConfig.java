@@ -46,7 +46,7 @@ public class TextComponentConfig extends YamlConfig
         HoverConfig = hoverSection == null ? null : new HoverConfig(hoverSection);
 
         String color = getString("Color");
-        Color = color == null ? null : ChatColor.valueOf(color.toUpperCase(Locale.ROOT));
+        Color = color == null ? null : ChatColor.of(color.toUpperCase(Locale.ROOT));
 
         Bold = getBoolean("Bold", false);
         Italic = getBoolean("Italic", false);

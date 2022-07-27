@@ -3,10 +3,7 @@ package ru.reosfire.temporarywhitelist.Lib.Sql;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.ISelectionAttribute;
 import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.TableColumn;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class SqlConnection
 {
@@ -77,7 +74,10 @@ public class SqlConnection
             if (i + 1 < columns.length) request.append(", ");
         }
         request.append(");");
-        getConnection().createStatement().executeUpdate(request.toString());
+        try(Statement statement = getConnection().createStatement())
+        {
+            statement.execute(request.toString());
+        }
     }
 
     public ResultSet Select(String table, String[] columns, ISelectionAttribute... attributes) throws SQLException
@@ -94,6 +94,9 @@ public class SqlConnection
             request.append(" ");
             request.append(attribute.ToString());
         }
-        return getConnection().createStatement().executeQuery(request.append(";").toString());
+        try(Statement statement = getConnection().createStatement())
+        {
+            return statement.executeQuery(request.append(";").toString());
+        }
     }
 }

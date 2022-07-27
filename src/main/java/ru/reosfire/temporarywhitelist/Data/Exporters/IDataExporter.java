@@ -2,11 +2,12 @@ package ru.reosfire.temporarywhitelist.Data.Exporters;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
-import ru.reosfire.temporarywhitelist.Data.*;
+import ru.reosfire.temporarywhitelist.Data.ExportResult;
+import ru.reosfire.temporarywhitelist.Data.IUpdatable;
+import ru.reosfire.temporarywhitelist.Data.PlayerData;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 public interface IDataExporter
 {

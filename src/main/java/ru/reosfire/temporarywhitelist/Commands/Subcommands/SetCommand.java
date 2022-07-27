@@ -4,8 +4,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.SetCommandResultsConfig;
-import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
@@ -15,7 +13,6 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
@@ -110,6 +107,7 @@ public class SetCommand extends CommandNode
         if (args.length == 1)
             return _database.AllList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
+
         return super.onTabComplete(sender, command, alias, args);
     }
 

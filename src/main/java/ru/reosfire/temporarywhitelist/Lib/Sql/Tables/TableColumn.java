@@ -16,11 +16,11 @@ public class TableColumn
     @Override
     public String toString()
     {
-        String result = "`" + name + "` " + type.ToString();
+        StringBuilder result = new StringBuilder("`" + name + "` " + type.ToString());
         for (ColumnFlag flag : flags)
         {
-            result += " " + flag.toString();
+            result.append(" ").append(flag.toString());
         }
-        return result;
+        return result.toString();
     }
 }

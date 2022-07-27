@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class SqlDataProvider implements IDataProvider
 {
-    private static final String[] AllColumns = new String[] {"*"};
+    private static final String[] AllColumns = new String[]{"*"};
 
     private final Config _configuration;
     private final SqlConnection _sqlConnection;
@@ -38,12 +38,11 @@ public class SqlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
-            try
+            String setRequest = "INSERT INTO " + _configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
+                    "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
+                    "TimeAmount=?;";
+            try (PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(setRequest))
             {
-                String setRequest = "INSERT INTO " + _configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
-                        "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
-                        "TimeAmount=?;";
-                PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(setRequest);
                 statement.setString(1, playerData.Name);
                 statement.setBoolean(2, playerData.Permanent);
                 statement.setLong(3, playerData.StartTime);
@@ -66,10 +65,9 @@ public class SqlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
-            try
+            String removeRequest = "DELETE FROM " + _configuration.SqlTable + " WHERE Player=?;";
+            try(PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(removeRequest);)
             {
-                String removeRequest = "DELETE FROM "+ _configuration.SqlTable +" WHERE Player=?;";
-                PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(removeRequest);
                 statement.setString(1, playerName);
                 statement.executeUpdate();
             }

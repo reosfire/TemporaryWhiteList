@@ -47,9 +47,10 @@ public class EasyWhitelist implements IDataExporter
 
         try
         {
-            for (String player : (ArrayList<String>)_getWhiteListsMethod.invoke(_WLStorage))
+            for (Object player : (ArrayList<?>)_getWhiteListsMethod.invoke(_WLStorage))
             {
-                result.add(new PlayerData(player, currentTime, _defaultTimeAmount, _defaultPermanent));
+                if (!(player instanceof String)) continue;
+                result.add(new PlayerData((String) player, currentTime, _defaultTimeAmount, _defaultPermanent));
             }
         }
         catch (Exception e)
