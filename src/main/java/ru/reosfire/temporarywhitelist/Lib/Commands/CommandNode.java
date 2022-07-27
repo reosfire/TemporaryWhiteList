@@ -193,4 +193,16 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         if (send) message.Send(sender, replacements);
         return send;
     }
+
+    protected final List<String> getStartingWith(List<String> input, String start)
+    {
+        ArrayList<String> result = new ArrayList<>();
+
+        for (String s : input)
+        {
+            if (s.startsWith(start)) result.add(start);
+        }
+
+        return result;
+    }
 }

@@ -15,6 +15,7 @@ import ru.reosfire.temporarywhitelist.TimeConverter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 @CommandName("add")
 @CommandPermission("TemporaryWhitelist.Administrate.Add")
@@ -101,16 +102,7 @@ public class AddCommand extends CommandNode
     public java.util.List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
     {
         if (args.length == 1)
-        {
-            ArrayList<String> result = new ArrayList<>();
-
-            for (PlayerData playerData : _database.AllList())
-            {
-                if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
-            }
-
-            return result;
-        }
+            return _database.AllList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
 
         return super.onTabComplete(sender, command, alias, args);

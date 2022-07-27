@@ -17,6 +17,7 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @CommandName("check")
 @CommandPermission("TemporaryWhitelist.CheckSelf")
@@ -86,16 +87,7 @@ public class CheckCommand extends CommandNode
         if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther"))
             return super.onTabComplete(sender, command, alias, args);
         if (args.length == 1)
-        {
-            ArrayList<String> result = new ArrayList<>();
-
-            for (PlayerData playerData : _database.AllList())
-            {
-                if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
-            }
-
-            return result;
-        }
+            return _database.AllList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         return super.onTabComplete(sender, command, alias, args);
     }
 

@@ -12,6 +12,7 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @CommandName("remove")
 @CommandPermission("TemporaryWhitelist.Administrate.Remove")
@@ -76,16 +77,7 @@ public class RemoveCommand extends CommandNode
     public java.util.List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
     {
         if (args.length == 1)
-        {
-            ArrayList<String> result = new ArrayList<>();
-
-            for (PlayerData playerData : _database.AllList())
-            {
-                if (playerData.Name.startsWith(args[0])) result.add(playerData.Name);
-            }
-
-            return result;
-        }
+            return _database.AllList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         return super.onTabComplete(sender, command, alias, args);
     }
 
