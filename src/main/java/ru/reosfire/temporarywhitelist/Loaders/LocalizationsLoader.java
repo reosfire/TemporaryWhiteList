@@ -48,7 +48,7 @@ public class LocalizationsLoader
         }
         catch (Exception e)
         {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
@@ -61,7 +61,7 @@ public class LocalizationsLoader
         catch (Exception e)
         {
             e.printStackTrace();
-            throw new RuntimeException("Can't load translation file");
+            throw new RuntimeException("Can't load translation file", e);
         }
     }
 }
