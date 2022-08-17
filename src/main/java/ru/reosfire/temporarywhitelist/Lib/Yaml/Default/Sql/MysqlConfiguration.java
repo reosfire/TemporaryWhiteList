@@ -1,10 +1,11 @@
-package ru.reosfire.temporarywhitelist.Lib.Yaml.Default;
+package ru.reosfire.temporarywhitelist.Lib.Yaml.Default.Sql;
 
 import org.bukkit.configuration.ConfigurationSection;
 import ru.reosfire.temporarywhitelist.Lib.Sql.ISqlConfiguration;
+import ru.reosfire.temporarywhitelist.Lib.Sql.SqlRequirementsNotSatisfiedException;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
-public class SqlConfiguration extends YamlConfig implements ISqlConfiguration
+public class MysqlConfiguration extends YamlConfig implements ISqlConfiguration
 {
     public final String Ip;
     public final String User;
@@ -17,7 +18,7 @@ public class SqlConfiguration extends YamlConfig implements ISqlConfiguration
      * @param configurationSection Ip, Port(3306), User, Password, Database, UseSsl(false), UseUnicode(true)
      *                             AutoReconnect(true), FailOverReadOnly(false), MaxReconnects(8)
      */
-    public SqlConfiguration(ConfigurationSection configurationSection)
+    public MysqlConfiguration(ConfigurationSection configurationSection)
     {
         super(configurationSection);
         Ip = getString("Ip");
@@ -29,13 +30,7 @@ public class SqlConfiguration extends YamlConfig implements ISqlConfiguration
         UseUnicode = getBoolean("UseUnicode", true);
         AutoReconnect = getBoolean("AutoReconnect", true);
         FailOverReadOnly = getBoolean("FailOverReadOnly", false);
-        MaxReconnects = getInt("MaxReconnects", 2);
-    }
-
-    @Override
-    public String getIp()
-    {
-        return Ip;
+        MaxReconnects = getInt("MaxReconnects", 8);
     }
 
     @Override
@@ -51,44 +46,26 @@ public class SqlConfiguration extends YamlConfig implements ISqlConfiguration
     }
 
     @Override
-    public String getDatabase()
+    public String getConnectionString()
     {
-        return Database;
+        return "jdbc:mysql://" + Ip + ":" + Port + "/" + Database
+                + "?useSSL=" + (UseSsl ? "true" : "false")
+                + "&useUnicode=" + (UseUnicode ? "true" : "false")
+                + "&autoReconnect=" + (AutoReconnect ? "true" : "false")
+                + "&failOverReadOnly=" + (FailOverReadOnly ? "true" : "false")
+                + "&maxReconnects=" + MaxReconnects;
     }
 
     @Override
-    public boolean getUseSsl()
+    public void CheckRequirements() throws SqlRequirementsNotSatisfiedException
     {
-        return UseSsl;
-    }
-
-    @Override
-    public boolean getUseUnicode()
-    {
-        return UseUnicode;
-    }
-
-    @Override
-    public boolean getAutoReconnect()
-    {
-        return AutoReconnect;
-    }
-
-    @Override
-    public boolean getFailOverReadOnly()
-    {
-        return FailOverReadOnly;
-    }
-
-    @Override
-    public int getMaxReconnects()
-    {
-        return MaxReconnects;
-    }
-
-    @Override
-    public int getPort()
-    {
-        return Port;
+        try
+        {
+            Class.forName("com.mysql.jdbc.Driver");
+        }
+        catch (ClassNotFoundException e)
+        {
+            throw new SqlRequirementsNotSatisfiedException(e);
+        }
     }
 }

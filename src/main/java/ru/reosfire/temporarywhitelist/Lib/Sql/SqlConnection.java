@@ -1,8 +1,5 @@
 package ru.reosfire.temporarywhitelist.Lib.Sql;
 
-import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.ISelectionAttribute;
-import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.TableColumn;
-
 import java.sql.*;
 
 public class SqlConnection
@@ -18,85 +15,39 @@ public class SqlConnection
 
     private void Open() throws SQLException
     {
-
-        if (connection != null && !connection.isClosed() && isConnectionAlive()) return;
-
-        try
+        synchronized (this)
         {
-            synchronized (this)
+            if (connection != null && !connection.isClosed() && isConnectionAlive()) return;
+
+            try
             {
-                String connectionBuilder =
-                        "jdbc:mysql://" + configuration.getIp() + ":" + configuration.getPort() + "/" + configuration.getDatabase()
-                                + "?useSSL=" + (configuration.getUseSsl() ? "true" : "false")
-                                + "&useUnicode=" + (configuration.getUseUnicode() ? "true" : "false")
-                                + "&autoReconnect=" + (configuration.getAutoReconnect() ? "true" : "false")
-                                + "&failOverReadOnly=" + (configuration.getFailOverReadOnly() ? "true" : "false")
-                                + "&maxReconnects=" + configuration.getMaxReconnects();
-
-                Class.forName("com.mysql.jdbc.Driver");
-                connection = DriverManager.getConnection(connectionBuilder, configuration.getUser(),
-                        configuration.getPassword());
+                configuration.CheckRequirements();
             }
-        }
-        catch (ClassNotFoundException e)
-        {
-            throw new SQLException("Can't find com.mysql.jdbc.Driver class");
+            catch (SqlRequirementsNotSatisfiedException e)
+            {
+                throw new SQLException(e);
+            }
+            connection = DriverManager.getConnection(configuration.getConnectionString(), configuration.getUser(),
+                    configuration.getPassword());
         }
     }
 
     private boolean isConnectionAlive()
     {
-        boolean alive;
         try
         {
             connection.createStatement().executeQuery("SELECT 1;");
-            alive = true;
+            return true;
         }
         catch (SQLException e)
         {
-            alive = false;
+            return false;
         }
-        return alive;
     }
 
     public Connection getConnection() throws SQLException
     {
         Open();
         return connection;
-    }
-
-    public void createTable(String name, TableColumn... columns) throws SQLException
-    {
-        StringBuilder request = new StringBuilder("CREATE TABLE IF NOT EXISTS ").append(name).append(" (");
-        for (int i = 0; i < columns.length; i++)
-        {
-            request.append(columns[i].toString());
-            if (i + 1 < columns.length) request.append(", ");
-        }
-        request.append(");");
-        try(Statement statement = getConnection().createStatement())
-        {
-            statement.execute(request.toString());
-        }
-    }
-
-    public ResultSet select(String table, String[] columns, ISelectionAttribute... attributes) throws SQLException
-    {
-        StringBuilder request = new StringBuilder("SELECT ");
-        for (int i = 0; i < columns.length; i++)
-        {
-            request.append(columns[i]);
-            if (i + 1 < columns.length) request.append(",");
-        }
-        request.append(" FROM ").append(table);
-        for (ISelectionAttribute attribute : attributes)
-        {
-            request.append(" ");
-            request.append(attribute.toSqlString());
-        }
-        try(Statement statement = getConnection().createStatement())
-        {
-            return statement.executeQuery(request.append(";").toString());
-        }
     }
 }

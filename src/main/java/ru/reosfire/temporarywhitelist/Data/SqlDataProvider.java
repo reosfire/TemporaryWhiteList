@@ -1,24 +1,18 @@
 package ru.reosfire.temporarywhitelist.Data;
 
 import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Comparer;
-import ru.reosfire.temporarywhitelist.Lib.Sql.Selection.Where;
 import ru.reosfire.temporarywhitelist.Lib.Sql.SqlConnection;
-import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.ColumnFlag;
-import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.ColumnType;
-import ru.reosfire.temporarywhitelist.Lib.Sql.Tables.TableColumn;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class SqlDataProvider implements IDataProvider
 {
-    private static final String[] AllColumns = new String[]{"*"};
-
     private final Config configuration;
     private final SqlConnection sqlconnection;
 
@@ -27,10 +21,16 @@ public class SqlDataProvider implements IDataProvider
         this.configuration = configuration;
 
         sqlconnection = new SqlConnection(this.configuration.SqlConfiguration);
-        sqlconnection.createTable(this.configuration.SqlTable, new TableColumn("Player", ColumnType.VarChar.setMax(32),
-                ColumnFlag.Not_null, ColumnFlag.Unique), new TableColumn("Permanent", ColumnType.Boolean,
-                ColumnFlag.Not_null), new TableColumn("LastStartTime", ColumnType.BigInt, ColumnFlag.Not_null),
-                new TableColumn("TimeAmount", ColumnType.BigInt, ColumnFlag.Not_null));
+
+        String createTableString = "CREATE TABLE IF NOT EXISTS `" + this.configuration.SqlTable + "` (" +
+                "Player VARCHAR(32) NOT NULL UNIQUE, " +
+                "Permanent BOOLEAN NOT NULL, " +
+                "LastStartTime BIGINT NOT NULL, " +
+                "TimeAmount BIGINT NOT NULL);";
+        try (Statement statement = sqlconnection.getConnection().createStatement())
+        {
+            statement.executeUpdate(createTableString);
+        }
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SqlDataProvider implements IDataProvider
         return CompletableFuture.runAsync(() ->
         {
             String removeRequest = "DELETE FROM " + configuration.SqlTable + " WHERE Player=?;";
-            try(PreparedStatement statement = sqlconnection.getConnection().prepareStatement(removeRequest);)
+            try(PreparedStatement statement = sqlconnection.getConnection().prepareStatement(removeRequest))
             {
                 statement.setString(1, playerName);
                 statement.executeUpdate();
@@ -81,10 +81,11 @@ public class SqlDataProvider implements IDataProvider
     @Override
     public PlayerData get(String playerName)
     {
-        try
+        String selectRequest = "SELECT * FROM " + configuration.SqlTable + " WHERE Player=?;";
+        try(PreparedStatement statement = sqlconnection.getConnection().prepareStatement(selectRequest))
         {
-            ResultSet player = sqlconnection.select(configuration.SqlTable, AllColumns, new Where("Player",
-                    Comparer.Equal, playerName));
+            statement.setString(1, playerName);
+            ResultSet player = statement.executeQuery();
             if (!player.next()) return null;
             return new PlayerData(player);
         }
@@ -97,10 +98,11 @@ public class SqlDataProvider implements IDataProvider
     @Override
     public List<PlayerData> getAll()
     {
-        try
+        String selectRequest = "SELECT * FROM " + configuration.SqlTable + ";";
+        try (Statement statement = sqlconnection.getConnection().createStatement())
         {
             List<PlayerData> result = new ArrayList<>();
-            ResultSet resultSet = sqlconnection.select(configuration.SqlTable, AllColumns);
+            ResultSet resultSet = statement.executeQuery(selectRequest);
 
             while (resultSet.next())
             {

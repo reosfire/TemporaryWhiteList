@@ -19,7 +19,7 @@ import ru.reosfire.temporarywhitelist.Data.SqlDataProvider;
 import ru.reosfire.temporarywhitelist.Data.YamlDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
-import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
+import ru.reosfire.temporarywhitelist.Data.Exporters.Loaders.LocalizationsLoader;
 
 import java.io.*;
 import java.util.Objects;

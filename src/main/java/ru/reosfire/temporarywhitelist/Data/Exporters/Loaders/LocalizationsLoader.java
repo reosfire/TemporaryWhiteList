@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Loaders;
+package ru.reosfire.temporarywhitelist.Data.Exporters.Loaders;
 
 import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
