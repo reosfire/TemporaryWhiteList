@@ -13,24 +13,24 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 @CommandName("twl-sync")
 public class TwlSyncCommand extends CommandNode
 {
-    private final TwlCommandResultsConfig _commandResults;
+    private final TwlCommandResultsConfig commandResults;
 
     public TwlSyncCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
 
-        _commandResults = pluginInstance.getMessages().CommandResults.Twl;
+        commandResults = pluginInstance.getMessages().CommandResults.Twl;
 
-        AddChildren(new AddCommand(pluginInstance, true));
-        AddChildren(new SetCommand(pluginInstance, true));
-        AddChildren(new CheckCommand(pluginInstance, true));
-        AddChildren(new RemoveCommand(pluginInstance, true));
+        addChildren(new AddCommand(pluginInstance, true));
+        addChildren(new SetCommand(pluginInstance, true));
+        addChildren(new CheckCommand(pluginInstance, true));
+        addChildren(new RemoveCommand(pluginInstance, true));
     }
 
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        _commandResults.Usage.Send(sender);
+        commandResults.Usage.Send(sender);
         return false;
     }
 }

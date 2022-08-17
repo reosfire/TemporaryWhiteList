@@ -17,11 +17,11 @@ public class ExportResult
         StartTime = Instant.now().toEpochMilli();
     }
 
-    public int WithErrorCount()
+    public int withErrorCount()
     {
         return Found.size() - WithoutError.size();
     }
-    public List<PlayerData> WithError()
+    public List<PlayerData> withError()
     {
         if (WithoutError.size() == 0) return Found;
 
@@ -41,12 +41,12 @@ public class ExportResult
         return new Replacement[]
             {
                     new Replacement("{found_count}", Integer.toString(Found.size())),
-                    new Replacement("{with_error_count}", Integer.toString(WithErrorCount())),
+                    new Replacement("{with_error_count}", Integer.toString(withErrorCount())),
                     new Replacement("{without_error_count}", Integer.toString(WithoutError.size())),
-                    new Replacement("{found}", PlayersDataToString(Found)),
-                    new Replacement("{with_error}", PlayersDataToString(WithError())),
-                    new Replacement("{without_error}", PlayersDataToString(WithoutError)),
-                    new Replacement("{time_elapsed}", TimeElapsedToString(getElapsed())),
+                    new Replacement("{found}", playersDataToString(Found)),
+                    new Replacement("{with_error}", playersDataToString(withError())),
+                    new Replacement("{without_error}", playersDataToString(WithoutError)),
+                    new Replacement("{time_elapsed}", timeElapsedToString(getElapsed())),
             };
     }
 
@@ -55,7 +55,7 @@ public class ExportResult
         return Instant.now().toEpochMilli() - StartTime;
     }
 
-    private static String PlayersDataToString(Collection<PlayerData> players)
+    private static String playersDataToString(Collection<PlayerData> players)
     {
         StringBuilder result = new StringBuilder();
         for (PlayerData player : players)
@@ -67,7 +67,7 @@ public class ExportResult
         return result.toString();
     }
 
-    private static String TimeElapsedToString(long ms)
+    private static String timeElapsedToString(long ms)
     {
         long seconds = ms / 1000;
         long milliSeconds = ms % 1000;

@@ -66,13 +66,13 @@ public class TextComponentConfig extends YamlConfig
 
     public TextComponent Unwrap(OfflinePlayer player, Replacement... replacements)
     {
-        return Unwrap(s -> Text.Colorize(player, s, replacements));
+        return Unwrap(s -> Text.colorize(player, s, replacements));
     }
 
     public TextComponent Unwrap(IColorizer colorizer)
     {
         TextComponent result;
-        if (Content == null) result = new TextComponent(TextComponent.fromLegacyText(colorizer.Colorize(TextContent)));
+        if (Content == null) result = new TextComponent(TextComponent.fromLegacyText(colorizer.colorize(TextContent)));
         else
         {
             TextComponent[] subComponents = new TextComponent[Content.size()];
@@ -96,7 +96,7 @@ public class TextComponentConfig extends YamlConfig
 
     public String toString(Replacement... replacements)
     {
-        if (TextContent != null) return Text.SetColors(Replacement.Set(TextContent, replacements));
+        if (TextContent != null) return Text.setColors(Replacement.set(TextContent, replacements));
 
         StringBuilder resultBuilder = new StringBuilder();
 
@@ -105,7 +105,7 @@ public class TextComponentConfig extends YamlConfig
             resultBuilder.append(subComponent.toString(replacements));
         }
 
-        return Text.SetColors(resultBuilder.toString());
+        return Text.setColors(resultBuilder.toString());
     }
 
     @Override

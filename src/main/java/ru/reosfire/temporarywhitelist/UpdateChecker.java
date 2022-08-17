@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 
 public class UpdateChecker
 {
-
     private final JavaPlugin plugin;
     private final int resourceId;
 

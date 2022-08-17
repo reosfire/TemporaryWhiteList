@@ -15,23 +15,23 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 @CommandPermission("TemporaryWhitelist.Administrate.Import")
 public class ImportCommand extends CommandNode
 {
-    private final ImportCommandResultConfig _commandResults;
+    private final ImportCommandResultConfig commandResults;
 
     public ImportCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _commandResults = pluginInstance.getMessages().CommandResults.Import;
+        commandResults = pluginInstance.getMessages().CommandResults.Import;
 
-        AddChildren(new MinecraftDefaultImportCommand(pluginInstance));
-        AddChildren(new EasyWhitelistImportCommand(pluginInstance));
-        AddChildren(new SelfYamlImportCommand(pluginInstance));
-        AddChildren(new SelfSqlImportCommand(pluginInstance));
+        addChildren(new MinecraftDefaultImportCommand(pluginInstance));
+        addChildren(new EasyWhitelistImportCommand(pluginInstance));
+        addChildren(new SelfYamlImportCommand(pluginInstance));
+        addChildren(new SelfSqlImportCommand(pluginInstance));
     }
 
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        _commandResults.Usage.Send(sender);
+        commandResults.Usage.Send(sender);
         return true;
     }
 }

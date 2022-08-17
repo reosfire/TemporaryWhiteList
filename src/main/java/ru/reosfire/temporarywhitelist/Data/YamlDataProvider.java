@@ -13,22 +13,22 @@ import java.util.concurrent.CompletableFuture;
 
 public class YamlDataProvider implements IDataProvider
 {
-    private final File _yamlDataFile;
-    private YamlConfiguration _yamlDataConfig;
+    private final File yamlDataFile;
+    private YamlConfiguration yamlDataConfig;
 
     public YamlDataProvider(File yamlFile) throws IOException, InvalidConfigurationException
     {
-        _yamlDataFile = yamlFile;
-        _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
+        yamlDataFile = yamlFile;
+        yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
     }
 
-    private void ReloadYaml()
+    private void reloadYaml()
     {
-        synchronized (_yamlDataFile)
+        synchronized (yamlDataFile)
         {
             try
             {
-                _yamlDataConfig = YamlConfig.LoadOrCreate(_yamlDataFile);
+                yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
             }
             catch (Exception e)
             {
@@ -39,8 +39,8 @@ public class YamlDataProvider implements IDataProvider
 
     private ConfigurationSection getPlayersSection()
     {
-        ConfigurationSection playersSection = _yamlDataConfig.getConfigurationSection("Players");
-        if (playersSection == null) playersSection = _yamlDataConfig.createSection("Players");
+        ConfigurationSection playersSection = yamlDataConfig.getConfigurationSection("Players");
+        if (playersSection == null) playersSection = yamlDataConfig.createSection("Players");
         return playersSection;
     }
     private ConfigurationSection getPlayerSection(String player)
@@ -52,13 +52,13 @@ public class YamlDataProvider implements IDataProvider
     }
 
     @Override
-    public CompletableFuture<Void> Update(PlayerData playerData)
+    public CompletableFuture<Void> update(PlayerData playerData)
     {
         return CompletableFuture.runAsync(() ->
         {
-            synchronized (_yamlDataFile)
+            synchronized (yamlDataFile)
             {
-                ReloadYaml();
+                reloadYaml();
 
                 ConfigurationSection playerSection = getPlayerSection(playerData.Name);
 
@@ -68,7 +68,7 @@ public class YamlDataProvider implements IDataProvider
 
                 try
                 {
-                    _yamlDataConfig.save(_yamlDataFile);
+                    yamlDataConfig.save(yamlDataFile);
                 }
                 catch (Exception e)
                 {
@@ -79,19 +79,19 @@ public class YamlDataProvider implements IDataProvider
     }
 
     @Override
-    public CompletableFuture<Void> Remove(String playerName)
+    public CompletableFuture<Void> remove(String playerName)
     {
         return CompletableFuture.runAsync(() ->
         {
-            ReloadYaml();
+            reloadYaml();
 
             getPlayersSection().set(playerName, null);
 
-            synchronized (_yamlDataFile)
+            synchronized (yamlDataFile)
             {
                 try
                 {
-                    _yamlDataConfig.save(_yamlDataFile);
+                    yamlDataConfig.save(yamlDataFile);
                 }
                 catch (Exception e)
                 {
@@ -102,9 +102,9 @@ public class YamlDataProvider implements IDataProvider
     }
 
     @Override
-    public PlayerData Get(String playerName)
+    public PlayerData get(String playerName)
     {
-        ReloadYaml();
+        reloadYaml();
 
         ConfigurationSection player = getPlayersSection().getConfigurationSection(playerName);
         if (player == null) return null;
@@ -112,9 +112,9 @@ public class YamlDataProvider implements IDataProvider
     }
 
     @Override
-    public List<PlayerData> GetAll()
+    public List<PlayerData> getAll()
     {
-        ReloadYaml();
+        reloadYaml();
 
         ArrayList<PlayerData> result = new ArrayList<>();
 

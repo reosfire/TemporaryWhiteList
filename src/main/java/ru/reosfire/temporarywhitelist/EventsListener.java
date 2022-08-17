@@ -11,28 +11,28 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 
 public class EventsListener implements Listener
 {
-    private final MessagesConfig _messages;
-    private final PlayerDatabase _database;
-    private final TemporaryWhiteList _pluginInstance;
+    private final MessagesConfig messages;
+    private final PlayerDatabase database;
+    private final TemporaryWhiteList pluginInstance;
 
     public EventsListener(MessagesConfig messages, PlayerDatabase database, TemporaryWhiteList pluginInstance)
     {
-        _messages = messages;
-        _database = database;
-        _pluginInstance = pluginInstance;
+        this.messages = messages;
+        this.database = database;
+        this.pluginInstance = pluginInstance;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(PlayerLoginEvent event)
     {
-        if (!_pluginInstance.isWhiteListEnabled()) return;
+        if (!pluginInstance.isWhiteListEnabled()) return;
         Player player = event.getPlayer();
 
-        if (_database.CanJoin(player.getName())) return;
+        if (database.canJoin(player.getName())) return;
         if (player.isOp()) return;
         if (player.hasPermission("TemporaryWhitelist.Bypass")) return;
 
-        String message = String.join("\n", Text.Colorize(player, _messages.Kick.Connecting));
+        String message = String.join("\n", Text.colorize(player, messages.Kick.Connecting));
         event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, message);
     }
 }

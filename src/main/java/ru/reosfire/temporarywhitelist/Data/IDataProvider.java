@@ -6,6 +6,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IDataProvider extends IDataExporter, IUpdatable
 {
-    CompletableFuture<Void> Remove(String playerName);
-    PlayerData Get(String playerName);
+    CompletableFuture<Void> remove(String playerName);
+    PlayerData get(String playerName);
 }

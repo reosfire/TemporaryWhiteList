@@ -15,6 +15,7 @@ import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @CommandName("check")
@@ -22,18 +23,18 @@ import java.util.stream.Collectors;
 @ExecuteAsync
 public class CheckCommand extends CommandNode
 {
-    private final CheckCommandResultsConfig _commandResults;
-    private final PlayerDatabase _database;
-    private final TimeConverter _timeConverter;
-    private final boolean _forceSync;
+    private final CheckCommandResultsConfig commandResults;
+    private final PlayerDatabase database;
+    private final TimeConverter timeconverter;
+    private final boolean forceSync;
 
     public CheckCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _commandResults = pluginInstance.getMessages().CommandResults.Check;
-        _database = pluginInstance.getDatabase();
-        _timeConverter = pluginInstance.getTimeConverter();
-        _forceSync = forceSync;
+        commandResults = pluginInstance.getMessages().CommandResults.Check;
+        database = pluginInstance.getDatabase();
+        timeconverter = pluginInstance.getTimeConverter();
+        this.forceSync = forceSync;
     }
     public CheckCommand(TemporaryWhiteList pluginInstance)
     {
@@ -45,54 +46,54 @@ public class CheckCommand extends CommandNode
     {
         if (args.length == 0)
         {
-            if (sender instanceof Player) SendInfo(sender, sender.getName());
-            else _commandResults.ForPlayerOnly.Send(sender);
+            if (sender instanceof Player) sendInfo(sender, sender.getName());
+            else commandResults.ForPlayerOnly.Send(sender);
         }
         else if (args.length == 1)
         {
             if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther")) noPermissionAction(sender);
-            else SendInfo(sender, args[0]);
+            else sendInfo(sender, args[0]);
         }
-        else _commandResults.Usage.Send(sender);
+        else commandResults.Usage.Send(sender);
         return true;
     }
 
-    private void SendInfo(CommandSender to, String about)
+    private void sendInfo(CommandSender to, String about)
     {
-        PlayerData playerData = _database.getPlayerData(about);
+        PlayerData playerData = database.getPlayerData(about);
         if (playerData == null)
         {
-            _commandResults.InfoNotFound.Send(to);
+            commandResults.InfoNotFound.Send(to);
             return;
         }
 
         Replacement[] replacements = new Replacement[]
                 {
                         new Replacement("{player}", about),
-                        new Replacement("{time_left}", _timeConverter.DurationToString(Math.max(playerData.TimeLeft(), 0))),
-                        new Replacement("{started}", _timeConverter.DateTimeToString(playerData.StartTime)),
-                        new Replacement("{will_end}", _timeConverter.DateTimeToString(playerData.EndTime())),
+                        new Replacement("{time_left}", timeconverter.durationToString(Math.max(playerData.timeLeft(), 0))),
+                        new Replacement("{started}", timeconverter.dateTimeToString(playerData.StartTime)),
+                        new Replacement("{will_end}", timeconverter.dateTimeToString(playerData.endTime())),
                         new Replacement("{permanent}", playerData.Permanent ?
-                                _commandResults.PermanentTrue : _commandResults.PermanentFalse),
+                                commandResults.PermanentTrue : commandResults.PermanentFalse),
                 };
 
-        _commandResults.Format.Send(to, replacements);
+        commandResults.Format.Send(to, replacements);
     }
 
     @Override
-    public java.util.List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
     {
         if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther"))
             return super.onTabComplete(sender, command, alias, args);
         if (args.length == 1)
-            return _database.AllList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
+            return database.allList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         return super.onTabComplete(sender, command, alias, args);
     }
 
     @Override
     public boolean isAsync()
     {
-        if (_forceSync) return false;
+        if (forceSync) return false;
         return super.isAsync();
     }
 }

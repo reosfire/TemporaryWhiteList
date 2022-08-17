@@ -16,7 +16,7 @@ public class TableColumn
     @Override
     public String toString()
     {
-        StringBuilder result = new StringBuilder("`" + name + "` " + type.ToString());
+        StringBuilder result = new StringBuilder("`" + name + "` " + type.toSqlString());
         for (ColumnFlag flag : flags)
         {
             result.append(" ").append(flag.toString());

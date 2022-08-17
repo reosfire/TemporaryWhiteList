@@ -11,11 +11,11 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IDataExporter
 {
-    List<PlayerData> GetAll();
+    List<PlayerData> getAll();
 
-    default ExportResult ExportTo(IUpdatable updatable)
+    default ExportResult exportTo(IUpdatable updatable)
     {
-        List<PlayerData> players = GetAll();
+        List<PlayerData> players = getAll();
         ExportResult exportResult = new ExportResult(players);
 
         CompletableFuture<?>[] updates = new CompletableFuture<?>[players.size()];
@@ -23,7 +23,7 @@ public interface IDataExporter
         for (int i = 0; i < players.size(); i++)
         {
             PlayerData playerData = players.get(i);
-            updates[i] = updatable.Update(playerData);
+            updates[i] = updatable.update(playerData);
 
             updates[i].handle((res, ex) ->
             {
@@ -36,16 +36,16 @@ public interface IDataExporter
         CompletableFuture.allOf(updates).join();
         return exportResult;
     }
-    default CompletableFuture<ExportResult> ExportToAsync(IUpdatable provider)
+    default CompletableFuture<ExportResult> exportToAsync(IUpdatable provider)
     {
-        return CompletableFuture.supplyAsync(() -> ExportTo(provider));
+        return CompletableFuture.supplyAsync(() -> exportTo(provider));
     }
 
     default void ExportAndHandle(IUpdatable updatable, ImportCommandResultConfig commandResults, CommandSender sender)
     {
         try
         {
-            ExportResult exportResult = ExportTo(updatable);
+            ExportResult exportResult = exportTo(updatable);
             commandResults.Success.Send(sender, exportResult.getReplacements());
         }
         catch (Exception e)
@@ -55,9 +55,9 @@ public interface IDataExporter
         }
     }
 
-    default void ExportAsyncAndHandle(IUpdatable updatable, ImportCommandResultConfig commandResults, CommandSender sender)
+    default void exportAsyncAndHandle(IUpdatable updatable, ImportCommandResultConfig commandResults, CommandSender sender)
     {
-        ExportToAsync(updatable).handle((res, ex) ->
+        exportToAsync(updatable).handle((res, ex) ->
         {
             if (ex == null) commandResults.Success.Send(sender, res.getReplacements());
             else

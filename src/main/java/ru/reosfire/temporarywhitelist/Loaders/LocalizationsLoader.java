@@ -11,16 +11,16 @@ import java.io.InputStream;
 
 public class LocalizationsLoader
 {
-    private final TemporaryWhiteList _pluginInstance;
-    private final Config _config;
+    private final TemporaryWhiteList plugin;
+    private final Config config;
 
-    public LocalizationsLoader(TemporaryWhiteList pluginInstance, Config config)
+    public LocalizationsLoader(TemporaryWhiteList pluginInstance)
     {
-        _pluginInstance = pluginInstance;
-        _config = config;
+        plugin = pluginInstance;
+        this.config = plugin.getConfiguration();
     }
 
-    public void CopyDefaultTranslations()
+    public void copyDefaultTranslations()
     {
         String[] translationsResources = new String[]
                 {
@@ -29,7 +29,7 @@ public class LocalizationsLoader
                 };
         try
         {
-            File translationsDirectory = new File(_pluginInstance.getDataFolder(), "./translations/");
+            File translationsDirectory = new File(plugin.getDataFolder(), "./translations/");
             translationsDirectory.mkdir();
 
             for (String translationsResource : translationsResources)
@@ -37,7 +37,7 @@ public class LocalizationsLoader
                 File translationFile = new File(translationsDirectory, translationsResource);
                 if (translationFile.exists()) continue;
 
-                InputStream resource = _pluginInstance.getResource("translations/" + translationsResource);
+                InputStream resource = plugin.getResource("translations/" + translationsResource);
                 byte[] buffer = new byte[resource.available()];
                 resource.read(buffer);
 
@@ -52,11 +52,11 @@ public class LocalizationsLoader
         }
     }
 
-    public MessagesConfig LoadMessages()
+    public MessagesConfig loadMessages()
     {
         try
         {
-            return new MessagesConfig(YamlConfig.LoadOrCreate("translations/" + _config.Translation, _pluginInstance));
+            return new MessagesConfig(YamlConfig.loadOrCreate("translations/" + config.Translation, plugin));
         }
         catch (Exception e)
         {

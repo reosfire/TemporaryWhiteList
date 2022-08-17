@@ -11,14 +11,14 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 @CommandPermission("TemporaryWhitelist.Administrate.Reload")
 public class ReloadCommand extends CommandNode
 {
-    private final TemporaryWhiteList _pluginInstance;
-    private final ReloadCommandResultsConfig _commandResults;
+    private final TemporaryWhiteList plugin;
+    private final ReloadCommandResultsConfig commandResults;
 
     public ReloadCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _commandResults = pluginInstance.getMessages().CommandResults.Reload;
-        _pluginInstance = pluginInstance;
+        commandResults = pluginInstance.getMessages().CommandResults.Reload;
+        plugin = pluginInstance;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class ReloadCommand extends CommandNode
     {
         try
         {
-            _pluginInstance.Load();
-            _commandResults.Success.Send(sender);
+            plugin.load();
+            commandResults.Success.Send(sender);
         }
         catch (Exception e)
         {
-            _commandResults.Error.Send(sender);
+            commandResults.Error.Send(sender);
         }
         return true;
     }

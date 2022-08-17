@@ -11,14 +11,14 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 @CommandPermission("TemporaryWhitelist.Administrate.EnableDisable")
 public class EnableCommand extends CommandNode
 {
-    private final TemporaryWhiteList _pluginInstance;
-    private final EnableCommandResultsConfig _commandResults;
+    private final TemporaryWhiteList plugin;
+    private final EnableCommandResultsConfig commandResults;
 
     public EnableCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _commandResults = pluginInstance.getMessages().CommandResults.Enable;
-        _pluginInstance = pluginInstance;
+        commandResults = pluginInstance.getMessages().CommandResults.Enable;
+        plugin = pluginInstance;
     }
 
     @Override
@@ -26,12 +26,12 @@ public class EnableCommand extends CommandNode
     {
         try
         {
-            if (_pluginInstance.Enable()) _commandResults.Success.Send(sender);
-            else _commandResults.NothingChanged.Send(sender);
+            if (plugin.enable()) commandResults.Success.Send(sender);
+            else commandResults.NothingChanged.Send(sender);
         }
         catch (Exception e)
         {
-            _commandResults.Error.Send(sender);
+            commandResults.Error.Send(sender);
             e.printStackTrace();
         }
         return true;

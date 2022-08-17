@@ -19,29 +19,29 @@ public class SqlDataProvider implements IDataProvider
 {
     private static final String[] AllColumns = new String[]{"*"};
 
-    private final Config _configuration;
-    private final SqlConnection _sqlConnection;
+    private final Config configuration;
+    private final SqlConnection sqlconnection;
 
     public SqlDataProvider(Config configuration) throws SQLException
     {
-        _configuration = configuration;
+        this.configuration = configuration;
 
-        _sqlConnection = new SqlConnection(_configuration.SqlConfiguration);
-        _sqlConnection.CreateTable(_configuration.SqlTable, new TableColumn("Player", ColumnType.VarChar.setMax(32),
+        sqlconnection = new SqlConnection(this.configuration.SqlConfiguration);
+        sqlconnection.createTable(this.configuration.SqlTable, new TableColumn("Player", ColumnType.VarChar.setMax(32),
                 ColumnFlag.Not_null, ColumnFlag.Unique), new TableColumn("Permanent", ColumnType.Boolean,
                 ColumnFlag.Not_null), new TableColumn("LastStartTime", ColumnType.BigInt, ColumnFlag.Not_null),
                 new TableColumn("TimeAmount", ColumnType.BigInt, ColumnFlag.Not_null));
     }
 
     @Override
-    public CompletableFuture<Void> Update(PlayerData playerData)
+    public CompletableFuture<Void> update(PlayerData playerData)
     {
         return CompletableFuture.runAsync(() ->
         {
-            String setRequest = "INSERT INTO " + _configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
+            String setRequest = "INSERT INTO " + configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
                     "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
                     "TimeAmount=?;";
-            try (PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(setRequest))
+            try (PreparedStatement statement = sqlconnection.getConnection().prepareStatement(setRequest))
             {
                 statement.setString(1, playerData.Name);
                 statement.setBoolean(2, playerData.Permanent);
@@ -61,12 +61,12 @@ public class SqlDataProvider implements IDataProvider
     }
 
     @Override
-    public CompletableFuture<Void> Remove(String playerName)
+    public CompletableFuture<Void> remove(String playerName)
     {
         return CompletableFuture.runAsync(() ->
         {
-            String removeRequest = "DELETE FROM " + _configuration.SqlTable + " WHERE Player=?;";
-            try(PreparedStatement statement = _sqlConnection.getConnection().prepareStatement(removeRequest);)
+            String removeRequest = "DELETE FROM " + configuration.SqlTable + " WHERE Player=?;";
+            try(PreparedStatement statement = sqlconnection.getConnection().prepareStatement(removeRequest);)
             {
                 statement.setString(1, playerName);
                 statement.executeUpdate();
@@ -79,11 +79,11 @@ public class SqlDataProvider implements IDataProvider
     }
 
     @Override
-    public PlayerData Get(String playerName)
+    public PlayerData get(String playerName)
     {
         try
         {
-            ResultSet player = _sqlConnection.Select(_configuration.SqlTable, AllColumns, new Where("Player",
+            ResultSet player = sqlconnection.select(configuration.SqlTable, AllColumns, new Where("Player",
                     Comparer.Equal, playerName));
             if (!player.next()) return null;
             return new PlayerData(player);
@@ -95,12 +95,12 @@ public class SqlDataProvider implements IDataProvider
     }
 
     @Override
-    public List<PlayerData> GetAll()
+    public List<PlayerData> getAll()
     {
         try
         {
             List<PlayerData> result = new ArrayList<>();
-            ResultSet resultSet = _sqlConnection.Select(_configuration.SqlTable, AllColumns);
+            ResultSet resultSet = sqlconnection.select(configuration.SqlTable, AllColumns);
 
             while (resultSet.next())
             {

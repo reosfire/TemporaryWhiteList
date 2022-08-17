@@ -10,67 +10,67 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 public class PlayerDatabase implements IUpdatable
 {
-    private final IDataProvider _provider;
-    private final Map<String, PlayerData> _playersData = new ConcurrentSkipListMap<>();
-    private final Map<String, Long> _lastRefresh = new ConcurrentHashMap<>();
-    private long _lastAllRefresh;
-    private final long _refreshInterval;
-    private final boolean _ignoreCase;
+    private final IDataProvider provider;
+    private final Map<String, PlayerData> playersData = new ConcurrentSkipListMap<>();
+    private final Map<String, Long> lastRefresh = new ConcurrentHashMap<>();
+    private long lastAllRefresh;
+    private final long refreshInterval;
+    private final boolean ignoreCase;
 
     public IDataProvider getProvider()
     {
-        return _provider;
+        return provider;
     }
 
     public PlayerDatabase(IDataProvider provider, long refreshInterval, boolean ignoreCase)
     {
-        _provider = provider;
-        _refreshInterval = refreshInterval;
-        _ignoreCase = ignoreCase;
-        LoadAll();
+        this.provider = provider;
+        this.refreshInterval = refreshInterval;
+        this.ignoreCase = ignoreCase;
+        loadAll();
     }
 
     public PlayerData getPlayerData(String name)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
-        TryRefreshPlayer(name);
-        return _playersData.get(name);
+        tryRefreshPlayer(name);
+        return playersData.get(name);
     }
 
     @Override
-    public CompletableFuture<Boolean> Update(PlayerData playerData)
+    public CompletableFuture<Boolean> update(PlayerData playerData)
     {
         if (playerData == null) throw new NullArgumentException("playerName");
 
         String name = playerData.Name;
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
-        TryRefreshPlayer(name);
+        tryRefreshPlayer(name);
 
         PlayerData oldData = getPlayerData(name);
         if (oldData != null && oldData.isSame(playerData)) return CompletableFuture.completedFuture(false);
         String finalName = name;
-        return _provider.Update(playerData).handle((res, ex) ->
+        return provider.update(playerData).handle((res, ex) ->
         {
             if (ex != null) throw new RuntimeException(ex);
-            _playersData.put(finalName, playerData);
+            playersData.put(finalName, playerData);
             return true;
         });
     }
 
-    public boolean CanJoin(String name)
+    public boolean canJoin(String name)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
         PlayerData playerData = getPlayerData(name);
         if (playerData == null) return false;
-        return playerData.CanJoin();
+        return playerData.canJoin();
     }
 
-    public CompletableFuture<Boolean> Add(String name, long addedTime)
+    public CompletableFuture<Boolean> add(String name, long addedTime)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
         PlayerData playerData = getPlayerData(name);
 
@@ -85,101 +85,101 @@ public class PlayerDatabase implements IUpdatable
         }
         else
         {
-            timeAmount = playerData.isTimedOut() ? addedTime : playerData.TimeLeft() + addedTime;
+            timeAmount = playerData.isTimedOut() ? addedTime : playerData.timeLeft() + addedTime;
             permanent = playerData.Permanent;
         }
 
-        return Update(new PlayerData(name, startTime, timeAmount, permanent));
+        return update(new PlayerData(name, startTime, timeAmount, permanent));
     }
 
-    public CompletableFuture<Boolean> SetPermanent(String name)
+    public CompletableFuture<Boolean> setPermanent(String name)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
         long startTime = Instant.now().getEpochSecond();
         long timeAmount = 0;
         boolean permanent = true;
 
-        return Update(new PlayerData(name, startTime, timeAmount, permanent));
+        return update(new PlayerData(name, startTime, timeAmount, permanent));
     }
 
-    public CompletableFuture<Boolean> Set(String name, long time)
+    public CompletableFuture<Boolean> set(String name, long time)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
         long startTime = Instant.now().getEpochSecond();
         boolean permanent = false;
 
-        return Update(new PlayerData(name, startTime, time, permanent));
+        return update(new PlayerData(name, startTime, time, permanent));
     }
 
-    public CompletableFuture<Boolean> Remove(String name)
+    public CompletableFuture<Boolean> remove(String name)
     {
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
-        TryRefreshPlayer(name);
-        if (!_playersData.containsKey(name)) return CompletableFuture.completedFuture(false);
+        tryRefreshPlayer(name);
+        if (!playersData.containsKey(name)) return CompletableFuture.completedFuture(false);
         String finalName = name;
-        return _provider.Remove(name).thenRun(() -> _playersData.remove(finalName)).thenApply(res -> true);
+        return provider.remove(name).thenRun(() -> playersData.remove(finalName)).thenApply(res -> true);
     }
 
-    public List<PlayerData> ActiveList()
+    public List<PlayerData> activeList()
     {
         List<PlayerData> result = new ArrayList<>();
 
-        for (PlayerData playerData : AllList())
+        for (PlayerData playerData : allList())
         {
-            if (playerData.CanJoin()) result.add(playerData);
+            if (playerData.canJoin()) result.add(playerData);
         }
         return result;
     }
 
-    public Collection<PlayerData> AllList()
+    public Collection<PlayerData> allList()
     {
-        TryRefreshAll();
-        return _playersData.values();
+        tryRefreshAll();
+        return playersData.values();
     }
 
-    private void LoadAll()
+    private void loadAll()
     {
         long nowTime = Instant.now().getEpochSecond();
-        _playersData.clear();
-        _lastRefresh.clear();
-        for (PlayerData playerData : _provider.GetAll())
+        playersData.clear();
+        lastRefresh.clear();
+        for (PlayerData playerData : provider.getAll())
         {
             String name = playerData.Name;
-            if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+            if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
-            _playersData.put(name, playerData);
-            _lastRefresh.put(name, nowTime);
+            playersData.put(name, playerData);
+            lastRefresh.put(name, nowTime);
         }
     }
 
-    private void TryRefreshPlayer(String name)
+    private void tryRefreshPlayer(String name)
     {
-        if (_refreshInterval < 0) return;
+        if (refreshInterval < 0) return;
 
         long nowTime = Instant.now().getEpochSecond();
-        if (_refreshInterval != 0)
+        if (refreshInterval != 0)
         {
-            long timePassed = nowTime - _lastRefresh.getOrDefault(name, 0L);
-            if (timePassed < _refreshInterval) return;
+            long timePassed = nowTime - lastRefresh.getOrDefault(name, 0L);
+            if (timePassed < refreshInterval) return;
         }
 
-        if (_ignoreCase) name = name.toLowerCase(Locale.ROOT);
+        if (ignoreCase) name = name.toLowerCase(Locale.ROOT);
 
-        PlayerData actualData = _provider.Get(name);
-        if (actualData == null) _playersData.remove(name);
-        else _playersData.put(name, actualData);
+        PlayerData actualData = provider.get(name);
+        if (actualData == null) playersData.remove(name);
+        else playersData.put(name, actualData);
 
-        _lastRefresh.put(name, nowTime);
+        lastRefresh.put(name, nowTime);
     }
 
-    private void TryRefreshAll()
+    private void tryRefreshAll()
     {
         long nowTime = Instant.now().getEpochSecond();
-        if (nowTime - _lastAllRefresh < _refreshInterval) return;
-        LoadAll();
-        _lastAllRefresh = nowTime;
+        if (nowTime - lastAllRefresh < refreshInterval) return;
+        loadAll();
+        lastAllRefresh = nowTime;
     }
 }

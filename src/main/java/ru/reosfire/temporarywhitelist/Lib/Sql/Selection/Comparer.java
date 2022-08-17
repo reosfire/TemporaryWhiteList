@@ -1,11 +1,13 @@
 package ru.reosfire.temporarywhitelist.Lib.Sql.Selection;
 
-public enum Comparer
+import ru.reosfire.temporarywhitelist.Lib.Sql.ISqlPart;
+
+public enum Comparer implements ISqlPart
 {
     Equal, NotEqual, GreaterThan, LessThan, GreaterThanOrEquals, LessThanOrEquals, Between, Like, In;
 
     @Override
-    public String toString()
+    public String toSqlString()
     {
         switch (this)
         {

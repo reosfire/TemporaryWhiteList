@@ -38,24 +38,24 @@ public class PlayerData
         TimeAmount = section.getLong("timeAmount");
     }
 
-    public long EndTime()
+    public long endTime()
     {
         return StartTime + TimeAmount;
     }
     public boolean isTimedOut()
     {
-        return EndTime() <= Instant.now().getEpochSecond();
+        return endTime() <= Instant.now().getEpochSecond();
     }
-    public long TimeLeft()
+    public long timeLeft()
     {
-        return EndTime() - Instant.now().getEpochSecond();
+        return endTime() - Instant.now().getEpochSecond();
     }
 
     public boolean isSame(PlayerData other)
     {
         if (!Name.equals(other.Name)) return false;
         if (Permanent && other.Permanent) return true;
-        return Permanent == other.Permanent && TimeLeft() == other.TimeLeft();
+        return Permanent == other.Permanent && timeLeft() == other.timeLeft();
     }
 
     @Override
@@ -74,7 +74,7 @@ public class PlayerData
         return Objects.hash(Name, Permanent, StartTime, TimeAmount);
     }
 
-    public boolean CanJoin()
+    public boolean canJoin()
     {
         return Permanent || !isTimedOut();
     }

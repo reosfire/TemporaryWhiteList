@@ -18,6 +18,6 @@ public class ClickConfig extends YamlConfig
 
     public ClickEvent Unwrap(IColorizer colorizer)
     {
-        return new ClickEvent(Action, colorizer.Colorize(Value));
+        return new ClickEvent(Action, colorizer.colorize(Value));
     }
 }

@@ -26,47 +26,47 @@ import java.util.Objects;
 
 public final class TemporaryWhiteList extends JavaPlugin
 {
-    private boolean _loaded;
-    private boolean _enabled;
-    private Config _configuration;
-    private PlayerDatabase _database;
-    private MessagesConfig _messages;
-    private PlaceholdersExpansion _placeholdersExpansion;
-    private TimeConverter _timeConverter;
+    private boolean loaded;
+    private boolean enabled;
+    private Config configuration;
+    private PlayerDatabase database;
+    private MessagesConfig messages;
+    private PlaceholdersExpansion placeholdersExpansion;
+    private TimeConverter timeConverter;
 
     public Config getConfiguration()
     {
-        return _configuration;
+        return configuration;
     }
     public MessagesConfig getMessages()
     {
-        return _messages;
+        return messages;
     }
     public PlayerDatabase getDatabase()
     {
-        return _database;
+        return database;
     }
     public TimeConverter getTimeConverter()
     {
-        return _timeConverter;
+        return timeConverter;
     }
 
     private BukkitTask _kickerTask;
 
     public boolean isWhiteListEnabled()
     {
-        return _enabled;
+        return enabled;
     }
 
     @SuppressWarnings("unused")
     @Override
     public void onEnable()
     {
-        Load();
+        load();
         Metrics metrics = new Metrics(this, 14858);
-        metrics.addCustomChart(new SingleLineChart("whitelisted_players", () -> _database.AllList().size()));
-        metrics.addCustomChart(new SimplePie("whitelisted_players_per_server", () -> Integer.toString(_database.AllList().size())));
-        metrics.addCustomChart(new SimplePie("data_provider", () -> _configuration.DataProvider));
+        metrics.addCustomChart(new SingleLineChart("whitelisted_players", () -> database.allList().size()));
+        metrics.addCustomChart(new SimplePie("whitelisted_players_per_server", () -> Integer.toString(database.allList().size())));
+        metrics.addCustomChart(new SimplePie("data_provider", () -> configuration.DataProvider));
 
         UpdateChecker updateChecker = new UpdateChecker(this, 99914);
         updateChecker.getVersion(version ->
@@ -78,28 +78,28 @@ public final class TemporaryWhiteList extends JavaPlugin
         });
     }
 
-    public void Load()
+    public void load()
     {
-        if (_loaded) Unload();
+        if (loaded) unload();
 
         getLogger().info("Loading configurations...");
-        _configuration = LoadConfiguration();
+        configuration = loadConfiguration();
 
         getLogger().info("Loading messages...");
-        LocalizationsLoader localizationsLoader = new LocalizationsLoader(this, _configuration);
-        localizationsLoader.CopyDefaultTranslations();
-        _messages = localizationsLoader.LoadMessages();
+        LocalizationsLoader localizationsLoader = new LocalizationsLoader(this);
+        localizationsLoader.copyDefaultTranslations();
+        messages = localizationsLoader.loadMessages();
 
-        _timeConverter = new TimeConverter(_configuration);
+        timeConverter = new TimeConverter(configuration);
 
         getLogger().info("Loading data...");
-        _database = LoadDatabase(_configuration);
+        database = loadDatabase(configuration);
 
         getLogger().info("Loading commands...");
         TwlCommand commands = new TwlCommand(this);
-        commands.Register(Objects.requireNonNull(getCommand("twl")));
+        commands.register(Objects.requireNonNull(getCommand("twl")));
         TwlSyncCommand syncCommands = new TwlSyncCommand(this);
-        syncCommands.Register(Objects.requireNonNull(getCommand("twl-sync")));
+        syncCommands.register(Objects.requireNonNull(getCommand("twl-sync")));
 
         getLogger().info("Loading placeholders...");
         Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");
@@ -109,37 +109,37 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
         else
         {
-            _placeholdersExpansion = new PlaceholdersExpansion(_messages, _database, _timeConverter, this);
-            _placeholdersExpansion.register();
+            placeholdersExpansion = new PlaceholdersExpansion(messages, database, timeConverter, this);
+            placeholdersExpansion.register();
             Text.placeholderApiEnabled = true;
         }
 
         getLogger().info("Loading events handler...");
-        EventsListener eventsListener = new EventsListener(_messages, _database, this);
+        EventsListener eventsListener = new EventsListener(messages, database, this);
         getServer().getPluginManager().registerEvents(eventsListener, this);
 
-        if (GetEnabledInFile())
+        if (getEnabledInFile())
         {
             getLogger().info("Enabling...");
-            Enable();
+            enable();
         }
 
-        _loaded = true;
+        loaded = true;
         getLogger().info("Loaded");
     }
 
-    private void Unload()
+    private void unload()
     {
         HandlerList.unregisterAll(this);
 
-        if (_placeholdersExpansion != null) _placeholdersExpansion.unregister();
+        if (placeholdersExpansion != null) placeholdersExpansion.unregister();
     }
 
-    private Config LoadConfiguration()
+    private Config loadConfiguration()
     {
         try
         {
-            return new Config(YamlConfig.LoadOrCreate("config.yml", this));
+            return new Config(YamlConfig.loadOrCreate("config.yml", this));
         }
         catch (Exception e)
         {
@@ -148,13 +148,13 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    private PlayerDatabase LoadDatabase(Config config)
+    private PlayerDatabase loadDatabase(Config config)
     {
         IDataProvider dataProvider;
 
         if (config.DataProvider.equals("yaml"))
         {
-            dataProvider = LoadYamlData(config);
+            dataProvider = loadYamlData(config);
         }
         else if (config.DataProvider.equals("mysql"))
         {
@@ -166,7 +166,7 @@ public final class TemporaryWhiteList extends JavaPlugin
             {
                 e.printStackTrace();
                 Bukkit.getLogger().warning("Can't connect to mysql data base! This plugin will use yaml data storing");
-                dataProvider = LoadYamlData(config);
+                dataProvider = loadYamlData(config);
             }
         }
         else throw new RuntimeException("cannot load data provider of type: " + config.DataProvider);
@@ -174,11 +174,11 @@ public final class TemporaryWhiteList extends JavaPlugin
         return new PlayerDatabase(dataProvider, config.RefreshAfter, config.IgnoreCase);
     }
 
-    public YamlDataProvider LoadYamlData(Config config)
+    public YamlDataProvider loadYamlData(Config config)
     {
         try
         {
-            return new YamlDataProvider(YamlConfig.LoadOrCreateFile(config.DataFile, this));
+            return new YamlDataProvider(YamlConfig.loadOrCreateFile(config.DataFile, this));
         }
         catch (Exception e)
         {
@@ -187,7 +187,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public SqlDataProvider LoadSqlData(Config config)
+    public SqlDataProvider loadSqlData(Config config)
     {
         try
         {
@@ -200,42 +200,42 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
-    public boolean Enable()
+    public boolean enable()
     {
-        if (_enabled) return false;
+        if (enabled) return false;
 
-        SetEnabledInFile(true);
-        RunKickerTask();
-        _enabled = true;
+        setEnabledInFile(true);
+        runKickerTask();
+        enabled = true;
         return true;
     }
 
-    private void RunKickerTask()
+    private void runKickerTask()
     {
         _kickerTask = Bukkit.getScheduler().runTaskTimer(this, () ->
         {
             for (Player player : getServer().getOnlinePlayers())
             {
-                if (_database.CanJoin(player.getName())) continue;
+                if (database.canJoin(player.getName())) continue;
                 if (player.isOp()) continue;
                 if (player.hasPermission("TemporaryWhitelist.Bypass")) continue;
 
-                player.kickPlayer(String.join("\n", Text.Colorize(player, _messages.Kick.WhilePlaying)));
+                player.kickPlayer(String.join("\n", Text.colorize(player, messages.Kick.WhilePlaying)));
             }
-        }, 0, _configuration.SubscriptionEndCheckTicks);
+        }, 0, configuration.SubscriptionEndCheckTicks);
     }
 
-    public boolean Disable()
+    public boolean disable()
     {
-        if (!_enabled) return false;
+        if (!enabled) return false;
 
-        SetEnabledInFile(false);
+        setEnabledInFile(false);
         _kickerTask.cancel();
-        _enabled = false;
+        enabled = false;
         return true;
     }
 
-    private void SetEnabledInFile(boolean enabled)
+    private void setEnabledInFile(boolean enabled)
     {
         File configFile = new File(this.getDataFolder(), "enabled.txt");
 
@@ -253,17 +253,17 @@ public final class TemporaryWhiteList extends JavaPlugin
             throw new RuntimeException("Error while setting enabled in file", e);
         }
 
-        _enabled = enabled;
+        this.enabled = enabled;
     }
 
-    private boolean GetEnabledInFile()
+    private boolean getEnabledInFile()
     {
         try
         {
             File configFile = new File(this.getDataFolder(), "enabled.txt");
             if (!configFile.exists())
             {
-                SetEnabledInFile(true);
+                setEnabledInFile(true);
                 return true;
             }
             try(BufferedReader reader = new BufferedReader(new FileReader(configFile)))

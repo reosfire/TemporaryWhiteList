@@ -16,46 +16,46 @@ import java.util.concurrent.atomic.AtomicReference;
 @CommandName("easy-whitelist")
 public class EasyWhitelistImportCommand extends CommandNode
 {
-    private final ImportCommandResultConfig _commandResults;
-    private final PlayerDatabase _database;
-    private final TimeConverter _timeConverter;
+    private final ImportCommandResultConfig commandResults;
+    private final PlayerDatabase database;
+    private final TimeConverter timeConverter;
 
     public EasyWhitelistImportCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _commandResults = pluginInstance.getMessages().CommandResults.Import;
-        _database = pluginInstance.getDatabase();
-        _timeConverter = pluginInstance.getTimeConverter();
+        commandResults = pluginInstance.getMessages().CommandResults.Import;
+        database = pluginInstance.getDatabase();
+        timeConverter = pluginInstance.getTimeConverter();
     }
 
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (SendMessageIf(args.length != 2, _commandResults.EasyWhiteListUsage, sender)) return true;
+        if (sendMessageIf(args.length != 2, commandResults.EasyWhiteListUsage, sender)) return true;
 
         AtomicReference<Long> defaultTime = new AtomicReference<>();
-        if (!TryParse(_timeConverter::ParseTime, args[0], defaultTime))
+        if (!tryParse(timeConverter::parseTime, args[0], defaultTime))
         {
-            _commandResults.IncorrectTime.Send(sender);
+            commandResults.IncorrectTime.Send(sender);
             return true;
         }
 
         AtomicReference<Boolean> defaultPermanent = new AtomicReference<>();
-        if (!TryParse(Boolean::parseBoolean, args[1], defaultPermanent))
+        if (!tryParse(Boolean::parseBoolean, args[1], defaultPermanent))
         {
-            _commandResults.IncorrectPermanent.Send(sender);
+            commandResults.IncorrectPermanent.Send(sender);
             return true;
         }
 
         try
         {
             IDataExporter dataExporter = new EasyWhitelist(defaultTime.get(), defaultPermanent.get());
-            dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
-            _commandResults.SuccessfullyStarted.Send(sender);
+            dataExporter.exportAsyncAndHandle(database, commandResults, sender);
+            commandResults.SuccessfullyStarted.Send(sender);
         }
         catch (ReflectionException e)
         {
-            _commandResults.EasyWhiteListPluginNotFound.Send(sender);
+            commandResults.EasyWhiteListPluginNotFound.Send(sender);
             e.printStackTrace();
         }
         return true;

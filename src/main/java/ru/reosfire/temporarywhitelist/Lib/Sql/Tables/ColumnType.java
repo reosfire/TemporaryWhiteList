@@ -1,6 +1,8 @@
 package ru.reosfire.temporarywhitelist.Lib.Sql.Tables;
 
-public enum ColumnType
+import ru.reosfire.temporarywhitelist.Lib.Sql.ISqlPart;
+
+public enum ColumnType implements ISqlPart
 {
     Bit, TinyInt, SmallInt, Int, BigInt, Decimal, Numeric, Float, Real, Boolean,
     Date, Time, DateTime, TimeStamp, Year,
@@ -26,7 +28,8 @@ public enum ColumnType
 
     }
 
-    public String ToString()
+    @Override
+    public String toSqlString()
     {
         return toString();
     }

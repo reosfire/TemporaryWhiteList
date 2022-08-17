@@ -20,7 +20,7 @@ public class Where implements ISelectionAttribute
     }
 
     @Override
-    public String ToString()
+    public String toSqlString()
     {
         return result.toString();
     }

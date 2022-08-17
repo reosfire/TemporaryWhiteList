@@ -7,35 +7,35 @@ import java.sql.*;
 
 public class SqlConnection
 {
-    private final ISqlConfiguration _configuration;
-    private Connection _connection = null;
+    private final ISqlConfiguration configuration;
+    private Connection connection = null;
 
     public SqlConnection(ISqlConfiguration config) throws SQLException
     {
-        _configuration = config;
+        configuration = config;
         Open();
     }
 
     private void Open() throws SQLException
     {
 
-        if (_connection != null && !_connection.isClosed() && isConnectionAlive()) return;
+        if (connection != null && !connection.isClosed() && isConnectionAlive()) return;
 
         try
         {
             synchronized (this)
             {
                 String connectionBuilder =
-                        "jdbc:mysql://" + _configuration.getIp() + ":" + _configuration.getPort() + "/" + _configuration.getDatabase()
-                                + "?useSSL=" + (_configuration.getUseSsl() ? "true" : "false")
-                                + "&useUnicode=" + (_configuration.getUseUnicode() ? "true" : "false")
-                                + "&autoReconnect=" + (_configuration.getAutoReconnect() ? "true" : "false")
-                                + "&failOverReadOnly=" + (_configuration.getFailOverReadOnly() ? "true" : "false")
-                                + "&maxReconnects=" + _configuration.getMaxReconnects();
+                        "jdbc:mysql://" + configuration.getIp() + ":" + configuration.getPort() + "/" + configuration.getDatabase()
+                                + "?useSSL=" + (configuration.getUseSsl() ? "true" : "false")
+                                + "&useUnicode=" + (configuration.getUseUnicode() ? "true" : "false")
+                                + "&autoReconnect=" + (configuration.getAutoReconnect() ? "true" : "false")
+                                + "&failOverReadOnly=" + (configuration.getFailOverReadOnly() ? "true" : "false")
+                                + "&maxReconnects=" + configuration.getMaxReconnects();
 
                 Class.forName("com.mysql.jdbc.Driver");
-                _connection = DriverManager.getConnection(connectionBuilder, _configuration.getUser(),
-                        _configuration.getPassword());
+                connection = DriverManager.getConnection(connectionBuilder, configuration.getUser(),
+                        configuration.getPassword());
             }
         }
         catch (ClassNotFoundException e)
@@ -49,7 +49,7 @@ public class SqlConnection
         boolean alive;
         try
         {
-            _connection.createStatement().executeQuery("SELECT 1;");
+            connection.createStatement().executeQuery("SELECT 1;");
             alive = true;
         }
         catch (SQLException e)
@@ -62,10 +62,10 @@ public class SqlConnection
     public Connection getConnection() throws SQLException
     {
         Open();
-        return _connection;
+        return connection;
     }
 
-    public void CreateTable(String name, TableColumn... columns) throws SQLException
+    public void createTable(String name, TableColumn... columns) throws SQLException
     {
         StringBuilder request = new StringBuilder("CREATE TABLE IF NOT EXISTS ").append(name).append(" (");
         for (int i = 0; i < columns.length; i++)
@@ -80,7 +80,7 @@ public class SqlConnection
         }
     }
 
-    public ResultSet Select(String table, String[] columns, ISelectionAttribute... attributes) throws SQLException
+    public ResultSet select(String table, String[] columns, ISelectionAttribute... attributes) throws SQLException
     {
         StringBuilder request = new StringBuilder("SELECT ");
         for (int i = 0; i < columns.length; i++)
@@ -92,7 +92,7 @@ public class SqlConnection
         for (ISelectionAttribute attribute : attributes)
         {
             request.append(" ");
-            request.append(attribute.ToString());
+            request.append(attribute.toSqlString());
         }
         try(Statement statement = getConnection().createStatement())
         {

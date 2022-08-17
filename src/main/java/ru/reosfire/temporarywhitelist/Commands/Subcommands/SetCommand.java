@@ -14,6 +14,7 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.TimeConverter;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @CommandName("set")
@@ -21,18 +22,18 @@ import java.util.stream.Collectors;
 @ExecuteAsync
 public class SetCommand extends CommandNode
 {
-    private final SetCommandResultsConfig _commandResults;
-    private final PlayerDatabase _database;
-    private final TimeConverter _timeConverter;
-    private final boolean _forceSync;
+    private final SetCommandResultsConfig commandResults;
+    private final PlayerDatabase database;
+    private final TimeConverter timeConverter;
+    private final boolean forceSync;
 
     public SetCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _commandResults = pluginInstance.getMessages().CommandResults.Set;
-        _database = pluginInstance.getDatabase();
-        _timeConverter = pluginInstance.getTimeConverter();
-        _forceSync = forceSync;
+        commandResults = pluginInstance.getMessages().CommandResults.Set;
+        database = pluginInstance.getDatabase();
+        timeConverter = pluginInstance.getTimeConverter();
+        this.forceSync = forceSync;
     }
     public SetCommand(TemporaryWhiteList pluginInstance)
     {
@@ -42,70 +43,70 @@ public class SetCommand extends CommandNode
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (SendMessageIf(args.length != 2, _commandResults.Usage, sender)) return true;
+        if (sendMessageIf(args.length != 2, commandResults.Usage, sender)) return true;
 
         Replacement playerReplacement = new Replacement("{player}", args[0]);
         Replacement timeReplacement = new Replacement("{time}", args[1]);
 
         if (args[1].equals("permanent"))
         {
-            _database.SetPermanent(args[0]).whenComplete((changed, exception) ->
-                    HandleCompletion(changed, exception, sender,playerReplacement, timeReplacement));
+            database.setPermanent(args[0]).whenComplete((changed, exception) ->
+                    handleCompletion(changed, exception, sender,playerReplacement, timeReplacement));
         }
         else
         {
             long time;
             try
             {
-                time = _timeConverter.ParseTime(args[1]);
+                time = timeConverter.parseTime(args[1]);
             }
             catch (Exception e)
             {
-                _commandResults.IncorrectTime.Send(sender);
+                commandResults.IncorrectTime.Send(sender);
                 return true;
             }
 
-            if (_forceSync)
+            if (forceSync)
             {
                 try
                 {
-                    Boolean changed = _database.Set(args[0], time).join();
-                    if (!changed) _commandResults.NothingChanged.Send(sender, playerReplacement, timeReplacement);
-                    else _commandResults.Success.Send(sender, playerReplacement, timeReplacement);
+                    Boolean changed = database.set(args[0], time).join();
+                    if (!changed) commandResults.NothingChanged.Send(sender, playerReplacement, timeReplacement);
+                    else commandResults.Success.Send(sender, playerReplacement, timeReplacement);
                 }
                 catch (Exception e)
                 {
-                    _commandResults.Error.Send(sender, playerReplacement, timeReplacement);
+                    commandResults.Error.Send(sender, playerReplacement, timeReplacement);
                     e.printStackTrace();
                 }
             }
             else
             {
-                _database.Set(args[0], time).whenComplete((changed, exception) ->
-                        HandleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
+                database.set(args[0], time).whenComplete((changed, exception) ->
+                        handleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
             }
         }
         return true;
     }
 
-    private void HandleCompletion(boolean changed, Throwable exception, CommandSender sender, Replacement... replacements)
+    private void handleCompletion(boolean changed, Throwable exception, CommandSender sender, Replacement... replacements)
     {
         if (!changed)
-            _commandResults.NothingChanged.Send(sender, replacements);
+            commandResults.NothingChanged.Send(sender, replacements);
         else if (exception == null)
-            _commandResults.Success.Send(sender, replacements);
+            commandResults.Success.Send(sender, replacements);
         else
         {
-            _commandResults.Error.Send(sender, replacements);
+            commandResults.Error.Send(sender, replacements);
             exception.printStackTrace();
         }
     }
 
     @Override
-    public java.util.List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
     {
         if (args.length == 1)
-            return _database.AllList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
+            return database.allList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
 
         return super.onTabComplete(sender, command, alias, args);
@@ -114,7 +115,7 @@ public class SetCommand extends CommandNode
     @Override
     public boolean isAsync()
     {
-        if (_forceSync) return false;
+        if (forceSync) return false;
         return super.isAsync();
     }
 }

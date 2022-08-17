@@ -6,23 +6,23 @@ import ru.reosfire.temporarywhitelist.Configuration.Config;
 
 public class TimeConverter
 {
-    private final Config _config;
+    private final Config config;
 
     public TimeConverter(Config config)
     {
-        _config = config;
+        this.config = config;
     }
 
-    public String DurationToString(long seconds)
+    public String durationToString(long seconds)
     {
-        return DurationFormatUtils.formatDuration(seconds * 1000, _config.DurationFormat);
+        return DurationFormatUtils.formatDuration(seconds * 1000, config.DurationFormat);
     }
-    public String DateTimeToString(long seconds)
+    public String dateTimeToString(long seconds)
     {
-        return DateFormatUtils.format(seconds * 1000, _config.DateTimeFormat);
+        return DateFormatUtils.format(seconds * 1000, config.DateTimeFormat);
     }
 
-    public long ParseTime(String time)
+    public long parseTime(String time)
     {
         long secondsInYear = 31536000;
         long secondsInDay = 86400;

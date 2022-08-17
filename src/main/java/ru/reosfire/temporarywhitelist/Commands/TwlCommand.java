@@ -10,28 +10,28 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
-    private final TwlCommandResultsConfig _commandResults;
+    private final TwlCommandResultsConfig commandResults;
     public TwlCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
 
-        _commandResults = pluginInstance.getMessages().CommandResults.Twl;
+        commandResults = pluginInstance.getMessages().CommandResults.Twl;
 
-        AddChildren(new AddCommand(pluginInstance));
-        AddChildren(new SetCommand(pluginInstance));
-        AddChildren(new RemoveCommand(pluginInstance));
-        AddChildren(new CheckCommand(pluginInstance));
-        AddChildren(new ListCommand(pluginInstance));
-        AddChildren(new ImportCommand(pluginInstance));
-        AddChildren(new EnableCommand(pluginInstance));
-        AddChildren(new DisableCommand(pluginInstance));
-        AddChildren(new ReloadCommand(pluginInstance));
+        addChildren(new AddCommand(pluginInstance));
+        addChildren(new SetCommand(pluginInstance));
+        addChildren(new RemoveCommand(pluginInstance));
+        addChildren(new CheckCommand(pluginInstance));
+        addChildren(new ListCommand(pluginInstance));
+        addChildren(new ImportCommand(pluginInstance));
+        addChildren(new EnableCommand(pluginInstance));
+        addChildren(new DisableCommand(pluginInstance));
+        addChildren(new ReloadCommand(pluginInstance));
     }
 
     @Override
     public boolean execute(CommandSender sender, String[] args)
     {
-        _commandResults.Usage.Send(sender);
+        commandResults.Usage.Send(sender);
         return true;
     }
 }

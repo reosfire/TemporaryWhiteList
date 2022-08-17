@@ -10,15 +10,15 @@ import java.util.List;
 
 public class EasyWhitelist implements IDataExporter
 {
-    private final long _defaultTimeAmount;
-    private final boolean _defaultPermanent;
-    private final Method _getWhiteListsMethod;
-    private final Object _WLStorage;
+    private final long defaultTimeAmount;
+    private final boolean defaultPermanent;
+    private final Method getWhiteListsMethod;
+    private final Object WLStorage;
 
     public EasyWhitelist(long defaultTimeAmount, boolean defaultPermanent) throws ReflectionException
     {
-        _defaultTimeAmount = defaultTimeAmount;
-        _defaultPermanent = defaultPermanent;
+        this.defaultTimeAmount = defaultTimeAmount;
+        this.defaultPermanent = defaultPermanent;
 
         try
         {
@@ -28,10 +28,10 @@ public class EasyWhitelist implements IDataExporter
 
             Object easyWhiteListInstance = getInstanceMethod.invoke(null);
 
-            _WLStorage = getStorageMethod.invoke(easyWhiteListInstance);
+            WLStorage = getStorageMethod.invoke(easyWhiteListInstance);
 
             Class<?> WLStorageClass = Class.forName("com.gmail.jyckosianjaya.easywhitelist.WLStorage");
-            _getWhiteListsMethod = WLStorageClass.getMethod("getWhiteLists");
+            getWhiteListsMethod = WLStorageClass.getMethod("getWhiteLists");
         }
         catch (Exception e)
         {
@@ -40,17 +40,17 @@ public class EasyWhitelist implements IDataExporter
     }
 
     @Override
-    public List<PlayerData> GetAll()
+    public List<PlayerData> getAll()
     {
         long currentTime = Instant.now().getEpochSecond();
         ArrayList<PlayerData> result = new ArrayList<>();
 
         try
         {
-            for (Object player : (ArrayList<?>)_getWhiteListsMethod.invoke(_WLStorage))
+            for (Object player : (ArrayList<?>) getWhiteListsMethod.invoke(WLStorage))
             {
                 if (!(player instanceof String)) continue;
-                result.add(new PlayerData((String) player, currentTime, _defaultTimeAmount, _defaultPermanent));
+                result.add(new PlayerData((String) player, currentTime, defaultTimeAmount, defaultPermanent));
             }
         }
         catch (Exception e)

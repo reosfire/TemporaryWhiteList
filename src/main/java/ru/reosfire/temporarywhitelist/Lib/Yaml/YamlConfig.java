@@ -21,28 +21,28 @@ import java.util.Map;
 
 public abstract class YamlConfig
 {
-    public static YamlConfiguration LoadOrCreate(String resultFileName, String defaultConfigurationResource,
+    public static YamlConfiguration loadOrCreate(String resultFileName, String defaultConfigurationResource,
                                                  JavaPlugin plugin) throws IOException, InvalidConfigurationException
     {
         YamlConfiguration config = new YamlConfiguration();
-        config.load(LoadOrCreateFile(resultFileName, defaultConfigurationResource, plugin));
+        config.load(loadOrCreateFile(resultFileName, defaultConfigurationResource, plugin));
         return config;
     }
 
-    public static YamlConfiguration LoadOrCreate(File file) throws IOException, InvalidConfigurationException
+    public static YamlConfiguration loadOrCreate(File file) throws IOException, InvalidConfigurationException
     {
         YamlConfiguration config = new YamlConfiguration();
         config.load(file);
         return config;
     }
 
-    public static YamlConfiguration LoadOrCreate(String fileName, JavaPlugin plugin) throws IOException,
+    public static YamlConfiguration loadOrCreate(String fileName, JavaPlugin plugin) throws IOException,
             InvalidConfigurationException
     {
-        return LoadOrCreate(fileName, fileName, plugin);
+        return loadOrCreate(fileName, fileName, plugin);
     }
 
-    public static File LoadOrCreateFile(String resultFileName, String defaultConfigurationResource,
+    public static File loadOrCreateFile(String resultFileName, String defaultConfigurationResource,
                                         JavaPlugin plugin) throws IOException
     {
         File configFile = new File(plugin.getDataFolder(), resultFileName);
@@ -60,22 +60,22 @@ public abstract class YamlConfig
         return configFile;
     }
 
-    public static File LoadOrCreateFile(String fileName, JavaPlugin plugin) throws IOException
+    public static File loadOrCreateFile(String fileName, JavaPlugin plugin) throws IOException
     {
-        return LoadOrCreateFile(fileName, fileName, plugin);
+        return loadOrCreateFile(fileName, fileName, plugin);
     }
 
-    protected final ConfigurationSection _configurationSection;
+    protected final ConfigurationSection configurationSection;
 
     public ConfigurationSection getSection()
     {
-        return _configurationSection;
+        return configurationSection;
     }
 
     public YamlConfig(ConfigurationSection configurationSection)
     {
         if (configurationSection == null) throw new NullArgumentException("configurationSection");
-        this._configurationSection = configurationSection;
+        this.configurationSection = configurationSection;
     }
     private  <T extends YamlConfig> List<T> getNestedConfigs(IConfigCreator<T> creator, ConfigurationSection section)
     {
@@ -109,12 +109,12 @@ public abstract class YamlConfig
 
     public String getString(String path)
     {
-        return _configurationSection.getString(path);
+        return configurationSection.getString(path);
     }
 
     public String getString(String path, String def)
     {
-        return _configurationSection.getString(path, def);
+        return configurationSection.getString(path, def);
     }
 
     public String getColoredString(String path)
@@ -129,40 +129,40 @@ public abstract class YamlConfig
 
     public int getInt(String path)
     {
-        return _configurationSection.getInt(path);
+        return configurationSection.getInt(path);
     }
 
     public int getInt(String path, int def)
     {
-        return _configurationSection.getInt(path, def);
+        return configurationSection.getInt(path, def);
     }
 
     public long getLong(String path)
     {
-        return _configurationSection.getLong(path);
+        return configurationSection.getLong(path);
     }
 
     public boolean getBoolean(String path, boolean def)
     {
-        return _configurationSection.getBoolean(path, def);
+        return configurationSection.getBoolean(path, def);
     }
 
     public ConfigurationSection getSection(String path)
     {
-        ConfigurationSection result = this._configurationSection.getConfigurationSection(path);
+        ConfigurationSection result = this.configurationSection.getConfigurationSection(path);
         if (result == null) throw new IllegalArgumentException("Unknown path: " + getSection().getCurrentPath() + "." + path);
         return result;
     }
     public ConfigurationSection getSection(String path, ConfigurationSection def)
     {
-        ConfigurationSection result = this._configurationSection.getConfigurationSection(path);
+        ConfigurationSection result = this.configurationSection.getConfigurationSection(path);
         if (result == null) return def;
         return result;
     }
 
     public List<String> getStringList(String path)
     {
-        List<String> stringList = _configurationSection.getStringList(path);
+        List<String> stringList = configurationSection.getStringList(path);
         if (stringList.isEmpty())
         {
             String string = getString(path);
@@ -178,7 +178,7 @@ public abstract class YamlConfig
 
     public List<String> getColoredStringList(String path)
     {
-        return Text.SetColors(getStringList(path));
+        return Text.setColors(getStringList(path));
     }
 
 

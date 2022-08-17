@@ -16,12 +16,12 @@ import java.util.function.Function;
 
 public abstract class CommandNode implements CommandExecutor, TabCompleter
 {
-    private final String _noPermissionMessage;
-    private List<CommandNode> _children = null;
+    private final String noPermissionMessage;
+    private List<CommandNode> children = null;
 
     public CommandNode(String noPermission)
     {
-        _noPermissionMessage = noPermission;
+        noPermissionMessage = noPermission;
 
         Class<? extends CommandNode> currentExtendedClass = this.getClass();
         Class<?>[] declaredClasses = currentExtendedClass.getDeclaredClasses();
@@ -35,7 +35,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
                 if (innerInstance instanceof CommandNode)
                 {
                     CommandNode commandNode = (CommandNode) innerInstance;
-                    AddChildren(commandNode);
+                    addChildren(commandNode);
                 }
             }
             catch (Exception e)
@@ -56,9 +56,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         }
         boolean executorFound = false;
         boolean lastExecutionResult = false;
-        if (_children != null && args.length > 0)
+        if (children != null && args.length > 0)
         {
-            for (CommandNode child : _children)
+            for (CommandNode child : children)
             {
                 if (child.getName().equals(args[0]))
                 {
@@ -85,8 +85,8 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         {
             return new ArrayList<>();
         }
-        if (_children == null) return completeTab(args);
-        for (CommandNode child : _children)
+        if (children == null) return completeTab(args);
+        for (CommandNode child : children)
         {
             if (child.getName().equals(args[0]))
             {
@@ -98,7 +98,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         if (args.length == 1)
         {
             List<String> result = new ArrayList<>();
-            for (CommandNode child : _children)
+            for (CommandNode child : children)
             {
                 if (child.getName().startsWith(args[0]) && (child.getPermission() == null || sender.hasPermission(child.getPermission())))
                 {
@@ -110,10 +110,10 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         return new ArrayList<>();
     }
 
-    public final void AddChildren(CommandNode child)
+    public final void addChildren(CommandNode child)
     {
-        if (_children == null) _children = new ArrayList<>();
-        _children.add(child);
+        if (children == null) children = new ArrayList<>();
+        children.add(child);
     }
 
     private boolean execute(CommandSender sender, String[] args, boolean async)
@@ -166,16 +166,16 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
 
     protected void noPermissionAction(CommandSender sender)
     {
-        sender.sendMessage(_noPermissionMessage);
+        sender.sendMessage(noPermissionMessage);
     }
 
-    public final void Register(PluginCommand command)
+    public final void register(PluginCommand command)
     {
         command.setExecutor(this);
         command.setTabCompleter(this);
     }
 
-    protected final <T> boolean TryParse(Function<String, T> parser, String s, AtomicReference<T> container)
+    protected final <T> boolean tryParse(Function<String, T> parser, String s, AtomicReference<T> container)
     {
         try
         {
@@ -188,7 +188,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         }
     }
 
-    protected final boolean SendMessageIf(boolean send, MultilineMessage message, CommandSender sender, Replacement... replacements)
+    protected final boolean sendMessageIf(boolean send, MultilineMessage message, CommandSender sender, Replacement... replacements)
     {
         if (send) message.Send(sender, replacements);
         return send;

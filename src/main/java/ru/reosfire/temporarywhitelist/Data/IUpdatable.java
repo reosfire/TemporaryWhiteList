@@ -4,5 +4,5 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IUpdatable
 {
-    CompletableFuture<?> Update(PlayerData playerData);
+    CompletableFuture<?> update(PlayerData playerData);
 }

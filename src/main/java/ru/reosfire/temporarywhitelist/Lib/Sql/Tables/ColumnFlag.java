@@ -11,7 +11,7 @@ public enum ColumnFlag implements IColumnAttribute
     }
 
     @Override
-    public String ToString()
+    public String toSqlString()
     {
         return toString();
     }

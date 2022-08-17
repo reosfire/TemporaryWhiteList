@@ -12,27 +12,27 @@ import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 @CommandName("self-sql")
 public class SelfSqlImportCommand extends CommandNode
 {
-    private final TemporaryWhiteList _plugin;
-    private final ImportCommandResultConfig _commandResults;
-    private final PlayerDatabase _database;
+    private final TemporaryWhiteList plugin;
+    private final ImportCommandResultConfig commandResults;
+    private final PlayerDatabase database;
 
     public SelfSqlImportCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
-        _plugin = pluginInstance;
-        _commandResults = pluginInstance.getMessages().CommandResults.Import;
-        _database = pluginInstance.getDatabase();
+        plugin = pluginInstance;
+        commandResults = pluginInstance.getMessages().CommandResults.Import;
+        database = pluginInstance.getDatabase();
     }
 
     @Override
     protected boolean execute(CommandSender sender, String[] args)
     {
-        if (SendMessageIf(_database.getProvider() instanceof SqlDataProvider, _commandResults.ImportFromSelf, sender)) return true;
-        if (SendMessageIf(args.length != 0, _commandResults.SelfSqlUsage, sender)) return true;
+        if (sendMessageIf(database.getProvider() instanceof SqlDataProvider, commandResults.ImportFromSelf, sender)) return true;
+        if (sendMessageIf(args.length != 0, commandResults.SelfSqlUsage, sender)) return true;
 
-        IDataExporter dataExporter = _plugin.LoadSqlData(_plugin.getConfiguration());
-        dataExporter.ExportAsyncAndHandle(_database, _commandResults, sender);
-        _commandResults.SuccessfullyStarted.Send(sender);
+        IDataExporter dataExporter = plugin.loadSqlData(plugin.getConfiguration());
+        dataExporter.exportAsyncAndHandle(database, commandResults, sender);
+        commandResults.SuccessfullyStarted.Send(sender);
         return true;
     }
 }
