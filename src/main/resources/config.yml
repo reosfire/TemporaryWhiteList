@@ -28,6 +28,7 @@ Mysql:
   AutoReconnect: true
   FailOverReadOnly: false
   MaxReconnects: 2
+  MaxConnectionLifetime: 550000
 
 #File in `translations` folder to use
 Translation: "en.yml"

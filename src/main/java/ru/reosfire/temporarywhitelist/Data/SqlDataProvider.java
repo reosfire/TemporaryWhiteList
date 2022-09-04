@@ -1,8 +1,10 @@
 package ru.reosfire.temporarywhitelist.Data;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
-import ru.reosfire.temporarywhitelist.Lib.Sql.SqlConnection;
 
+import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,20 +16,27 @@ import java.util.concurrent.CompletableFuture;
 public class SqlDataProvider implements IDataProvider
 {
     private final Config configuration;
-    private final SqlConnection sqlconnection;
+    private final DataSource dataSource;
 
     public SqlDataProvider(Config configuration) throws SQLException
     {
         this.configuration = configuration;
 
-        sqlconnection = new SqlConnection(this.configuration.SqlConfiguration);
+        HikariConfig hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(configuration.SqlConfiguration.getConnectionString());
+        hikariConfig.setUsername(configuration.SqlConfiguration.getUser());
+        hikariConfig.setPassword(configuration.SqlConfiguration.getPassword());
+        hikariConfig.setPoolName("TWL Hikari pool");
+        hikariConfig.setMaxLifetime(configuration.SqlConfiguration.MaxConnectionLifetime);
+
+        dataSource = new HikariDataSource(hikariConfig);
 
         String createTableString = "CREATE TABLE IF NOT EXISTS `" + this.configuration.SqlTable + "` (" +
                 "Player VARCHAR(32) NOT NULL UNIQUE, " +
                 "Permanent BOOLEAN NOT NULL, " +
                 "LastStartTime BIGINT NOT NULL, " +
                 "TimeAmount BIGINT NOT NULL);";
-        try (Statement statement = sqlconnection.getConnection().createStatement())
+        try (Statement statement = dataSource.getConnection().createStatement())
         {
             statement.executeUpdate(createTableString);
         }
@@ -41,7 +50,7 @@ public class SqlDataProvider implements IDataProvider
             String setRequest = "INSERT INTO " + configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
                     "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
                     "TimeAmount=?;";
-            try (PreparedStatement statement = sqlconnection.getConnection().prepareStatement(setRequest))
+            try (PreparedStatement statement = dataSource.getConnection().prepareStatement(setRequest))
             {
                 statement.setString(1, playerData.Name);
                 statement.setBoolean(2, playerData.Permanent);
@@ -66,7 +75,7 @@ public class SqlDataProvider implements IDataProvider
         return CompletableFuture.runAsync(() ->
         {
             String removeRequest = "DELETE FROM " + configuration.SqlTable + " WHERE Player=?;";
-            try(PreparedStatement statement = sqlconnection.getConnection().prepareStatement(removeRequest))
+            try(PreparedStatement statement = dataSource.getConnection().prepareStatement(removeRequest))
             {
                 statement.setString(1, playerName);
                 statement.executeUpdate();
@@ -82,7 +91,7 @@ public class SqlDataProvider implements IDataProvider
     public PlayerData get(String playerName)
     {
         String selectRequest = "SELECT * FROM " + configuration.SqlTable + " WHERE Player=?;";
-        try(PreparedStatement statement = sqlconnection.getConnection().prepareStatement(selectRequest))
+        try(PreparedStatement statement = dataSource.getConnection().prepareStatement(selectRequest))
         {
             statement.setString(1, playerName);
             ResultSet player = statement.executeQuery();
@@ -99,7 +108,7 @@ public class SqlDataProvider implements IDataProvider
     public List<PlayerData> getAll()
     {
         String selectRequest = "SELECT * FROM " + configuration.SqlTable + ";";
-        try (Statement statement = sqlconnection.getConnection().createStatement())
+        try (Statement statement = dataSource.getConnection().createStatement())
         {
             List<PlayerData> result = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery(selectRequest);

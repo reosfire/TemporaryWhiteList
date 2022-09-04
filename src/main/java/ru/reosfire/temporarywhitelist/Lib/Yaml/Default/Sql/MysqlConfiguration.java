@@ -13,6 +13,7 @@ public class MysqlConfiguration extends YamlConfig implements ISqlConfiguration
     public final String Database;
     public final boolean UseSsl, UseUnicode, AutoReconnect, FailOverReadOnly;
     public final int Port, MaxReconnects;
+    public final long MaxConnectionLifetime;
 
     /**
      * @param configurationSection Ip, Port(3306), User, Password, Database, UseSsl(false), UseUnicode(true)
@@ -30,7 +31,8 @@ public class MysqlConfiguration extends YamlConfig implements ISqlConfiguration
         UseUnicode = getBoolean("UseUnicode", true);
         AutoReconnect = getBoolean("AutoReconnect", true);
         FailOverReadOnly = getBoolean("FailOverReadOnly", false);
-        MaxReconnects = getInt("MaxReconnects", 8);
+        MaxReconnects = getInt("MaxReconnects", 2);
+        MaxConnectionLifetime = getLong("MaxConnectionLifetime", 550000);
     }
 
     @Override
@@ -54,6 +56,12 @@ public class MysqlConfiguration extends YamlConfig implements ISqlConfiguration
                 + "&autoReconnect=" + (AutoReconnect ? "true" : "false")
                 + "&failOverReadOnly=" + (FailOverReadOnly ? "true" : "false")
                 + "&maxReconnects=" + MaxReconnects;
+    }
+
+    @Override
+    public long getMaxConnectionLifetime()
+    {
+        return MaxConnectionLifetime;
     }
 
     @Override

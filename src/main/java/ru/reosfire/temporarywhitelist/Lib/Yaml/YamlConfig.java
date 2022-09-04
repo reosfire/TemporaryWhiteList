@@ -141,6 +141,10 @@ public abstract class YamlConfig
     {
         return configurationSection.getLong(path);
     }
+    public long getLong(String path, long def)
+    {
+        return configurationSection.getLong(path, def);
+    }
 
     public boolean getBoolean(String path, boolean def)
     {

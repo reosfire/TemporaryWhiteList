@@ -8,11 +8,13 @@ import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 public class FileSqlConfiguration extends YamlConfig implements ISqlConfiguration
 {
     public final String FilePath;
+    public final long MaxConnectionLifetime;
 
     public FileSqlConfiguration(ConfigurationSection configurationSection)
     {
         super(configurationSection);
         FilePath = getString("FilePath");
+        MaxConnectionLifetime = getLong("MaxConnectionLifetime", 550000);
     }
 
     @Override
@@ -31,6 +33,12 @@ public class FileSqlConfiguration extends YamlConfig implements ISqlConfiguratio
     public String getConnectionString()
     {
         return "jdbc:sqlite:" + FilePath;
+    }
+
+    @Override
+    public long getMaxConnectionLifetime()
+    {
+        return MaxConnectionLifetime;
     }
 
     @Override
