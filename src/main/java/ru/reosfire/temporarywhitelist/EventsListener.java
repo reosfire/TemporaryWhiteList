@@ -5,9 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
-import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
+import ru.reosfire.temporarywhitelist.configuration.localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
-import ru.reosfire.temporarywhitelist.Lib.Text.Text;
+import ru.reosfire.temporarywhitelist.lib.text.Text;
 
 public class EventsListener implements Listener
 {

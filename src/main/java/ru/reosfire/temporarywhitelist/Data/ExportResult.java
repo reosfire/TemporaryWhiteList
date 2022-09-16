@@ -1,6 +1,6 @@
 package ru.reosfire.temporarywhitelist.Data;
 
-import ru.reosfire.temporarywhitelist.Lib.Text.Replacement;
+import ru.reosfire.temporarywhitelist.lib.text.Replacement;
 
 import java.time.Instant;
 import java.util.*;

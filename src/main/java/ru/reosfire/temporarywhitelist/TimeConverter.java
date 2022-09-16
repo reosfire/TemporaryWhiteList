@@ -2,7 +2,7 @@ package ru.reosfire.temporarywhitelist;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
-import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.configuration.Config;
 
 public class TimeConverter
 {
