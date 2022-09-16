@@ -1,8 +1,10 @@
-package ru.reosfire.temporarywhitelist.Data;
+package ru.reosfire.temporarywhitelist.Data.Providers;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Data.PlayerData;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
 
 import java.io.File;

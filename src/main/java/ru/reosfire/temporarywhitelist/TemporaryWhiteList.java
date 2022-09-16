@@ -15,11 +15,11 @@ import ru.reosfire.temporarywhitelist.Configuration.Config;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.Data.IDataProvider;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
-import ru.reosfire.temporarywhitelist.Data.SqlDataProvider;
-import ru.reosfire.temporarywhitelist.Data.YamlDataProvider;
+import ru.reosfire.temporarywhitelist.Data.Providers.SqlDataProvider;
+import ru.reosfire.temporarywhitelist.Data.Providers.YamlDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Text.Text;
 import ru.reosfire.temporarywhitelist.Lib.Yaml.YamlConfig;
-import ru.reosfire.temporarywhitelist.Data.Exporters.Loaders.LocalizationsLoader;
+import ru.reosfire.temporarywhitelist.Loaders.LocalizationsLoader;
 
 import java.io.*;
 import java.util.Objects;

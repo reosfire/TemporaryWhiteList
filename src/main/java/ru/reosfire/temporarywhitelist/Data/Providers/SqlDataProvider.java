@@ -1,8 +1,10 @@
-package ru.reosfire.temporarywhitelist.Data;
+package ru.reosfire.temporarywhitelist.Data.Providers;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import ru.reosfire.temporarywhitelist.Configuration.Config;
+import ru.reosfire.temporarywhitelist.Data.IDataProvider;
+import ru.reosfire.temporarywhitelist.Data.PlayerData;
 
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;

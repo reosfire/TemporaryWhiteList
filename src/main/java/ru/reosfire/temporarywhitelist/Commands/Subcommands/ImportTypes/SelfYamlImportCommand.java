@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.Configuration.Localization.CommandResults.ImportCommandResultConfig;
 import ru.reosfire.temporarywhitelist.Data.Exporters.IDataExporter;
 import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
-import ru.reosfire.temporarywhitelist.Data.YamlDataProvider;
+import ru.reosfire.temporarywhitelist.Data.Providers.YamlDataProvider;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandName;
 import ru.reosfire.temporarywhitelist.Lib.Commands.CommandNode;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
