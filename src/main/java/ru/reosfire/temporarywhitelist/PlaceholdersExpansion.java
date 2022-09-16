@@ -5,8 +5,8 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.reosfire.temporarywhitelist.configuration.localization.MessagesConfig;
-import ru.reosfire.temporarywhitelist.Data.PlayerData;
-import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
+import ru.reosfire.temporarywhitelist.data.PlayerData;
+import ru.reosfire.temporarywhitelist.data.PlayerDatabase;
 
 public class PlaceholdersExpansion extends PlaceholderExpansion
 {

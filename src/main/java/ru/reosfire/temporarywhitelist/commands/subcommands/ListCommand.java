@@ -2,8 +2,8 @@ package ru.reosfire.temporarywhitelist.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.configuration.localization.commandResults.ListCommandResultsConfig;
-import ru.reosfire.temporarywhitelist.Data.PlayerData;
-import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
+import ru.reosfire.temporarywhitelist.data.PlayerData;
+import ru.reosfire.temporarywhitelist.data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandName;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandNode;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandPermission;

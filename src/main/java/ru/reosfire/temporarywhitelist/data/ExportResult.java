@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Data;
+package ru.reosfire.temporarywhitelist.data;
 
 import ru.reosfire.temporarywhitelist.lib.text.Replacement;
 

@@ -1,8 +1,8 @@
-package ru.reosfire.temporarywhitelist.Data.exporters;
+package ru.reosfire.temporarywhitelist.data.exporters;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import ru.reosfire.temporarywhitelist.Data.PlayerData;
+import ru.reosfire.temporarywhitelist.data.PlayerData;
 
 import java.time.Instant;
 import java.util.ArrayList;

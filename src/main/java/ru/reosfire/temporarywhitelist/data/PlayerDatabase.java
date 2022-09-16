@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.Data;
+package ru.reosfire.temporarywhitelist.data;
 
 import org.apache.commons.lang.NullArgumentException;
 

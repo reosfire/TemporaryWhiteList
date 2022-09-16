@@ -1,6 +1,6 @@
-package ru.reosfire.temporarywhitelist.Data;
+package ru.reosfire.temporarywhitelist.data;
 
-import ru.reosfire.temporarywhitelist.Data.exporters.IDataExporter;
+import ru.reosfire.temporarywhitelist.data.exporters.IDataExporter;
 
 import java.util.concurrent.CompletableFuture;
 

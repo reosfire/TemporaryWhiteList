@@ -1,4 +1,4 @@
-package ru.reosfire.temporarywhitelist.commands.Sync;
+package ru.reosfire.temporarywhitelist.commands;
 
 import org.bukkit.command.CommandSender;
 import ru.reosfire.temporarywhitelist.commands.subcommands.AddCommand;

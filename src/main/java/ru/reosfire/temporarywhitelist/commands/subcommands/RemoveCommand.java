@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.temporarywhitelist.configuration.localization.commandResults.RemoveCommandResultsConfig;
-import ru.reosfire.temporarywhitelist.Data.PlayerDatabase;
+import ru.reosfire.temporarywhitelist.data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandName;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandNode;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandPermission;
