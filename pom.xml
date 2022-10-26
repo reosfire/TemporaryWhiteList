@@ -6,7 +6,7 @@
 
     <groupId>ru.reosfire</groupId>
     <artifactId>TemporaryWhiteList</artifactId>
-    <version>2.2</version>
+    <version>2.3</version>
     <packaging>jar</packaging>
 
     <name>TemporaryWhiteList</name>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.1-R0.1-SNAPSHOT</version>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -75,18 +75,17 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <configuration>
-                    <finalName>${project.name}</finalName>
+                    <outputFile>${directory}\${project.name}-${project.version}.jar</outputFile>
                     <minimizeJar>true</minimizeJar>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
-                    <artifactSet>
-                        <includes>
-                            <include>org.bstats</include>
-                        </includes>
-                    </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>ru.reosfire.temporarywhitelist.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>ru.reosfire.shaded.com.zaxxer.hikari</shadedPattern>
                         </relocation>
                     </relocations>
                     <filters>
