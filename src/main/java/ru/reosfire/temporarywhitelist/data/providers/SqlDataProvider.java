@@ -96,9 +96,11 @@ public class SqlDataProvider implements IDataProvider
         try(PreparedStatement statement = dataSource.getConnection().prepareStatement(selectRequest))
         {
             statement.setString(1, playerName);
-            ResultSet player = statement.executeQuery();
-            if (!player.next()) return null;
-            return new PlayerData(player);
+            try(ResultSet player = statement.executeQuery())
+            {
+                if (!player.next()) return null;
+                return new PlayerData(player);
+            }
         }
         catch (Exception e)
         {
@@ -113,11 +115,13 @@ public class SqlDataProvider implements IDataProvider
         try (Statement statement = dataSource.getConnection().createStatement())
         {
             List<PlayerData> result = new ArrayList<>();
-            ResultSet resultSet = statement.executeQuery(selectRequest);
 
-            while (resultSet.next())
+            try(ResultSet resultSet = statement.executeQuery(selectRequest))
             {
-                result.add(new PlayerData(resultSet));
+                while (resultSet.next())
+                {
+                    result.add(new PlayerData(resultSet));
+                }
             }
             return result;
         }
