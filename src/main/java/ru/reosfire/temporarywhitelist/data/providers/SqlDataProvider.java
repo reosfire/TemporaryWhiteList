@@ -7,10 +7,7 @@ import ru.reosfire.temporarywhitelist.data.IDataProvider;
 import ru.reosfire.temporarywhitelist.data.PlayerData;
 
 import javax.sql.DataSource;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -38,9 +35,12 @@ public class SqlDataProvider implements IDataProvider
                 "Permanent BOOLEAN NOT NULL, " +
                 "LastStartTime BIGINT NOT NULL, " +
                 "TimeAmount BIGINT NOT NULL);";
-        try (Statement statement = dataSource.getConnection().createStatement())
+        try (Connection connection = dataSource.getConnection())
         {
-            statement.executeUpdate(createTableString);
+            try (Statement statement = connection.createStatement())
+            {
+                statement.executeUpdate(createTableString);
+            }
         }
     }
 
@@ -52,17 +52,21 @@ public class SqlDataProvider implements IDataProvider
             String setRequest = "INSERT INTO " + configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
                     "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
                     "TimeAmount=?;";
-            try (PreparedStatement statement = dataSource.getConnection().prepareStatement(setRequest))
-            {
-                statement.setString(1, playerData.Name);
-                statement.setBoolean(2, playerData.Permanent);
-                statement.setLong(3, playerData.StartTime);
-                statement.setLong(4, playerData.TimeAmount);
-                statement.setBoolean(5, playerData.Permanent);
-                statement.setLong(6, playerData.StartTime);
-                statement.setLong(7, playerData.TimeAmount);
 
-                statement.executeUpdate();
+            try (Connection connection = dataSource.getConnection())
+            {
+                try (PreparedStatement statement = connection.prepareStatement(setRequest))
+                {
+                    statement.setString(1, playerData.Name);
+                    statement.setBoolean(2, playerData.Permanent);
+                    statement.setLong(3, playerData.StartTime);
+                    statement.setLong(4, playerData.TimeAmount);
+                    statement.setBoolean(5, playerData.Permanent);
+                    statement.setLong(6, playerData.StartTime);
+                    statement.setLong(7, playerData.TimeAmount);
+
+                    statement.executeUpdate();
+                }
             }
             catch (Exception e)
             {
@@ -77,10 +81,13 @@ public class SqlDataProvider implements IDataProvider
         return CompletableFuture.runAsync(() ->
         {
             String removeRequest = "DELETE FROM " + configuration.SqlTable + " WHERE Player=?;";
-            try(PreparedStatement statement = dataSource.getConnection().prepareStatement(removeRequest))
+            try(Connection connection = dataSource.getConnection())
             {
-                statement.setString(1, playerName);
-                statement.executeUpdate();
+                try(PreparedStatement statement = connection.prepareStatement(removeRequest))
+                {
+                    statement.setString(1, playerName);
+                    statement.executeUpdate();
+                }
             }
             catch (Exception e)
             {
@@ -93,13 +100,16 @@ public class SqlDataProvider implements IDataProvider
     public PlayerData get(String playerName)
     {
         String selectRequest = "SELECT * FROM " + configuration.SqlTable + " WHERE Player=?;";
-        try(PreparedStatement statement = dataSource.getConnection().prepareStatement(selectRequest))
+        try(Connection connection = dataSource.getConnection())
         {
-            statement.setString(1, playerName);
-            try(ResultSet player = statement.executeQuery())
+            try(PreparedStatement statement = connection.prepareStatement(selectRequest))
             {
-                if (!player.next()) return null;
-                return new PlayerData(player);
+                statement.setString(1, playerName);
+                try(ResultSet player = statement.executeQuery())
+                {
+                    if (!player.next()) return null;
+                    return new PlayerData(player);
+                }
             }
         }
         catch (Exception e)
@@ -112,18 +122,21 @@ public class SqlDataProvider implements IDataProvider
     public List<PlayerData> getAll()
     {
         String selectRequest = "SELECT * FROM " + configuration.SqlTable + ";";
-        try (Statement statement = dataSource.getConnection().createStatement())
+        try(Connection connection = dataSource.getConnection())
         {
-            List<PlayerData> result = new ArrayList<>();
-
-            try(ResultSet resultSet = statement.executeQuery(selectRequest))
+            try(PreparedStatement statement = connection.prepareStatement(selectRequest))
             {
-                while (resultSet.next())
+                List<PlayerData> result = new ArrayList<>();
+
+                try(ResultSet resultSet = statement.executeQuery(selectRequest))
                 {
-                    result.add(new PlayerData(resultSet));
+                    while (resultSet.next())
+                    {
+                        result.add(new PlayerData(resultSet));
+                    }
                 }
+                return result;
             }
-            return result;
         }
         catch (Exception e)
         {
