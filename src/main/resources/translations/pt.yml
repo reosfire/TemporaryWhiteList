@@ -1,0 +1,323 @@
+Kick:
+  Connecting:
+    - "&b------------------------"
+    - "&bVocê não está na lista!"
+    - "&b------------------------"
+  WhilePlaying:
+    - "&b----------------------------"
+    - "&bVocê não está na lista agora!"
+    - "&b----------------------------"
+NoPermission: "&cSem permissão!"
+WhiteListStatuses:
+  Enabled: "&c&lhabilitado"
+  Disabled: "&a&ldesabilitado"
+PlayerStatuses:
+  Undefined: "Informação não encontrada"
+  NeverEnd: "nunca acaba"
+  Ended: "finalizado"
+
+CommandResults:
+  Add:
+    Usage:
+      - Content: "&cContagem de argumentos incorretos"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl add <nick> permanent"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl add "
+
+      - Content:
+        - Content: "&c   ou:  "
+        - Content: "&b&n/twl add <nick> <tempo>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl add "
+
+    AlreadyPermanent:
+      - Content: "&7O jogador {player} já está na lista permanente. Nada mudou."
+
+    IncorrectTime:
+      - Content: "&cTempo inválido. Use <quantidade>:<unidade de tempo>,<quantidade>:<unidade de tempo>... Unidades de tempo: s,m,h,d,y"
+    Success:
+      - Content: "&a{player} adicionado com sucesso a lista por {time}."
+    Error:
+      - Content: "&cErro ao adicionar {player} a lista por {time}. Veja o console."
+
+  Set:
+    Usage:
+      - Content: "&cContagem de argumentos incorretos"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl set <nick> permanent"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl set "
+
+      - Content:
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl set <nick> <tempo>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl set "
+    NothingChanged:
+      - Content: "&7Nada mudou sobre {player}."
+    Success:
+      - Content: "&a{player} agora está na lista por {time}."
+    Error:
+      - Content: "&cErro ao definir tempo para {time} do jogador listado {player}. Veja o console."
+    IncorrectTime:
+      - Content: "&cTempo inválido. Use <quantidade>:<unidade de tempo>,<quantidade>:<unidade de tempo>... Unidades de tempo: s,m,h,d,y"
+
+  Remove:
+    Usage:
+      - Content: "&cContagem de argumentos incorretos"
+      - Content:
+        - Content: "&cUse: "
+        - Content: "&b&n/twl remove <nick>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl remove "
+    NothingChanged:
+      - Content: "&7Nada mudou sobre {player}."
+    Success:
+      - Content: "&a{player} removido com sucesso da lista."
+    Error:
+      - Content: "&cErro ao remover {player} da lista. Veja o console."
+
+  Check:
+    Permanent:
+      'True': "Sim"
+      'False': "Não"
+    Usage:
+      - Content: "&cContagem de argumentos incorretos"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl check"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para usar"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl check"
+
+      - Content:
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl check <nick>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl check "
+    Format:
+      - Content: "&l------  &b{player}&f&l  ------"
+      - Content: " • Permanente: &b{permanent}"
+      - Content: " • Tempo restante: &b{time_left}"
+      - Content: " • Começou: &b{started}"
+      - Content: " • Vai terminar: &b{will_end}"
+    ForPlayerOnly:
+      - Content: "&cPara jogadores apenas"
+    InfoNotFound:
+      - Content: "&cInformação sobre o jogador não encontrada"
+
+  List:
+    Usage:
+      - Content: "&cContagem de argumentos incorretos"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl list"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para usar"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list"
+
+      - Content:
+        - Content: "&c   or:  "
+        - Content: "&b&n/twl list <page>"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl list "
+    IncorrectPage:
+      - Content: "&cPágina incorreta"
+    ListIsEmpty:
+      - Content: "&cA lista está vazia"
+    Header:
+      - Content: "&l--------  &bLista&f&l  --------"
+    PlayerFormat:
+      - Content: " {number}) &b{player}"
+        Click:
+          Action: RUN_COMMAND
+          Value: "/twl check {player}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "&bClique para ver as informações"
+    PagesSwitch:
+      - Content:
+        - Content: "    <---    "
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list {previous_page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bPágina anterior"
+        - Content: "   {page}/{total_pages}   "
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl list {page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bEntrar na página"
+        - Content: "    --->"
+          Click:
+            Action: RUN_COMMAND
+            Value: "/twl list {next_page}"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "&bPróxima página"
+  Import:
+    Usage:
+      - Content: "&cContagem de argumentos incorretos"
+
+      - Content:
+        - Content: "&c   Use: "
+        - Content: "&b&n/twl import <type> [digite argumentos específicos]"
+          Hover:
+            Action: SHOW_TEXT
+            Value: "Clique para auto completar"
+          Click:
+            Action: SUGGEST_COMMAND
+            Value: "/twl import"
+    ImportFromSelf:
+      - Content: "&cVocê não pode importar do provedor de dados usado atualmente"
+    IncorrectTime:
+      - Content: "&cTempo inválido. Use <quantidade>:<unidade de tempo>,<quantidade>:<unidade de tempo>... Unidades de tempo: s,m,h,d,y"
+    IncorrectPermanent:
+      - Content: "&cPermanente inválido. Use true ou false"
+    Success:
+      - Content: "&aDados importados com sucesso em &b{time_elapsed}"
+
+      - Content: " • Encontrado: &b{found_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{found}"
+      - Content: " • Sem erro: &b{without_error_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{without_error}"
+      - Content: " • Com erro: &b{with_error_count}"
+        Hover:
+          Action: SHOW_TEXT
+          Value: "{with_error}"
+    Error:
+      - Content: "&cErro durante importação"
+    SuccessfullyStarted:
+      - Content: "&aImportação inciada com sucesso. Aguarde pelos resultados"
+
+    MinecraftDefault:
+      Usage:
+        - Content: "&cContagem de argumentos incorretos"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import minecraft <tempo padrão> <permanência padrão>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Clique para auto completar"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl import minecraft 0:s true"
+    SelfSql:
+      Usage:
+        - Content: "&cContagem de argumentos incorretos"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import self-sql"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Clique para usar"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl import self-sql"
+    SelfYaml:
+      Usage:
+        - Content: "&cContagem de argumentos incorretos"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import self-yaml"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Clique para usar"
+            Click:
+              Action: RUN_COMMAND
+              Value: "/twl import self-yaml"
+    EasyWhiteList:
+      Usage:
+        - Content: "&cContagem de argumentos incorretos"
+
+        - Content:
+          - Content: "&c   Use: "
+          - Content: "&b&n/twl import easy-whitelist <tempo padrão> <permanência padrão>"
+            Hover:
+              Action: SHOW_TEXT
+              Value: "Clique para auto completar"
+            Click:
+              Action: SUGGEST_COMMAND
+              Value: "/twl import easy-whitelist 0:s true"
+      PluginNotFound:
+        - Content: "&cErro ao tentar encontrar o plugin EasyWhiteList. Tenha certeza de que ele está instalado ou tente instalar outra versão"
+
+  Enable:
+    Success:
+      - Content: "&aLista habilitada com sucesso"
+    NothingChanged:
+      - Content: "&7Lista já está habilitada"
+    Error:
+      - Content: "&cErro ao habilitar a lista"
+
+  Disable:
+    Success:
+      - Content: "&aLista desabilitada com sucesso"
+    NothingChanged:
+      - Content: "&7Lista já está desabilitada"
+    Error:
+      - Content: "&cErro ao desabilitar a lista"
+
+  Reload:
+    Success:
+      - Content: "&aLista recarregada com sucesso"
+    Error:
+      - Content: "&cErro ao recarregar a lista"
+
+  Twl:
+    Usage:
+      - Content: "&cPor favor use o subcomando correto:"
+      - Content: " • add / set / remove / import"
+      - Content: " • list / check"
+      - Content: " • enable / disable / reload"
