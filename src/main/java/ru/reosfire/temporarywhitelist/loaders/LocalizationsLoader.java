@@ -1,54 +1,48 @@
 package ru.reosfire.temporarywhitelist.loaders;
 
-import ru.reosfire.temporarywhitelist.configuration.Config;
 import ru.reosfire.temporarywhitelist.configuration.localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.lib.yaml.YamlConfig;
 import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 public class LocalizationsLoader
 {
+    private static final String[] translationsResources = new String[]
+            {
+                    "en.yml",
+                    "ru.yml",
+                    "pt.yml",
+            };
+
     private final TemporaryWhiteList plugin;
-    private final Config config;
 
     public LocalizationsLoader(TemporaryWhiteList pluginInstance)
     {
         plugin = pluginInstance;
-        this.config = plugin.getConfiguration();
     }
 
     public void copyDefaultTranslations()
     {
-        String[] translationsResources = new String[]
-                {
-                        "en.yml",
-                        "ru.yml"
-                };
-        try
-        {
-            File translationsDirectory = new File(plugin.getDataFolder(), "./translations/");
-            translationsDirectory.mkdir();
+        File translationsDirectory = new File(plugin.getDataFolder(), "./translations/");
 
-            for (String translationsResource : translationsResources)
+        if (!translationsDirectory.exists() && !translationsDirectory.mkdir())
+            throw new RuntimeException("Directory for translations couldn't created.");
+
+        for (String translationsResource : translationsResources)
+        {
+            try
             {
                 File translationFile = new File(translationsDirectory, translationsResource);
                 if (translationFile.exists()) continue;
-
                 InputStream resource = plugin.getResource("translations/" + translationsResource);
-                byte[] buffer = new byte[resource.available()];
-                resource.read(buffer);
-
-                FileOutputStream fileOutputStream = new FileOutputStream(translationFile);
-                fileOutputStream.write(buffer);
-                fileOutputStream.close();
+                Files.copy(resource, translationFile.toPath());
             }
-        }
-        catch (Exception e)
-        {
-            throw new RuntimeException(e);
+            catch (Exception e)
+            {
+                throw new RuntimeException("Can't load " + translationsResource + " from plugin jar. Is it corrupted?", e);
+            }
         }
     }
 
@@ -56,7 +50,7 @@ public class LocalizationsLoader
     {
         try
         {
-            return new MessagesConfig(YamlConfig.loadOrCreate("translations/" + config.Translation, plugin));
+            return new MessagesConfig(YamlConfig.loadOrCreate("translations/" + plugin.getConfiguration().Translation, plugin));
         }
         catch (Exception e)
         {
