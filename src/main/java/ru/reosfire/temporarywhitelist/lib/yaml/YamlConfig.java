@@ -12,9 +12,9 @@ import ru.reosfire.temporarywhitelist.lib.yaml.common.text.MultilineMessage;
 import ru.reosfire.temporarywhitelist.lib.yaml.common.text.TextComponentConfig;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,16 +46,16 @@ public abstract class YamlConfig
                                         JavaPlugin plugin) throws IOException
     {
         File configFile = new File(plugin.getDataFolder(), resultFileName);
+
         if (!configFile.exists())
         {
-            configFile.getParentFile().mkdirs();
-            InputStream resource = plugin.getResource(defaultConfigurationResource);
-            byte[] buffer = new byte[resource.available()];
-            resource.read(buffer);
+            if (!configFile.getParentFile().exists() && !configFile.getParentFile().mkdirs())
+                throw new RuntimeException("Can't create directory for " + resultFileName);
 
-            FileOutputStream fileOutputStream = new FileOutputStream(configFile);
-            fileOutputStream.write(buffer);
-            fileOutputStream.close();
+            try(InputStream resource = plugin.getResource(defaultConfigurationResource))
+            {
+                Files.copy(resource, configFile.toPath());
+            }
         }
         return configFile;
     }

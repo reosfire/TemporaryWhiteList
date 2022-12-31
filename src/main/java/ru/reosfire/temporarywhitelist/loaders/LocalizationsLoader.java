@@ -32,11 +32,11 @@ public class LocalizationsLoader
 
         for (String translationsResource : translationsResources)
         {
-            try
+            File translationFile = new File(translationsDirectory, translationsResource);
+            if (translationFile.exists()) continue;
+
+            try (InputStream resource = plugin.getResource("translations/" + translationsResource))
             {
-                File translationFile = new File(translationsDirectory, translationsResource);
-                if (translationFile.exists()) continue;
-                InputStream resource = plugin.getResource("translations/" + translationsResource);
                 Files.copy(resource, translationFile.toPath());
             }
             catch (Exception e)
