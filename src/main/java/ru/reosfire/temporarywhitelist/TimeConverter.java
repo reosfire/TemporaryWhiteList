@@ -1,16 +1,18 @@
 package ru.reosfire.temporarywhitelist;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DurationFormatUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 import ru.reosfire.temporarywhitelist.configuration.Config;
 
 public class TimeConverter
 {
     private final Config config;
+    private final FastDateFormat dateTimeFormat;
 
     public TimeConverter(Config config)
     {
         this.config = config;
+        dateTimeFormat = FastDateFormat.getInstance(config.DateTimeFormat);
     }
 
     public String durationToString(long seconds)
@@ -19,7 +21,7 @@ public class TimeConverter
     }
     public String dateTimeToString(long seconds)
     {
-        return DateFormatUtils.format(seconds * 1000, config.DateTimeFormat);
+        return dateTimeFormat.format(seconds * 1000);
     }
 
     public long parseTime(String time)
