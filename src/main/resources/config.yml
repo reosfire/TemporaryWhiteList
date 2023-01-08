@@ -36,6 +36,8 @@ Translation: "en.yml"
 #Players per page when used /twl list command
 ListPageSize: 4
 
-#Time formats used in placeholders
+#Time formats used in placeholders. Pattern docs:
+# https://commons.apache.org/proper/commons-lang/javadocs/api-3.0/org/apache/commons/lang3/time/DurationFormatUtils.html
+# https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
 DurationFormat: "&bdd 'days' &cHH 'hours' &emm 'minutes' &ass 'seconds'"
 DateTimeFormat: "[dd MM yyyy] HH:mm:ss"
