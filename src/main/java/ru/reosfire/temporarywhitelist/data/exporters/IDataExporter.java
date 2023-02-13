@@ -8,6 +8,7 @@ import ru.reosfire.temporarywhitelist.data.PlayerData;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public interface IDataExporter
 {
@@ -23,17 +24,17 @@ public interface IDataExporter
         for (int i = 0; i < players.size(); i++)
         {
             PlayerData playerData = players.get(i);
-            updates[i] = updatable.update(playerData);
 
-            updates[i].handle((res, ex) ->
+            updates[i] = updatable.update(playerData).handle((res, ex) ->
             {
-                if (ex == null) exportResult.WithoutError.add(playerData);
+                if (ex == null) exportResult.addWithoutError(playerData);
                 else ex.printStackTrace();
                 return null;
             });
         }
 
         CompletableFuture.allOf(updates).join();
+
         return exportResult;
     }
     default CompletableFuture<ExportResult> exportToAsync(IUpdatable provider)

@@ -4,17 +4,24 @@ import ru.reosfire.temporarywhitelist.lib.text.Replacement;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ExportResult
 {
-    public final List<PlayerData> Found;
-    public final Set<PlayerData> WithoutError = new HashSet<>();
-    public final long StartTime;
+    private final List<PlayerData> Found;
+    private final Set<PlayerData> WithoutError = new HashSet<>();
+    private final long StartTime;
 
     public ExportResult(List<PlayerData> found)
     {
         Found = found;
         StartTime = Instant.now().toEpochMilli();
+    }
+
+    public void addWithoutError(PlayerData playerData) {
+        synchronized (WithoutError) {
+            WithoutError.add(playerData);
+        }
     }
 
     public int withErrorCount()
