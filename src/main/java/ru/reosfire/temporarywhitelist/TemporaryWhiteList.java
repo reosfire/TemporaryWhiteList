@@ -230,7 +230,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         if (!enabled) return false;
 
         setEnabledInFile(false);
-        _kickerTask.cancel();
+        if(_kickerTask != null) _kickerTask.cancel();
         enabled = false;
         return true;
     }
@@ -243,7 +243,8 @@ public final class TemporaryWhiteList extends JavaPlugin
         {
             if (!configFile.exists()) configFile.createNewFile();
 
-            try(BufferedWriter writer = new BufferedWriter(new FileWriter(configFile)))
+            try(FileWriter fileWriter = new FileWriter(configFile);
+                BufferedWriter writer = new BufferedWriter(fileWriter))
             {
                 writer.write(enabled ? "true" : "false");
             }
@@ -266,7 +267,8 @@ public final class TemporaryWhiteList extends JavaPlugin
                 setEnabledInFile(true);
                 return true;
             }
-            try(BufferedReader reader = new BufferedReader(new FileReader(configFile)))
+            try(FileReader fileReader = new FileReader(configFile);
+                BufferedReader reader = new BufferedReader(fileReader))
             {
                 return reader.readLine().equals("true");
             }
