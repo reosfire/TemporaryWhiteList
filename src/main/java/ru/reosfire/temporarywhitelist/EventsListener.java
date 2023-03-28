@@ -25,6 +25,9 @@ public class EventsListener implements Listener
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLogin(PlayerLoginEvent event)
     {
+        // TODO async db calls. Problem is that we can replace it by AsyncPlayerPreLoginEvent.
+        // But in that stage Online player is not already exist.
+        // So we can't check his permissions.
         if (!pluginInstance.isWhiteListEnabled()) return;
         Player player = event.getPlayer();
 

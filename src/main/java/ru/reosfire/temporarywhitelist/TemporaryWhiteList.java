@@ -1,5 +1,6 @@
 package ru.reosfire.temporarywhitelist;
 
+import com.google.common.collect.ImmutableList;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
@@ -33,6 +34,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     private MessagesConfig messages;
     private PlaceholdersExpansion placeholdersExpansion;
     private TimeConverter timeConverter;
+    private BukkitTask kickerTask;
 
     public Config getConfiguration()
     {
@@ -50,8 +52,6 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         return timeConverter;
     }
-
-    private BukkitTask _kickerTask;
 
     public boolean isWhiteListEnabled()
     {
@@ -212,9 +212,10 @@ public final class TemporaryWhiteList extends JavaPlugin
 
     private void runKickerTask()
     {
-        _kickerTask = Bukkit.getScheduler().runTaskTimer(this, () ->
+        //TODO async db calls. Smooth out load by check queue. + may be move this logic to other class
+        kickerTask = Bukkit.getScheduler().runTaskTimer(this, () ->
         {
-            for (Player player : getServer().getOnlinePlayers())
+            for (Player player : ImmutableList.copyOf(getServer().getOnlinePlayers()))
             {
                 if (database.canJoin(player.getName())) continue;
                 if (player.isOp()) continue;
@@ -230,7 +231,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         if (!enabled) return false;
 
         setEnabledInFile(false);
-        if(_kickerTask != null) _kickerTask.cancel();
+        if(kickerTask != null) kickerTask.cancel();
         enabled = false;
         return true;
     }
