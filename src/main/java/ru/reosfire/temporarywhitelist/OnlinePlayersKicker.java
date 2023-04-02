@@ -9,12 +9,17 @@ import ru.reosfire.temporarywhitelist.configuration.localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.lib.text.Text;
 
+import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 public class OnlinePlayersKicker {
     private final TemporaryWhiteList pluginInstance;
     private final Config configuration;
     private final PlayerDatabase database;
     private final MessagesConfig messages;
+    private BukkitTask checkerTask;
     private BukkitTask kickerTask;
+    private final ConcurrentLinkedQueue<UUID> toKick = new ConcurrentLinkedQueue<>();
 
     public OnlinePlayersKicker(TemporaryWhiteList pluginInstance) {
         this.pluginInstance = pluginInstance;
@@ -24,17 +29,19 @@ public class OnlinePlayersKicker {
     }
 
     public void start() {
+        runCheckerTask();
         runKickerTask();
     }
 
     public void stop() {
+        if(checkerTask != null) checkerTask.cancel();
         if(kickerTask != null) kickerTask.cancel();
+        toKick.clear();
     }
 
-    private void runKickerTask()
-    {
-        //TODO async db calls. Smooth out load by check queue. + may be move this logic to other class
-        kickerTask = Bukkit.getScheduler().runTaskTimer(pluginInstance, () ->
+    private void runCheckerTask() {
+        //TODO Smooth out load by check rolling queue.
+        checkerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(pluginInstance, () ->
         {
             for (Player player : ImmutableList.copyOf(pluginInstance.getServer().getOnlinePlayers()))
             {
@@ -42,8 +49,22 @@ public class OnlinePlayersKicker {
                 if (player.isOp()) continue;
                 if (player.hasPermission("TemporaryWhitelist.Bypass")) continue;
 
+                toKick.add(player.getUniqueId());
+            }
+        },0, configuration.SubscriptionEndCheckTicks);
+    }
+
+    private void runKickerTask()
+    {
+        kickerTask = Bukkit.getScheduler().runTaskTimer(pluginInstance, () ->
+        {
+            while (!toKick.isEmpty())
+            {
+                Player player = Bukkit.getPlayer(toKick.poll());
+                if (!player.isOnline()) continue;
+
                 player.kickPlayer(String.join("\n", Text.colorize(player, messages.Kick.WhilePlaying)));
             }
-        }, 0, configuration.SubscriptionEndCheckTicks);
+        }, configuration.SubscriptionEndCheckTicks / 2, configuration.SubscriptionEndCheckTicks);
     }
 }
