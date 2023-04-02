@@ -1,17 +1,14 @@
 package ru.reosfire.temporarywhitelist;
 
-import com.google.common.collect.ImmutableList;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
-import ru.reosfire.temporarywhitelist.commands.TwlSyncCommand;
 import ru.reosfire.temporarywhitelist.commands.TwlCommand;
+import ru.reosfire.temporarywhitelist.commands.TwlSyncCommand;
 import ru.reosfire.temporarywhitelist.configuration.Config;
 import ru.reosfire.temporarywhitelist.configuration.localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.data.IDataProvider;
@@ -34,7 +31,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     private MessagesConfig messages;
     private PlaceholdersExpansion placeholdersExpansion;
     private TimeConverter timeConverter;
-    private BukkitTask kickerTask;
+    private OnlinePlayersKicker onlinePlayersKicker;
 
     public Config getConfiguration()
     {
@@ -117,6 +114,8 @@ public final class TemporaryWhiteList extends JavaPlugin
         getLogger().info("Loading events handler...");
         EventsListener eventsListener = new EventsListener(messages, database, this);
         getServer().getPluginManager().registerEvents(eventsListener, this);
+
+        onlinePlayersKicker = new OnlinePlayersKicker(this);
 
         if (getEnabledInFile())
         {
@@ -203,35 +202,17 @@ public final class TemporaryWhiteList extends JavaPlugin
     public boolean enable()
     {
         if (enabled) return false;
-
+        onlinePlayersKicker.start();
         setEnabledInFile(true);
-        runKickerTask();
         enabled = true;
         return true;
-    }
-
-    private void runKickerTask()
-    {
-        //TODO async db calls. Smooth out load by check queue. + may be move this logic to other class
-        kickerTask = Bukkit.getScheduler().runTaskTimer(this, () ->
-        {
-            for (Player player : ImmutableList.copyOf(getServer().getOnlinePlayers()))
-            {
-                if (database.canJoin(player.getName())) continue;
-                if (player.isOp()) continue;
-                if (player.hasPermission("TemporaryWhitelist.Bypass")) continue;
-
-                player.kickPlayer(String.join("\n", Text.colorize(player, messages.Kick.WhilePlaying)));
-            }
-        }, 0, configuration.SubscriptionEndCheckTicks);
     }
 
     public boolean disable()
     {
         if (!enabled) return false;
-
+        onlinePlayersKicker.stop();
         setEnabledInFile(false);
-        if(kickerTask != null) kickerTask.cancel();
         enabled = false;
         return true;
     }
