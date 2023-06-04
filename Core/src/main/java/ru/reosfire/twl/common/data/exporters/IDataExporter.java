@@ -7,7 +7,7 @@ import ru.reosfire.twl.common.data.PlayerData;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public interface IDataExporter
+public interface  IDataExporter
 {
     List<PlayerData> getAll();
 

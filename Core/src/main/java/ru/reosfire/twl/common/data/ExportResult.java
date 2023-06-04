@@ -18,7 +18,8 @@ public class ExportResult
     }
 
     public void addWithoutError(PlayerData playerData) {
-        synchronized (WithoutError) {
+        synchronized (WithoutError)
+        {
             WithoutError.add(playerData);
         }
     }

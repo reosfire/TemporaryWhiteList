@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import ru.reosfire.twl.common.data.IDataProvider;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.providers.SqlDataProvider;
+import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.TwlCommand;
 import ru.reosfire.twl.spigot.commands.TwlSyncCommand;
 import ru.reosfire.twl.spigot.configuration.Config;
@@ -32,6 +33,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     private PlaceholdersExpansion placeholdersExpansion;
     private TimeConverter timeConverter;
     private OnlinePlayersKicker onlinePlayersKicker;
+    private VersionChecker versionChecker;
 
     public Config getConfiguration()
     {
@@ -65,14 +67,11 @@ public final class TemporaryWhiteList extends JavaPlugin
         metrics.addCustomChart(new SimplePie("whitelisted_players_per_server", () -> Integer.toString(database.allList().size())));
         metrics.addCustomChart(new SimplePie("data_provider", () -> configuration.DataProvider));
 
-        UpdateChecker updateChecker = new UpdateChecker(this, 99914);
-        updateChecker.getVersion(version ->
+        Bukkit.getScheduler().runTaskLater(this, () ->
         {
-            if (version.equalsIgnoreCase(getDescription().getVersion()))
-                getLogger().info("Plugin is up to date. Please rate it: https://www.spigotmc.org/resources/temporarywhitelist.99914");
-            else
-                getLogger().info("There is a new version (" + version + ") available: https://www.spigotmc.org/resources/temporarywhitelist.99914");
-        });
+            versionChecker = new VersionChecker(99914);
+            versionChecker.printVersionCheckAsync(getDescription().getVersion(), getLogger()::info);
+        }, 10);
     }
 
     public void load()
@@ -223,7 +222,7 @@ public final class TemporaryWhiteList extends JavaPlugin
 
         try
         {
-            if (!configFile.exists()) configFile.createNewFile();
+            configFile.createNewFile();
 
             try(FileWriter fileWriter = new FileWriter(configFile);
                 BufferedWriter writer = new BufferedWriter(fileWriter))
