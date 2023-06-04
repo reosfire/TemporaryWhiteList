@@ -318,6 +318,9 @@ CommandResults:
     Error:
       - Content: "&cОшибка во время перезагрузки вайтлиста"
 
+  Clear:
+
+
   Twl:
     Usage:
       - Content: "&cИспользуйте подкомманду из списка ниже:"
