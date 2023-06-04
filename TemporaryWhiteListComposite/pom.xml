@@ -15,12 +15,6 @@
     <name>TemporaryWhiteList</name>
     <description>Nicknames based temporary white list</description>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>ru.reosfire</groupId>
@@ -33,11 +27,21 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.4.1</version>
                 <configuration>
                     <outputFile>${directory}\${project.name}-${project.version}.jar</outputFile>
-                    <minimizeJar>true</minimizeJar>
+                    <minimizeJar>false</minimizeJar> <!--TODO make it true(now if true only resources are compiled)-->
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>
                         <relocation>
@@ -52,6 +56,9 @@
                     <filters>
                         <filter>
                             <artifact>*:*</artifact>
+                            <includes>
+                                <include>ru/**</include>
+                            </includes>
                         </filter>
                         <filter>
                             <artifact>*:*</artifact>
