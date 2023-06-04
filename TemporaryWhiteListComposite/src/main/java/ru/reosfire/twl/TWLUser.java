@@ -4,6 +4,7 @@ public class TWLUser {
 
     @SuppressWarnings("unused")
     public void use() {
-        TemporaryWhiteList temporaryWhiteList = new TemporaryWhiteList();
+        ru.reosfire.twl.spigot.TemporaryWhiteList spigot = new ru.reosfire.twl.spigot.TemporaryWhiteList();
+        ru.reosfire.twl.velocity.TemporaryWhiteList velocity = new ru.reosfire.twl.velocity.TemporaryWhiteList();
     }
 }

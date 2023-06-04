@@ -1,6 +1,6 @@
 name: '${project.name}'
 version: '${project.version}'
-main: ru.reosfire.twl.TemporaryWhiteList
+main: ru.reosfire.twl.spigot.TemporaryWhiteList
 prefix: TWL
 authors: [ reosfire ]
 description: Nicknames based temporary white list
