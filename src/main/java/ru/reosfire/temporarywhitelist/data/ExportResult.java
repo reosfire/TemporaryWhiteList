@@ -4,7 +4,6 @@ import ru.reosfire.temporarywhitelist.lib.text.Replacement;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 public class ExportResult
 {

@@ -8,7 +8,6 @@ import ru.reosfire.temporarywhitelist.data.PlayerData;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public interface IDataExporter
 {
