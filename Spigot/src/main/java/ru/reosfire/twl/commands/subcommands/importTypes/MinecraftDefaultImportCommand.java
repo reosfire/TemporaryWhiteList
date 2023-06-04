@@ -8,12 +8,11 @@ import ru.reosfire.twl.data.PlayerDatabase;
 import ru.reosfire.twl.data.exporters.IDataExporter;
 import ru.reosfire.twl.data.exporters.MinecraftDefaultWhitelist;
 import ru.reosfire.twl.lib.commands.CommandName;
-import ru.reosfire.twl.lib.commands.CommandNode;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 @CommandName("minecraft")
-public class MinecraftDefaultImportCommand extends CommandNode
+public class MinecraftDefaultImportCommand extends BaseImportCommandNode
 {
     private final ImportCommandResultConfig commandResults;
     private final PlayerDatabase database;
@@ -47,7 +46,7 @@ public class MinecraftDefaultImportCommand extends CommandNode
         }
 
         IDataExporter dataExporter = new MinecraftDefaultWhitelist(defaultTime.get(), defaultPermanent.get());
-        dataExporter.exportAsyncAndHandle(database, commandResults, sender);
+        exportAsyncAndHandle(dataExporter, database, commandResults, sender);
 
         commandResults.SuccessfullyStarted.Send(sender);
         return true;

@@ -110,7 +110,7 @@ public class YamlDataProvider implements IDataProvider
 
         ConfigurationSection player = getPlayersSection().getConfigurationSection(playerName);
         if (player == null) return null;
-        return new PlayerData(player);
+        return new YamlPlayerData(player);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class YamlDataProvider implements IDataProvider
         ConfigurationSection players = getPlayersSection();
         for (String player : players.getKeys(false))
         {
-            result.add(new PlayerData(getPlayerSection(player)));
+            result.add(new YamlPlayerData(getPlayerSection(player)));
         }
 
         return result;

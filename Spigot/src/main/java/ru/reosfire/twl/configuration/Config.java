@@ -1,6 +1,7 @@
 package ru.reosfire.twl.configuration;
 
 import org.bukkit.configuration.ConfigurationSection;
+import ru.reosfire.twl.data.providers.SqlDataProvider;
 import ru.reosfire.twl.lib.yaml.YamlConfig;
 import ru.reosfire.twl.lib.yaml.common.sql.MysqlConfiguration;
 
@@ -33,5 +34,9 @@ public class Config extends YamlConfig
         DurationFormat = getString("DurationFormat");
         DateTimeFormat = getString("DateTimeFormat");
         ListPageSize = getInt("ListPageSize");
+    }
+
+    public SqlDataProvider.Configuration getSqlProviderConfiguration() {
+        return new SqlDataProvider.Configuration(SqlTable, SqlConfiguration);
     }
 }

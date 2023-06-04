@@ -7,10 +7,9 @@ import ru.reosfire.twl.data.PlayerDatabase;
 import ru.reosfire.twl.data.exporters.IDataExporter;
 import ru.reosfire.twl.data.providers.YamlDataProvider;
 import ru.reosfire.twl.lib.commands.CommandName;
-import ru.reosfire.twl.lib.commands.CommandNode;
 
 @CommandName("self-yaml")
-public class SelfYamlImportCommand extends CommandNode
+public class SelfYamlImportCommand extends BaseImportCommandNode
 {
     private final TemporaryWhiteList plugin;
     private final ImportCommandResultConfig commandResults;
@@ -31,7 +30,7 @@ public class SelfYamlImportCommand extends CommandNode
         if (sendMessageIf(args.length != 0, commandResults.SelfYamlUsage, sender)) return true;
 
         IDataExporter dataExporter = plugin.loadYamlData(plugin.getConfiguration());
-        dataExporter.exportAsyncAndHandle(database, commandResults, sender);
+        exportAsyncAndHandle(dataExporter, database, commandResults, sender);
         commandResults.SuccessfullyStarted.Send(sender);
         return true;
     }

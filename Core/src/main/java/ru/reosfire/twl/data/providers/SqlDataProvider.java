@@ -2,9 +2,9 @@ package ru.reosfire.twl.data.providers;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import ru.reosfire.twl.configuration.Config;
 import ru.reosfire.twl.data.IDataProvider;
 import ru.reosfire.twl.data.PlayerData;
+import ru.reosfire.twl.lib.sql.ISqlConfiguration;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -14,23 +14,23 @@ import java.util.concurrent.CompletableFuture;
 
 public class SqlDataProvider implements IDataProvider
 {
-    private final Config configuration;
+    private final Configuration configuration;
     private final DataSource dataSource;
 
-    public SqlDataProvider(Config configuration) throws SQLException
+    public SqlDataProvider(Configuration configuration) throws SQLException
     {
         this.configuration = configuration;
 
         HikariConfig hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(configuration.SqlConfiguration.getConnectionString());
-        hikariConfig.setUsername(configuration.SqlConfiguration.getUser());
-        hikariConfig.setPassword(configuration.SqlConfiguration.getPassword());
+        hikariConfig.setJdbcUrl(configuration.sqlConfiguration.getConnectionString());
+        hikariConfig.setUsername(configuration.sqlConfiguration.getUser());
+        hikariConfig.setPassword(configuration.sqlConfiguration.getPassword());
         hikariConfig.setPoolName("TWL Hikari pool");
-        hikariConfig.setMaxLifetime(configuration.SqlConfiguration.MaxConnectionLifetime);
+        hikariConfig.setMaxLifetime(configuration.sqlConfiguration.getMaxConnectionLifetime());
 
         dataSource = new HikariDataSource(hikariConfig);
 
-        String createTableString = "CREATE TABLE IF NOT EXISTS `" + this.configuration.SqlTable + "` (" +
+        String createTableString = "CREATE TABLE IF NOT EXISTS `" + configuration.table + "` (" +
                 "Player VARCHAR(32) NOT NULL UNIQUE, " +
                 "Permanent BOOLEAN NOT NULL, " +
                 "LastStartTime BIGINT NOT NULL, " +
@@ -49,7 +49,7 @@ public class SqlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
-            String setRequest = "INSERT INTO " + configuration.SqlTable + " (Player, Permanent, LastStartTime, " +
+            String setRequest = "INSERT INTO " + configuration.table + " (Player, Permanent, LastStartTime, " +
                     "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
                     "TimeAmount=?;";
 
@@ -80,7 +80,7 @@ public class SqlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
-            String removeRequest = "DELETE FROM " + configuration.SqlTable + " WHERE Player=?;";
+            String removeRequest = "DELETE FROM " + configuration.table + " WHERE Player=?;";
             try(Connection connection = dataSource.getConnection())
             {
                 try(PreparedStatement statement = connection.prepareStatement(removeRequest))
@@ -99,7 +99,7 @@ public class SqlDataProvider implements IDataProvider
     @Override
     public PlayerData get(String playerName)
     {
-        String selectRequest = "SELECT * FROM " + configuration.SqlTable + " WHERE Player=?;";
+        String selectRequest = "SELECT * FROM " + configuration.table + " WHERE Player=?;";
         try(Connection connection = dataSource.getConnection())
         {
             try(PreparedStatement statement = connection.prepareStatement(selectRequest))
@@ -121,7 +121,7 @@ public class SqlDataProvider implements IDataProvider
     @Override
     public List<PlayerData> getAll()
     {
-        String selectRequest = "SELECT * FROM " + configuration.SqlTable + ";";
+        String selectRequest = "SELECT * FROM " + configuration.table + ";";
         try(Connection connection = dataSource.getConnection())
         {
             try(PreparedStatement statement = connection.prepareStatement(selectRequest))
@@ -141,6 +141,17 @@ public class SqlDataProvider implements IDataProvider
         catch (Exception e)
         {
             throw new RuntimeException("Error while getting all data");
+        }
+    }
+
+
+    public static class Configuration {
+        private final String table;
+        private final ISqlConfiguration sqlConfiguration;
+
+        public Configuration(String table, ISqlConfiguration sqlConfiguration) {
+            this.table = table;
+            this.sqlConfiguration = sqlConfiguration;
         }
     }
 }

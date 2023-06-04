@@ -7,10 +7,9 @@ import ru.reosfire.twl.data.PlayerDatabase;
 import ru.reosfire.twl.data.exporters.IDataExporter;
 import ru.reosfire.twl.data.providers.SqlDataProvider;
 import ru.reosfire.twl.lib.commands.CommandName;
-import ru.reosfire.twl.lib.commands.CommandNode;
 
 @CommandName("self-sql")
-public class SelfSqlImportCommand extends CommandNode
+public class SelfSqlImportCommand extends BaseImportCommandNode
 {
     private final TemporaryWhiteList plugin;
     private final ImportCommandResultConfig commandResults;
@@ -31,7 +30,7 @@ public class SelfSqlImportCommand extends CommandNode
         if (sendMessageIf(args.length != 0, commandResults.SelfSqlUsage, sender)) return true;
 
         IDataExporter dataExporter = plugin.loadSqlData(plugin.getConfiguration());
-        dataExporter.exportAsyncAndHandle(database, commandResults, sender);
+        exportAsyncAndHandle(dataExporter, database, commandResults, sender);
         commandResults.SuccessfullyStarted.Send(sender);
         return true;
     }

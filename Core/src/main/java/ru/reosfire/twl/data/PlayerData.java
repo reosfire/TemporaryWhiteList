@@ -1,7 +1,5 @@
 package ru.reosfire.twl.data;
 
-import org.bukkit.configuration.ConfigurationSection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -28,14 +26,6 @@ public class PlayerData
         Permanent = resultSet.getBoolean("Permanent");
         StartTime = resultSet.getLong("LastStartTime");
         TimeAmount = resultSet.getLong("TimeAmount");
-    }
-
-    public PlayerData(ConfigurationSection section)
-    {
-        Name = section.getName();
-        Permanent = section.getBoolean("permanent");
-        StartTime = section.getLong("lastStartTime");
-        TimeAmount = section.getLong("timeAmount");
     }
 
     public long endTime()

@@ -8,13 +8,12 @@ import ru.reosfire.twl.data.PlayerDatabase;
 import ru.reosfire.twl.data.exporters.EasyWhitelist;
 import ru.reosfire.twl.data.exporters.IDataExporter;
 import ru.reosfire.twl.lib.commands.CommandName;
-import ru.reosfire.twl.lib.commands.CommandNode;
 
 import javax.management.ReflectionException;
 import java.util.concurrent.atomic.AtomicReference;
 
 @CommandName("easy-whitelist")
-public class EasyWhitelistImportCommand extends CommandNode
+public class EasyWhitelistImportCommand extends BaseImportCommandNode
 {
     private final ImportCommandResultConfig commandResults;
     private final PlayerDatabase database;
@@ -50,7 +49,7 @@ public class EasyWhitelistImportCommand extends CommandNode
         try
         {
             IDataExporter dataExporter = new EasyWhitelist(defaultTime.get(), defaultPermanent.get());
-            dataExporter.exportAsyncAndHandle(database, commandResults, sender);
+            exportAsyncAndHandle(dataExporter, database, commandResults, sender);
             commandResults.SuccessfullyStarted.Send(sender);
         }
         catch (ReflectionException e)

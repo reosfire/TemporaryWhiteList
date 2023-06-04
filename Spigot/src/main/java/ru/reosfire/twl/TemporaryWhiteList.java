@@ -159,7 +159,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         {
             try
             {
-                dataProvider = new SqlDataProvider(config);
+                dataProvider = new SqlDataProvider(config.getSqlProviderConfiguration());
             }
             catch (Exception e)
             {
@@ -190,7 +190,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         try
         {
-            return new SqlDataProvider(config);
+            return new SqlDataProvider(config.getSqlProviderConfiguration());
         }
         catch (Exception e)
         {
