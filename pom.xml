@@ -7,11 +7,15 @@
     <groupId>ru.reosfire</groupId>
     <artifactId>TemporaryWhiteList</artifactId>
     <version>2.4</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>TemporaryWhiteList</name>
 
     <description>Nicknames based temporary white list</description>
+    <modules>
+        <module>Core</module>
+        <module>Spigot</module>
+    </modules>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,7 +85,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>ru.reosfire.temporarywhitelist.bstats</shadedPattern>
+                            <shadedPattern>ru.reosfire.twl.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.zaxxer.hikari</pattern>
@@ -109,7 +113,7 @@
         </plugins>
         <resources>
             <resource>
-                <directory>src/main/resources</directory>
+                <directory>Spigot/src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
         </resources>

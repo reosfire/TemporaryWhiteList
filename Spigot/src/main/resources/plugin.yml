@@ -1,0 +1,44 @@
+name: '${project.name}'
+version: '${project.version}'
+main: ru.reosfire.twl.TemporaryWhiteList
+prefix: TWL
+authors: [ reosfire ]
+description: Nicknames based temporary white list
+website: https://www.spigotmc.org/resources/temporarywhitelist.99914
+load: STARTUP
+api-version: 1.13
+softdepend:
+  - PlaceholderAPI
+  - EasyWhitelist
+commands:
+  twl:
+    description: Base command of temporary white list
+  twl-sync:
+    description: Sync version of twl command (use it with RCON)
+permissions:
+  'TemporaryWhitelist.Bypass':
+    description: "Not whitelisted players with this permission can join."
+
+  'TemporaryWhitelist.Administrate.Add':
+    description: "Add player to whitelist"
+  'TemporaryWhitelist.Administrate.Set':
+    description: "Set player whitelist status"
+  'TemporaryWhitelist.Administrate.Remove':
+    description: "Remove player from whitelist"
+
+  'TemporaryWhitelist.Administrate.List':
+    description: "View whitelist"
+  'TemporaryWhitelist.Administrate.CheckOther':
+    description: "Check whitelist info about other player."
+
+  'TemporaryWhitelist.CheckSelf':
+    description: "Check whitelist info"
+    default: true
+
+  'TemporaryWhitelist.Administrate.Reload':
+    description: "Reload plugin"
+  'TemporaryWhitelist.Administrate.EnableDisable':
+    description: "Enable/disable plugin"
+
+  'TemporaryWhitelist.Administrate.Import':
+    description: "Import data from other files"
