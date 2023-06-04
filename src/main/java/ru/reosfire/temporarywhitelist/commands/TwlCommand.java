@@ -1,11 +1,11 @@
 package ru.reosfire.temporarywhitelist.commands;
 
 import org.bukkit.command.CommandSender;
+import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 import ru.reosfire.temporarywhitelist.commands.subcommands.*;
 import ru.reosfire.temporarywhitelist.configuration.localization.commandResults.TwlCommandResultsConfig;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandName;
 import ru.reosfire.temporarywhitelist.lib.commands.CommandNode;
-import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
 
 @CommandName("twl")
 public class TwlCommand extends CommandNode
@@ -23,6 +23,7 @@ public class TwlCommand extends CommandNode
         addChildren(new CheckCommand(pluginInstance));
         addChildren(new ListCommand(pluginInstance));
         addChildren(new ImportCommand(pluginInstance));
+        addChildren(new ClearCommand(pluginInstance));
         addChildren(new EnableCommand(pluginInstance));
         addChildren(new DisableCommand(pluginInstance));
         addChildren(new ReloadCommand(pluginInstance));

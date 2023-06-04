@@ -123,6 +123,11 @@ public class PlayerDatabase implements IUpdatable
         return provider.remove(name).thenRun(() -> playersData.remove(finalName)).thenApply(res -> true);
     }
 
+    public CompletableFuture<Void> clear()
+    {
+        return provider.clear();
+    }
+
     public List<PlayerData> activeList()
     {
         List<PlayerData> result = new ArrayList<>();

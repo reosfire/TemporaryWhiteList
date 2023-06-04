@@ -16,6 +16,7 @@ public class CommandResultsConfig extends YamlConfig
     public final DisableCommandResultsConfig Disable;
     public final ReloadCommandResultsConfig Reload;
     public final ImportCommandResultConfig Import;
+    public final ClearCommandResultsConfig Clear;
 
     public CommandResultsConfig(ConfigurationSection configurationSection)
     {
@@ -31,5 +32,6 @@ public class CommandResultsConfig extends YamlConfig
         Disable = new DisableCommandResultsConfig(getSection("Disable"));
         Reload = new ReloadCommandResultsConfig(getSection("Reload"));
         Import = new ImportCommandResultConfig(getSection("Import"));
+        Clear = new ClearCommandResultsConfig(getSection("Clear"));
     }
 }
