@@ -41,7 +41,7 @@
                 <version>3.4.1</version>
                 <configuration>
                     <outputFile>${directory}\${project.name}-${project.version}.jar</outputFile>
-                    <minimizeJar>false</minimizeJar> <!--TODO make it true(now if true only resources are compiled)-->
+                    <minimizeJar>true</minimizeJar>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <relocations>
                         <relocation>
@@ -55,6 +55,10 @@
                     </relocations>
                     <filters>
                         <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>ru.reosfire.twl.TWLUser</exclude>
+                            </excludes>
                             <artifact>*:*</artifact>
                             <excludes>
                                 <exclude>META-INF/**</exclude>
