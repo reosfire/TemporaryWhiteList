@@ -21,6 +21,11 @@
             <artifactId>Spigot</artifactId>
             <version>2.4</version>
         </dependency>
+        <dependency>
+            <groupId>ru.reosfire</groupId>
+            <artifactId>Velocity</artifactId>
+            <version>2.4</version>
+        </dependency>
     </dependencies>
 
     <build>
