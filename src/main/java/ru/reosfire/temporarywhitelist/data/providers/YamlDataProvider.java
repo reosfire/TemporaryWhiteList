@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import ru.reosfire.temporarywhitelist.data.IDataProvider;
 import ru.reosfire.temporarywhitelist.data.PlayerData;
 import ru.reosfire.temporarywhitelist.lib.yaml.YamlConfig;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,6 +102,12 @@ public class YamlDataProvider implements IDataProvider
                 }
             }
         });
+    }
+
+    @Override
+    public CompletableFuture<Void> clear() {
+        //TODO clear logic
+        throw new NotImplementedException();
     }
 
     @Override
