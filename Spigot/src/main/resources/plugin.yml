@@ -1,5 +1,5 @@
-name: '${project.name}'
-version: '${project.version}'
+name: 'TemporaryWhiteList'
+version: '2.4'
 main: ru.reosfire.twl.spigot.TemporaryWhiteList
 prefix: TWL
 authors: [ reosfire ]
