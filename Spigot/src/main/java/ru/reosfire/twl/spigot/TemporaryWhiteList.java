@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import ru.reosfire.twl.common.TimeConverter;
 import ru.reosfire.twl.common.data.IDataProvider;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.providers.SqlDataProvider;
@@ -86,7 +87,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         localizationsLoader.copyDefaultTranslations();
         messages = localizationsLoader.loadMessages();
 
-        timeConverter = new TimeConverter(configuration);
+        timeConverter = new TimeConverter(configuration.DurationFormat, configuration.DateTimeFormat);
 
         getLogger().info("Loading data...");
         database = loadDatabase(configuration);

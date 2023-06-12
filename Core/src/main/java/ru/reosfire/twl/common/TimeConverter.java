@@ -1,23 +1,22 @@
-package ru.reosfire.twl.spigot;
+package ru.reosfire.twl.common;
 
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;
-import ru.reosfire.twl.spigot.configuration.Config;
 
 public class TimeConverter
 {
-    private final Config config;
+    private final String durationFormat;
     private final FastDateFormat dateTimeFormat;
 
-    public TimeConverter(Config config)
+    public TimeConverter(String durationFormat, String dateTimeFormat)
     {
-        this.config = config;
-        dateTimeFormat = FastDateFormat.getInstance(config.DateTimeFormat);
+        this.durationFormat = durationFormat;
+        this.dateTimeFormat = FastDateFormat.getInstance(dateTimeFormat);
     }
 
     public String durationToString(long seconds)
     {
-        return DurationFormatUtils.formatDuration(seconds * 1000, config.DurationFormat);
+        return DurationFormatUtils.formatDuration(seconds * 1000, durationFormat);
     }
     public String dateTimeToString(long seconds)
     {

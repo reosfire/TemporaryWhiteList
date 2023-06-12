@@ -42,10 +42,6 @@ public class OnlinePlayersKicker {
         toKick.clear();
     }
 
-    private void runOnlinePlayersUpdaterTask() {
-
-    }
-
     private void runCheckerTask() {
         //TODO Smooth out load by check rolling queue.
         checkerTask = Bukkit.getScheduler().runTaskTimer(pluginInstance, () ->

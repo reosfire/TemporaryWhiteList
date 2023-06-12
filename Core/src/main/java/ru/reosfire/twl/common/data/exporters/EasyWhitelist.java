@@ -1,7 +1,6 @@
-package ru.reosfire.twl.spigot.data.exporters;
+package ru.reosfire.twl.common.data.exporters;
 
 import ru.reosfire.twl.common.data.PlayerData;
-import ru.reosfire.twl.common.data.exporters.IDataExporter;
 
 import javax.management.ReflectionException;
 import java.lang.reflect.Method;
