@@ -23,6 +23,7 @@ public class TwlCommand extends CommandNode
         addChildren(new CheckCommand(pluginInstance));
         addChildren(new ListCommand(pluginInstance));
         addChildren(new ImportCommand(pluginInstance));
+        addChildren(new ClearCommand(pluginInstance));
         addChildren(new EnableCommand(pluginInstance));
         addChildren(new DisableCommand(pluginInstance));
         addChildren(new ReloadCommand(pluginInstance));

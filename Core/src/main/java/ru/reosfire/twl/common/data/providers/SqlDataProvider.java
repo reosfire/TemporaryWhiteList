@@ -97,6 +97,25 @@ public class SqlDataProvider implements IDataProvider
     }
 
     @Override
+    public CompletableFuture<Void> clear() {
+        return CompletableFuture.runAsync(() ->
+        {
+            String removeRequest = "DELETE FROM " + configuration.SqlTable + ";";
+            try(Connection connection = dataSource.getConnection())
+            {
+                try(Statement statement = connection.createStatement())
+                {
+                    statement.executeUpdate(removeRequest);
+                }
+            }
+            catch (Exception e)
+            {
+                throw new RuntimeException("Error while clearing", e);
+            }
+        });
+    }
+
+    @Override
     public PlayerData get(String playerName)
     {
         String selectRequest = "SELECT * FROM " + configuration.table + " WHERE Player=?;";

@@ -83,7 +83,7 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         String requiredPermission = getPermission();
         if (!(sender instanceof ConsoleCommandSender) && requiredPermission != null && !sender.hasPermission(requiredPermission) && !sender.isOp())
         {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
         if (children == null) return completeTab(args);
         for (CommandNode child : children)

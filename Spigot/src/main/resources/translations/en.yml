@@ -315,6 +315,11 @@ CommandResults:
     Error:
       - Content: "&cError while reloading whitelist"
 
+  Clear:
+    Confirmation:
+      - Content: "&lTo confirm clear use: /clear &b{confirmation_code}"
+      - Content: "Get"
+
   Twl:
     Usage:
       - Content: "&cPlease use correct subcommand:"

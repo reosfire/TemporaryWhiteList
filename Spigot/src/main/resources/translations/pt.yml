@@ -315,6 +315,9 @@ CommandResults:
     Error:
       - Content: "&cErro ao recarregar a lista"
 
+  Clear:
+
+
   Twl:
     Usage:
       - Content: "&cPor favor use o subcomando correto:"

@@ -104,6 +104,12 @@ public class YamlDataProvider implements IDataProvider
     }
 
     @Override
+    public CompletableFuture<Void> clear() {
+        //TODO clear logic
+        throw new NotImplementedException();
+    }
+
+    @Override
     public PlayerData get(String playerName)
     {
         reloadYaml();
