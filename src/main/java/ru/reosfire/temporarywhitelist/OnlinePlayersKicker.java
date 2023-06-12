@@ -1,6 +1,5 @@
 package ru.reosfire.temporarywhitelist;
 
-import com.google.common.collect.ImmutableList;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -9,6 +8,8 @@ import ru.reosfire.temporarywhitelist.configuration.localization.MessagesConfig;
 import ru.reosfire.temporarywhitelist.data.PlayerDatabase;
 import ru.reosfire.temporarywhitelist.lib.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -17,6 +18,7 @@ public class OnlinePlayersKicker {
     private final Config configuration;
     private final PlayerDatabase database;
     private final MessagesConfig messages;
+
     private BukkitTask checkerTask;
     private BukkitTask kickerTask;
     private final ConcurrentLinkedQueue<UUID> toKick = new ConcurrentLinkedQueue<>();
@@ -29,6 +31,7 @@ public class OnlinePlayersKicker {
     }
 
     public void start() {
+        toKick.clear();
         runCheckerTask();
         runKickerTask();
     }
@@ -41,16 +44,23 @@ public class OnlinePlayersKicker {
 
     private void runCheckerTask() {
         //TODO Smooth out load by check rolling queue.
-        checkerTask = Bukkit.getScheduler().runTaskTimerAsynchronously(pluginInstance, () ->
+        checkerTask = Bukkit.getScheduler().runTaskTimer(pluginInstance, () ->
         {
-            for (Player player : ImmutableList.copyOf(pluginInstance.getServer().getOnlinePlayers()))
-            {
-                if (database.canJoin(player.getName())) continue;
+            List<PlayerInfo> potentialKickPlayersNames = new ArrayList<>();
+            for (Player player: Bukkit.getOnlinePlayers()) {
                 if (player.isOp()) continue;
                 if (player.hasPermission("TemporaryWhitelist.Bypass")) continue;
 
-                toKick.add(player.getUniqueId());
+                potentialKickPlayersNames.add(new PlayerInfo(player));
             }
+
+            Bukkit.getScheduler().runTaskAsynchronously(pluginInstance, () -> {
+                for (PlayerInfo player: potentialKickPlayersNames) {
+                    if (database.canJoin(player.name)) continue;
+
+                    toKick.add(player.uuid);
+                }
+            });
         },0, configuration.SubscriptionEndCheckTicks);
     }
 
@@ -66,5 +76,15 @@ public class OnlinePlayersKicker {
                 player.kickPlayer(String.join("\n", Text.colorize(player, messages.Kick.WhilePlaying)));
             }
         }, configuration.SubscriptionEndCheckTicks / 2, configuration.SubscriptionEndCheckTicks);
+    }
+
+    private static class PlayerInfo {
+        private final String name;
+        private final UUID uuid;
+
+        private PlayerInfo(Player player) {
+            this.name = player.getName();
+            this.uuid = player.getUniqueId();
+        }
     }
 }
