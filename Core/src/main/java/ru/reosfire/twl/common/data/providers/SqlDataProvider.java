@@ -100,7 +100,7 @@ public class SqlDataProvider implements IDataProvider
     public CompletableFuture<Void> clear() {
         return CompletableFuture.runAsync(() ->
         {
-            String removeRequest = "DELETE FROM " + configuration.SqlTable + ";";
+            String removeRequest = "DELETE FROM " + configuration.table + ";";
             try(Connection connection = dataSource.getConnection())
             {
                 try(Statement statement = connection.createStatement())

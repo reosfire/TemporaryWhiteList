@@ -1,8 +1,8 @@
-package ru.reosfire.temporarywhitelist.configuration.localization.commandResults;
+package ru.reosfire.twl.spigot.configuration.localization.commandResults;
 
 import org.bukkit.configuration.ConfigurationSection;
-import ru.reosfire.temporarywhitelist.lib.yaml.YamlConfig;
-import ru.reosfire.temporarywhitelist.lib.yaml.common.text.MultilineMessage;
+import ru.reosfire.twl.spigot.lib.yaml.YamlConfig;
+import ru.reosfire.twl.spigot.lib.yaml.common.text.MultilineMessage;
 
 public class ClearCommandResultsConfig extends YamlConfig {
     MultilineMessage Confirmation;

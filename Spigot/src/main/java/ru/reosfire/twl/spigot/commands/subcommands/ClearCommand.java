@@ -1,11 +1,11 @@
-package ru.reosfire.temporarywhitelist.commands.subcommands;
+package ru.reosfire.twl.spigot.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
-import ru.reosfire.temporarywhitelist.TemporaryWhiteList;
-import ru.reosfire.temporarywhitelist.configuration.localization.commandResults.ClearCommandResultsConfig;
-import ru.reosfire.temporarywhitelist.lib.commands.CommandName;
-import ru.reosfire.temporarywhitelist.lib.commands.CommandNode;
-import ru.reosfire.temporarywhitelist.lib.commands.CommandPermission;
+import ru.reosfire.twl.spigot.TemporaryWhiteList;
+import ru.reosfire.twl.spigot.configuration.localization.commandResults.ClearCommandResultsConfig;
+import ru.reosfire.twl.spigot.lib.commands.CommandName;
+import ru.reosfire.twl.spigot.lib.commands.CommandNode;
+import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
 
 import java.util.concurrent.ThreadLocalRandom;
 
