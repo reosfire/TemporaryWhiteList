@@ -1,15 +1,10 @@
-package ru.reosfire.twl.spigot.commands.subcommands;
+package ru.reosfire.twl.common.commands.subcommands;
 
 import ru.reosfire.twl.common.configuration.localization.commandResults.ListCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerData;
 import ru.reosfire.twl.common.data.PlayerDatabase;
-import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
+import ru.reosfire.twl.common.lib.commands.*;
 import ru.reosfire.twl.common.lib.text.Replacement;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.lib.commands.CommandName;
-import ru.reosfire.twl.spigot.lib.commands.CommandNode;
-import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
-import ru.reosfire.twl.spigot.lib.commands.ExecuteAsync;
 
 import java.util.List;
 

@@ -1,15 +1,14 @@
-package ru.reosfire.twl.spigot.commands.subcommands;
+package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.commands.subcommands.importTypes.EasyWhitelistImportCommand;
+import ru.reosfire.twl.common.commands.subcommands.importTypes.MinecraftDefaultImportCommand;
+import ru.reosfire.twl.common.commands.subcommands.importTypes.SelfSqlImportCommand;
+import ru.reosfire.twl.common.commands.subcommands.importTypes.SelfYamlImportCommand;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ImportCommandResultConfig;
+import ru.reosfire.twl.common.lib.commands.CommandName;
+import ru.reosfire.twl.common.lib.commands.CommandNode;
+import ru.reosfire.twl.common.lib.commands.CommandPermission;
 import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.commands.subcommands.importTypes.EasyWhitelistImportCommand;
-import ru.reosfire.twl.spigot.commands.subcommands.importTypes.MinecraftDefaultImportCommand;
-import ru.reosfire.twl.spigot.commands.subcommands.importTypes.SelfSqlImportCommand;
-import ru.reosfire.twl.spigot.commands.subcommands.importTypes.SelfYamlImportCommand;
-import ru.reosfire.twl.spigot.lib.commands.CommandName;
-import ru.reosfire.twl.spigot.lib.commands.CommandNode;
-import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
 
 @CommandName("import")
 @CommandPermission("TemporaryWhitelist.Administrate.Import")

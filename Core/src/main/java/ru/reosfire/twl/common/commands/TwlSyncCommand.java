@@ -1,14 +1,13 @@
-package ru.reosfire.twl.spigot.commands;
+package ru.reosfire.twl.common.commands;
 
+import ru.reosfire.twl.common.commands.subcommands.AddCommand;
+import ru.reosfire.twl.common.commands.subcommands.CheckCommand;
+import ru.reosfire.twl.common.commands.subcommands.RemoveCommand;
+import ru.reosfire.twl.common.commands.subcommands.SetCommand;
 import ru.reosfire.twl.common.configuration.localization.commandResults.TwlCommandResultsConfig;
+import ru.reosfire.twl.common.lib.commands.CommandName;
+import ru.reosfire.twl.common.lib.commands.CommandNode;
 import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.commands.subcommands.AddCommand;
-import ru.reosfire.twl.spigot.commands.subcommands.CheckCommand;
-import ru.reosfire.twl.spigot.commands.subcommands.RemoveCommand;
-import ru.reosfire.twl.spigot.commands.subcommands.SetCommand;
-import ru.reosfire.twl.spigot.lib.commands.CommandName;
-import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 
 @CommandName("twl-sync")
 public class TwlSyncCommand extends CommandNode

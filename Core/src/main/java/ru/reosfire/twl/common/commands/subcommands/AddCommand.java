@@ -1,42 +1,36 @@
-package ru.reosfire.twl.spigot.commands.subcommands;
+package ru.reosfire.twl.common.commands.subcommands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 import ru.reosfire.twl.common.TimeConverter;
-import ru.reosfire.twl.common.configuration.localization.commandResults.SetCommandResultsConfig;
+import ru.reosfire.twl.common.configuration.localization.commandResults.AddCommandResultsConfig;
+import ru.reosfire.twl.common.data.PlayerData;
 import ru.reosfire.twl.common.data.PlayerDatabase;
-import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
+import ru.reosfire.twl.common.lib.commands.*;
 import ru.reosfire.twl.common.lib.text.Replacement;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.lib.commands.CommandName;
-import ru.reosfire.twl.spigot.lib.commands.CommandNode;
-import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
-import ru.reosfire.twl.spigot.lib.commands.ExecuteAsync;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
-@CommandName("set")
-@CommandPermission("TemporaryWhitelist.Administrate.Set")
+@CommandName("add")
+@CommandPermission("TemporaryWhitelist.Administrate.Add")
 @ExecuteAsync
-public class SetCommand extends CommandNode
+public class AddCommand extends CommandNode
 {
-    private final SetCommandResultsConfig commandResults;
+    private final AddCommandResultsConfig commandResults;
     private final PlayerDatabase database;
     private final TimeConverter timeConverter;
     private final boolean forceSync;
 
-    public SetCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
+    public AddCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
     {
         super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Set;
+        commandResults = pluginInstance.getMessages().CommandResults.Add;
         database = pluginInstance.getDatabase();
         timeConverter = pluginInstance.getTimeConverter();
         this.forceSync = forceSync;
     }
-    public SetCommand(TemporaryWhiteList pluginInstance)
+    public AddCommand(TemporaryWhiteList pluginInstance)
     {
         this(pluginInstance, false);
     }
@@ -49,31 +43,29 @@ public class SetCommand extends CommandNode
         Replacement playerReplacement = new Replacement("{player}", args[0]);
         Replacement timeReplacement = new Replacement("{time}", args[1]);
 
+        PlayerData playerData = database.getPlayerData(args[0]);
+        if (sendMessageIf(playerData != null && playerData.Permanent, commandResults.AlreadyPermanent, sender, playerReplacement))
+            return true;
+
         if (args[1].equals("permanent"))
         {
             database.setPermanent(args[0]).whenComplete((changed, exception) ->
-                    handleCompletion(changed, exception, sender,playerReplacement, timeReplacement));
+                    handleCompletion(sender, exception, playerReplacement, timeReplacement));
         }
         else
         {
-            long time;
-            try
-            {
-                time = timeConverter.parseTime(args[1]);
-            }
-            catch (Exception e)
+            AtomicReference<Long> time = new AtomicReference<>();
+            if (!tryParse(timeConverter::parseTime, args[1], time))
             {
                 commandResults.IncorrectTime.Send(sender);
                 return true;
             }
-
             if (forceSync)
             {
                 try
                 {
-                    Boolean changed = database.set(args[0], time).join();
-                    if (!changed) commandResults.NothingChanged.Send(sender, playerReplacement, timeReplacement);
-                    else commandResults.Success.Send(sender, playerReplacement, timeReplacement);
+                    database.add(args[0], time.get()).join();
+                    commandResults.Success.Send(sender, playerReplacement, timeReplacement);
                 }
                 catch (Exception e)
                 {
@@ -83,18 +75,16 @@ public class SetCommand extends CommandNode
             }
             else
             {
-                database.set(args[0], time).whenComplete((changed, exception) ->
-                        handleCompletion(changed, exception, sender, playerReplacement, timeReplacement));
+                database.add(args[0], time.get()).whenComplete((result, exception) ->
+                        handleCompletion(sender, exception, playerReplacement, timeReplacement));
             }
         }
         return true;
     }
 
-    private void handleCompletion(boolean changed, Throwable exception, TwlCommandSender sender, Replacement... replacements)
+    private void handleCompletion(TwlCommandSender sender, Throwable exception, Replacement... replacements)
     {
-        if (!changed)
-            commandResults.NothingChanged.Send(sender, replacements);
-        else if (exception == null)
+        if (exception == null)
             commandResults.Success.Send(sender, replacements);
         else
         {

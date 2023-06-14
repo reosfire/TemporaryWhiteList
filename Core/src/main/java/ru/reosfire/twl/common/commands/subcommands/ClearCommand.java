@@ -1,10 +1,9 @@
-package ru.reosfire.twl.spigot.commands.subcommands;
+package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.lib.commands.CommandName;
+import ru.reosfire.twl.common.lib.commands.CommandNode;
+import ru.reosfire.twl.common.lib.commands.CommandPermission;
 import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.lib.commands.CommandName;
-import ru.reosfire.twl.spigot.lib.commands.CommandNode;
-import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
 
 import java.util.concurrent.ThreadLocalRandom;
 

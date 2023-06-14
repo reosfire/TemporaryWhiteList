@@ -1,11 +1,10 @@
-package ru.reosfire.twl.spigot.commands;
+package ru.reosfire.twl.common.commands;
 
+import ru.reosfire.twl.common.commands.subcommands.*;
 import ru.reosfire.twl.common.configuration.localization.commandResults.TwlCommandResultsConfig;
+import ru.reosfire.twl.common.lib.commands.CommandName;
+import ru.reosfire.twl.common.lib.commands.CommandNode;
 import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.commands.subcommands.*;
-import ru.reosfire.twl.spigot.lib.commands.CommandName;
-import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 
 @CommandName("twl")
 public class TwlCommand extends CommandNode
