@@ -7,21 +7,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.yaml.snakeyaml.Yaml;
 import ru.reosfire.twl.common.TimeConverter;
+import ru.reosfire.twl.common.configuration.Config;
+import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.data.IDataProvider;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.providers.SqlDataProvider;
+import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.TwlCommand;
 import ru.reosfire.twl.spigot.commands.TwlSyncCommand;
-import ru.reosfire.twl.spigot.configuration.Config;
-import ru.reosfire.twl.spigot.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.spigot.data.providers.YamlDataProvider;
 import ru.reosfire.twl.spigot.lib.text.Text;
-import ru.reosfire.twl.spigot.lib.yaml.YamlConfig;
 import ru.reosfire.twl.spigot.loaders.LocalizationsLoader;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Objects;
 
 public final class TemporaryWhiteList extends JavaPlugin
@@ -138,7 +140,9 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         try
         {
-            return new Config(YamlConfig.loadOrCreate("config.yml", this));
+            File file = new File(getDataFolder(), "./config.yml");
+            Map<String, Object> loaded = new Yaml().load(new FileInputStream(file));
+            return new Config(new ConfigSection(loaded));
         }
         catch (Exception e)
         {
@@ -177,7 +181,7 @@ public final class TemporaryWhiteList extends JavaPlugin
     {
         try
         {
-            return new YamlDataProvider(YamlConfig.loadOrCreateFile(config.DataFile, this));
+            return new YamlDataProvider(new File(getDataFolder(), config.DataFile));
         }
         catch (Exception e)
         {

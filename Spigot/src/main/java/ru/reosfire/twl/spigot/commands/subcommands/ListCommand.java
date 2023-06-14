@@ -1,11 +1,11 @@
 package ru.reosfire.twl.spigot.commands.subcommands;
 
-import org.bukkit.command.CommandSender;
+import ru.reosfire.twl.common.configuration.localization.commandResults.ListCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerData;
 import ru.reosfire.twl.common.data.PlayerDatabase;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.common.lib.text.Replacement;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.ListCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -31,7 +31,7 @@ public class ListCommand extends CommandNode
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(TwlCommandSender sender, String[] args)
     {
         if (sendMessageIf(args.length > 1, commandResults.Usage, sender)) return true;
         int page = 1;
@@ -74,7 +74,7 @@ public class ListCommand extends CommandNode
                         new Replacement("{player}", players.get(i).Name),
                         new Replacement("{number}", Integer.toString(i + 1)));
             }
-            else sender.sendMessage("");
+            //else sender.sendMessage("");
         }
 
         int previousPage = Math.max(page - 1, 1);

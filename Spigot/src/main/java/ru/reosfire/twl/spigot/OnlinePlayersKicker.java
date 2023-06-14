@@ -3,9 +3,9 @@ package ru.reosfire.twl.spigot;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+import ru.reosfire.twl.common.configuration.Config;
+import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
-import ru.reosfire.twl.spigot.configuration.Config;
-import ru.reosfire.twl.spigot.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.spigot.lib.text.Text;
 
 import java.util.ArrayList;

@@ -2,14 +2,14 @@ package ru.reosfire.twl.spigot.commands.subcommands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.twl.common.TimeConverter;
+import ru.reosfire.twl.common.configuration.localization.commandResults.CheckCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerData;
 import ru.reosfire.twl.common.data.PlayerDatabase;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.common.lib.text.Replacement;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.CheckCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -42,23 +42,23 @@ public class CheckCommand extends CommandNode
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(TwlCommandSender sender, String[] args)
     {
         if (args.length == 0)
         {
-            if (sender instanceof Player) sendInfo(sender, sender.getName());
-            else commandResults.ForPlayerOnly.Send(sender);
+            //if (sender instanceof Player) sendInfo(new SpigotTwlCommandSender(sender), sender.getName());
+            //else commandResults.ForPlayerOnly.Send(new SpigotTwlCommandSender(sender));
         }
         else if (args.length == 1)
         {
-            if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther")) noPermissionAction(sender);
-            else sendInfo(sender, args[0]);
+            //if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther")) noPermissionAction(sender);
+            //else sendInfo(new SpigotTwlCommandSender(sender), args[0]);
         }
         else commandResults.Usage.Send(sender);
         return true;
     }
 
-    private void sendInfo(CommandSender to, String about)
+    private void sendInfo(TwlCommandSender to, String about)
     {
         PlayerData playerData = database.getPlayerData(about);
         if (playerData == null)

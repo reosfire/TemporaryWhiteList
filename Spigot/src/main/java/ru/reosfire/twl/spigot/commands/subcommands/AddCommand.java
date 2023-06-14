@@ -4,11 +4,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import ru.reosfire.twl.common.TimeConverter;
+import ru.reosfire.twl.common.configuration.localization.commandResults.AddCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerData;
 import ru.reosfire.twl.common.data.PlayerDatabase;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.common.lib.text.Replacement;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.AddCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -43,7 +44,7 @@ public class AddCommand extends CommandNode
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(TwlCommandSender sender, String[] args)
     {
         if (sendMessageIf(args.length != 2, commandResults.Usage, sender)) return true;
 
@@ -89,7 +90,7 @@ public class AddCommand extends CommandNode
         return true;
     }
 
-    private void handleCompletion(CommandSender sender, Throwable exception, Replacement... replacements)
+    private void handleCompletion(TwlCommandSender sender, Throwable exception, Replacement... replacements)
     {
         if (exception == null)
             commandResults.Success.Send(sender, replacements);

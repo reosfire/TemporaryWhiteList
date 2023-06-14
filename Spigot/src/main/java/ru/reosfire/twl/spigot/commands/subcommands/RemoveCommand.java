@@ -3,10 +3,11 @@ package ru.reosfire.twl.spigot.commands.subcommands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import ru.reosfire.twl.common.configuration.localization.commandResults.RemoveCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.common.lib.text.Replacement;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.RemoveCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -38,7 +39,7 @@ public class RemoveCommand extends CommandNode
 
 
     @Override
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(TwlCommandSender sender, String[] args)
     {
         if (sendMessageIf(args.length != 1, commandResults.Usage, sender)) return true;
 

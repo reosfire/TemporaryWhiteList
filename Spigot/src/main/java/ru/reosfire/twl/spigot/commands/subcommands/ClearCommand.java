@@ -1,8 +1,7 @@
 package ru.reosfire.twl.spigot.commands.subcommands;
 
-import org.bukkit.command.CommandSender;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.ClearCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -15,24 +14,24 @@ public class ClearCommand extends CommandNode
 {
     private int confirmationCode = -1;
     private final TemporaryWhiteList plugin;
-    private final ClearCommandResultsConfig commandResults;
+    //private final ClearCommandResultsConfig commandResults;
 
     public ClearCommand(TemporaryWhiteList pluginInstance)
     {
         super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Clear;
+        //commandResults = pluginInstance.getMessages().CommandResults.Clear;
         plugin = pluginInstance;
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(TwlCommandSender sender, String[] args)
     {
         if (confirmationCode == -1) {
             confirmationCode = ThreadLocalRandom.current().nextInt(9000) + 1000;
-            sender.sendMessage("To confirm clear use: /clear " + confirmationCode + "or any other number to cancel");
+            //sender.sendMessage("To confirm clear use: /clear " + confirmationCode + "or any other number to cancel");
         } else {
             if (args.length == 0) {
-                sender.sendMessage("To confirm clear use: /clear " + confirmationCode);
+                //sender.sendMessage("To confirm clear use: /clear " + confirmationCode);
                 return true;
             }
 
@@ -47,13 +46,13 @@ public class ClearCommand extends CommandNode
             }
 
             if (enteredCode != confirmationCode) {
-                sender.sendMessage("cancelled");
+                //sender.sendMessage("cancelled");
             }
             else {
-                plugin.getDatabase().clear().whenComplete((unused, exception) ->
-                        sender.sendMessage("Success")
+                plugin.getDatabase().clear().whenComplete((unused, exception) -> System.out.println("aaaa")
+                        //sender.sendMessage("Success")
                 );
-                sender.sendMessage("cleared");
+                //sender.sendMessage("cleared");
             }
 
             //TODO move messages to config

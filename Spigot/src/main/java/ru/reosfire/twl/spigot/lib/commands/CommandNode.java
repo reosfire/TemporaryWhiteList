@@ -3,8 +3,10 @@ package ru.reosfire.twl.spigot.lib.commands;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.common.lib.text.Replacement;
-import ru.reosfire.twl.spigot.lib.yaml.common.text.MultilineMessage;
+import ru.reosfire.twl.common.lib.yaml.common.text.MultilineMessage;
+import ru.reosfire.twl.spigot.commands.SpigotTwlCommandSender;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -118,9 +120,11 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
 
     private boolean execute(CommandSender sender, String[] args, boolean async)
     {
+        TwlCommandSender twlCommandSender = new SpigotTwlCommandSender(sender);
+
         if (async)
         {
-            CompletableFuture.runAsync(() -> execute(sender, args)).handle((res, ex) ->
+            CompletableFuture.runAsync(() -> execute(twlCommandSender, args)).handle((res, ex) ->
             {
                 if (ex != null)
                 {
@@ -131,9 +135,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
             });
             return true;
         }
-        return execute(sender, args);
+        return execute(twlCommandSender, args);
     }
-    protected abstract boolean execute(CommandSender sender, String[] args);
+    protected abstract boolean execute(TwlCommandSender sender, String[] args);
 
     protected List<String> completeTab(String[] args)
     {
@@ -188,21 +192,9 @@ public abstract class CommandNode implements CommandExecutor, TabCompleter
         }
     }
 
-    protected final boolean sendMessageIf(boolean send, MultilineMessage message, CommandSender sender, Replacement... replacements)
+    protected final boolean sendMessageIf(boolean send, MultilineMessage message, TwlCommandSender sender, Replacement... replacements)
     {
         if (send) message.Send(sender, replacements);
         return send;
-    }
-
-    protected final List<String> getStartingWith(List<String> input, String start)
-    {
-        ArrayList<String> result = new ArrayList<>();
-
-        for (String s : input)
-        {
-            if (s.startsWith(start)) result.add(start);
-        }
-
-        return result;
     }
 }

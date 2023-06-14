@@ -1,8 +1,8 @@
 package ru.reosfire.twl.spigot.commands.subcommands;
 
-import org.bukkit.command.CommandSender;
+import ru.reosfire.twl.common.configuration.localization.commandResults.ReloadCommandResultsConfig;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.ReloadCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -22,7 +22,7 @@ public class ReloadCommand extends CommandNode
     }
 
     @Override
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(TwlCommandSender sender, String[] args)
     {
         try
         {

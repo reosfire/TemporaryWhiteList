@@ -1,12 +1,15 @@
 package ru.reosfire.twl.spigot.loaders;
 
+import org.yaml.snakeyaml.Yaml;
+import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
+import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
-import ru.reosfire.twl.spigot.configuration.localization.MessagesConfig;
-import ru.reosfire.twl.spigot.lib.yaml.YamlConfig;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Map;
 
 public class LocalizationsLoader
 {
@@ -51,7 +54,10 @@ public class LocalizationsLoader
     {
         try
         {
-            return new MessagesConfig(YamlConfig.loadOrCreate("translations/" + plugin.getConfiguration().Translation, plugin));
+            File file = new File(plugin.getDataFolder(), "./translations/" + plugin.getConfiguration().Translation);
+            Map<String, Object> loaded = new Yaml().load(new FileInputStream(file));
+
+            return new MessagesConfig(new ConfigSection(loaded));
         }
         catch (Exception e)
         {

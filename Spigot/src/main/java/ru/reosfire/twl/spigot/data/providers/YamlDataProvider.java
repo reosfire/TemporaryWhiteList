@@ -6,7 +6,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import ru.reosfire.twl.common.data.IDataProvider;
 import ru.reosfire.twl.common.data.PlayerData;
-import ru.reosfire.twl.spigot.lib.yaml.YamlConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +21,7 @@ public class YamlDataProvider implements IDataProvider
     public YamlDataProvider(File yamlFile) throws IOException, InvalidConfigurationException
     {
         yamlDataFile = yamlFile;
-        yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
+        //yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
     }
 
     private void reloadYaml()
@@ -31,7 +30,7 @@ public class YamlDataProvider implements IDataProvider
         {
             try
             {
-                yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
+                //yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
             }
             catch (Exception e)
             {

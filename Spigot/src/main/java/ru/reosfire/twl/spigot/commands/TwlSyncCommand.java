@@ -1,12 +1,12 @@
 package ru.reosfire.twl.spigot.commands;
 
-import org.bukkit.command.CommandSender;
+import ru.reosfire.twl.common.configuration.localization.commandResults.TwlCommandResultsConfig;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
 import ru.reosfire.twl.spigot.commands.subcommands.AddCommand;
 import ru.reosfire.twl.spigot.commands.subcommands.CheckCommand;
 import ru.reosfire.twl.spigot.commands.subcommands.RemoveCommand;
 import ru.reosfire.twl.spigot.commands.subcommands.SetCommand;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.TwlCommandResultsConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 
@@ -28,7 +28,7 @@ public class TwlSyncCommand extends CommandNode
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args)
+    protected boolean execute(TwlCommandSender sender, String[] args)
     {
         commandResults.Usage.Send(sender);
         return false;

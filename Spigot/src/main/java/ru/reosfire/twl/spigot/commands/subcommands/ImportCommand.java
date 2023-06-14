@@ -1,12 +1,12 @@
 package ru.reosfire.twl.spigot.commands.subcommands;
 
-import org.bukkit.command.CommandSender;
+import ru.reosfire.twl.common.configuration.localization.commandResults.ImportCommandResultConfig;
+import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
 import ru.reosfire.twl.spigot.commands.subcommands.importTypes.EasyWhitelistImportCommand;
 import ru.reosfire.twl.spigot.commands.subcommands.importTypes.MinecraftDefaultImportCommand;
 import ru.reosfire.twl.spigot.commands.subcommands.importTypes.SelfSqlImportCommand;
 import ru.reosfire.twl.spigot.commands.subcommands.importTypes.SelfYamlImportCommand;
-import ru.reosfire.twl.spigot.configuration.localization.commandResults.ImportCommandResultConfig;
 import ru.reosfire.twl.spigot.lib.commands.CommandName;
 import ru.reosfire.twl.spigot.lib.commands.CommandNode;
 import ru.reosfire.twl.spigot.lib.commands.CommandPermission;
@@ -29,7 +29,7 @@ public class ImportCommand extends CommandNode
     }
 
     @Override
-    protected boolean execute(CommandSender sender, String[] args)
+    protected boolean execute(TwlCommandSender sender, String[] args)
     {
         commandResults.Usage.Send(sender);
         return true;
