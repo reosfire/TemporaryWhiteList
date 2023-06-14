@@ -5,8 +5,7 @@ import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
 import ru.reosfire.twl.common.lib.yaml.common.sql.MysqlConfiguration;
 
-public class Config extends YamlConfig
-{
+public class Config extends YamlConfig {
     public final String DataFile;
     public final int SubscriptionEndCheckTicks;
     public final long RefreshAfter;
@@ -19,8 +18,7 @@ public class Config extends YamlConfig
     public final String DateTimeFormat;
     public final int ListPageSize;
 
-    public Config(ConfigSection configuration)
-    {
+    public Config(ConfigSection configuration) {
         super(configuration);
 
         DataFile = getString("DataFile");

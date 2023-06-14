@@ -4,13 +4,11 @@ import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
 import ru.reosfire.twl.common.lib.yaml.common.text.MultilineMessage;
 
-public class ReloadCommandResultsConfig extends YamlConfig
-{
+public class ReloadCommandResultsConfig extends YamlConfig {
     public final MultilineMessage Success;
     public final MultilineMessage Error;
 
-    public ReloadCommandResultsConfig(ConfigSection configurationSection)
-    {
+    public ReloadCommandResultsConfig(ConfigSection configurationSection) {
         super(configurationSection);
 
         Success = getMultilineMessage("Success");

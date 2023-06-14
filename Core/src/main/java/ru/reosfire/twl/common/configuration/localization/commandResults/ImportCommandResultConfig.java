@@ -4,8 +4,7 @@ import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
 import ru.reosfire.twl.common.lib.yaml.common.text.MultilineMessage;
 
-public class ImportCommandResultConfig extends YamlConfig
-{
+public class ImportCommandResultConfig extends YamlConfig {
     public final MultilineMessage Usage;
     public final MultilineMessage ImportFromSelf;
     public final MultilineMessage IncorrectTime;
@@ -19,9 +18,9 @@ public class ImportCommandResultConfig extends YamlConfig
     public final MultilineMessage EasyWhiteListUsage;
     public final MultilineMessage EasyWhiteListPluginNotFound;
 
-    public ImportCommandResultConfig(ConfigSection configurationSection)
-    {
+    public ImportCommandResultConfig(ConfigSection configurationSection) {
         super(configurationSection);
+
         Usage = getMultilineMessage("Usage");
         ImportFromSelf = getMultilineMessage("ImportFromSelf");
         IncorrectTime = getMultilineMessage("IncorrectTime");

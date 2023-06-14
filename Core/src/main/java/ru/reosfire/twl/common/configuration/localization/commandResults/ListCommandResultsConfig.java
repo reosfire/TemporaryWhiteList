@@ -4,8 +4,7 @@ import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
 import ru.reosfire.twl.common.lib.yaml.common.text.MultilineMessage;
 
-public class ListCommandResultsConfig extends YamlConfig
-{
+public class ListCommandResultsConfig extends YamlConfig {
     public final MultilineMessage Usage;
     public final MultilineMessage IncorrectPage;
     public final MultilineMessage ListIsEmpty;
@@ -13,8 +12,7 @@ public class ListCommandResultsConfig extends YamlConfig
     public final MultilineMessage PlayerFormat;
     public final MultilineMessage PagesSwitch;
 
-    public ListCommandResultsConfig(ConfigSection configurationSection)
-    {
+    public ListCommandResultsConfig(ConfigSection configurationSection) {
         super(configurationSection);
 
         Usage = getMultilineMessage("Usage");

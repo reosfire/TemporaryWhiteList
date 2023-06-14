@@ -4,8 +4,7 @@ import ru.reosfire.twl.common.configuration.localization.commandResults.*;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
 
-public class CommandResultsConfig extends YamlConfig
-{
+public class CommandResultsConfig extends YamlConfig {
     public final TwlCommandResultsConfig Twl;
     public final AddCommandResultsConfig Add;
     public final SetCommandResultsConfig Set;
@@ -18,8 +17,7 @@ public class CommandResultsConfig extends YamlConfig
     public final ImportCommandResultConfig Import;
     //public final ClearCommandResultsConfig Clear;
 
-    public CommandResultsConfig(ConfigSection configurationSection)
-    {
+    public CommandResultsConfig(ConfigSection configurationSection) {
         super(configurationSection);
 
         Twl = new TwlCommandResultsConfig(getSection("Twl"));
