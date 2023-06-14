@@ -37,8 +37,14 @@ public class ConfigSection {
     public String getString(String path) {
         return get(path, String.class);
     }
+    public String getString(String path, String def) {
+        return getOrDefault(path, String.class, def);
+    }
     public int getInt(String path) {
         return get(path, Integer.class);
+    }
+    public int getInt(String path, int def) {
+        return getOrDefault(path, Integer.class, def);
     }
     public long getLong(String path) {
         try {
@@ -46,6 +52,9 @@ public class ConfigSection {
         } catch (Exception e) {
             return get(path, Integer.class);
         }
+    }
+    public long getLong(String path, long def) {
+        return getOrDefault(path, Long.class, def);
     }
 
 

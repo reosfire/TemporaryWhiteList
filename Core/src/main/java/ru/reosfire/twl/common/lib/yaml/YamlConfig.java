@@ -27,23 +27,6 @@ public abstract class YamlConfig
         this(new ConfigSection(data));
     }
 
-
-    private  <T extends YamlConfig> List<T> getNestedConfigs(IConfigCreator<T> creator, Map<String, Object> section)
-    {
-        ArrayList<T> result = new ArrayList<>();
-        for (String key : section.keySet())
-        {
-            try
-            {
-                result.add(creator.Create((Map<String, Object>)section.get(key)));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
     public <T extends YamlConfig> List<T> getList(IConfigCreator<T> creator, String path)
     {
         List<?> list = (List<?>) getSection().data.get(path);
@@ -65,29 +48,25 @@ public abstract class YamlConfig
         return result;
     }
 
-    public String getString(String path)
-    {
-        return getSection().get(path, String.class);
+    public String getString(String path) {
+        return getSection().getString(path);
     }
-    public String getString(String path, String def)
-    {
-        return getSection().getOrDefault(path, String.class, def);
+    public String getString(String path, String def) {
+        return getSection().getString(path, def);
     }
 
     public int getInt(String path) {
         return getSection().getInt(path);
     }
-    public int getInt(String path, int def)
-    {
-        return getSection().getOrDefault(path, Integer.class, def);
+    public int getInt(String path, int def) {
+        return getSection().getInt(path, def);
     }
 
     public long getLong(String path) {
         return getSection().getLong(path);
     }
-    public long getLong(String path, long def)
-    {
-        return getSection().getOrDefault(path, Long.class, def);
+    public long getLong(String path, long def) {
+        return getSection().getLong(path, def);
     }
 
     public boolean getBoolean(String path, boolean def)
@@ -119,13 +98,11 @@ public abstract class YamlConfig
     }
 
 
-    public boolean isList(String path)
-    {
+    public boolean isList(String path) {
         return getSection().data.get(path) instanceof List;
     }
 
-    public MultilineMessage getMultilineMessage(String path)
-    {
+    public MultilineMessage getMultilineMessage(String path) {
         return new MultilineMessage(getList(TextComponentConfig::new, path));
     }
 }
