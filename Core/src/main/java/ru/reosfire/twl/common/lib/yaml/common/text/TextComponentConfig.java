@@ -1,5 +1,7 @@
 package ru.reosfire.twl.common.lib.yaml.common.text;
 
+import ru.reosfire.twl.common.lib.text.ColorizersCollection;
+import ru.reosfire.twl.common.lib.text.Replacement;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
 
@@ -11,7 +13,7 @@ public class TextComponentConfig extends YamlConfig
     public final List<TextComponentConfig> Content;
     public final ClickConfig ClickConfig;
     public final HoverConfig HoverConfig;
-    //public final ChatColor Color;
+    public final String Color;
     public final boolean Bold;
     public final boolean Italic;
     public final boolean Strikethrough;
@@ -36,13 +38,26 @@ public class TextComponentConfig extends YamlConfig
         ConfigSection hoverSection = getSection("Hover", null);
         HoverConfig = hoverSection == null ? null : new HoverConfig(hoverSection);
 
-        String color = getString("Color", null);
-        //Color = color == null ? null : ChatColor.valueOf(color.toUpperCase(Locale.ROOT));
+        Color = getString("Color", null);
 
         Bold = getBoolean("Bold", false);
         Italic = getBoolean("Italic", false);
         Strikethrough = getBoolean("Strikethrough", false);
         Underlined = getBoolean("Underlined", false);
+    }
+
+    public String toString(Replacement... replacements)
+    {
+        if (TextContent != null) return ColorizersCollection.shared.apply(Replacement.set(TextContent, replacements));
+
+        StringBuilder resultBuilder = new StringBuilder();
+
+        for (TextComponentConfig subComponent : Content)
+        {
+            resultBuilder.append(subComponent.toString(replacements));
+        }
+
+        return ColorizersCollection.shared.apply(resultBuilder.toString());
     }
 
     @Override

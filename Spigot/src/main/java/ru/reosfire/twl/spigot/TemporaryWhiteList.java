@@ -4,6 +4,7 @@ import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,6 +15,7 @@ import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.data.IDataProvider;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.providers.SqlDataProvider;
+import ru.reosfire.twl.common.lib.text.ColorizersCollection;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.TwlCommand;
@@ -64,6 +66,8 @@ public final class TemporaryWhiteList extends JavaPlugin
     @Override
     public void onEnable()
     {
+        ColorizersCollection.shared.addColorizer(input -> ChatColor.translateAlternateColorCodes('&', input));
+
         load();
         Metrics metrics = new Metrics(this, 14858);
         metrics.addCustomChart(new SingleLineChart("whitelisted_players", () -> database.allList().size()));
