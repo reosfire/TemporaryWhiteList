@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.TimeConverter;
 import ru.reosfire.twl.common.configuration.localization.commandResults.SetCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
@@ -20,15 +21,16 @@ public class SetCommand extends CommandNode
     private final TimeConverter timeConverter;
     private final boolean forceSync;
 
-    public SetCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
+    public SetCommand(CommonTwlApi commonApi, boolean forceSync)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Set;
-        database = pluginInstance.getDatabase();
-        timeConverter = pluginInstance.getTimeConverter();
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.Set;
+        database = commonApi.getDatabase();
+        timeConverter = commonApi.getTimeConverter();
         this.forceSync = forceSync;
     }
-    public SetCommand(TemporaryWhiteList pluginInstance)
+    public SetCommand(CommonTwlApi pluginInstance)
     {
         this(pluginInstance, false);
     }
@@ -96,13 +98,13 @@ public class SetCommand extends CommandNode
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+    public List<String> onTabComplete(TwlCommandSender sender, String[] args)
     {
         if (args.length == 1)
             return database.allList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
         else if (args.length == 2 && "permanent".startsWith(args[1])) return Collections.singletonList("permanent");
 
-        return super.onTabComplete(sender, command, alias, args);
+        return super.onTabComplete(sender, args);
     }
 
     @Override

@@ -2,12 +2,14 @@ package ru.reosfire.twl.common.configuration.localization;
 
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlConfig;
+import ru.reosfire.twl.common.lib.yaml.common.text.MultilineMessage;
 
 public class MessagesConfig extends YamlConfig {
     public final PlayerStatusesConfig PlayerStatuses;
     public final KickMessagesConfig Kick;
     public final CommandResultsConfig CommandResults;
-    public final String NoPermission;
+    public final MultilineMessage NoPermission;
+    public final MultilineMessage UnexpectedError;
     public final String WhiteListEnabledStatus;
     public final String WhiteListDisabledStatus;
 
@@ -18,7 +20,9 @@ public class MessagesConfig extends YamlConfig {
         Kick = new KickMessagesConfig(getSection("Kick"));
         CommandResults = new CommandResultsConfig(getSection("CommandResults"));
 
-        NoPermission = getString("NoPermission");
+        NoPermission = getMultilineMessage("NoPermission");
+        UnexpectedError = getMultilineMessage("UnexpectedError");
+
         WhiteListEnabledStatus = getString("WhiteListStatuses.Enabled");
         WhiteListDisabledStatus = getString("WhiteListStatuses.Disabled");
     }

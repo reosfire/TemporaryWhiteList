@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.lib.commands.CommandName;
 import ru.reosfire.twl.common.lib.commands.CommandNode;
 import ru.reosfire.twl.common.lib.commands.CommandPermission;
@@ -12,14 +13,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class ClearCommand extends CommandNode
 {
     private int confirmationCode = -1;
-    private final TemporaryWhiteList plugin;
+    private final CommonTwlApi plugin;
     //private final ClearCommandResultsConfig commandResults;
 
-    public ClearCommand(TemporaryWhiteList pluginInstance)
+    public ClearCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
         //commandResults = pluginInstance.getMessages().CommandResults.Clear;
-        plugin = pluginInstance;
+        plugin = commonApi;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ListCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerData;
 import ru.reosfire.twl.common.data.PlayerDatabase;
@@ -17,12 +18,13 @@ public class ListCommand extends CommandNode
     private final PlayerDatabase database;
     private final int pageSize;
 
-    public ListCommand(TemporaryWhiteList pluginInstance)
+    public ListCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.List;
-        database = pluginInstance.getDatabase();
-        pageSize = pluginInstance.getConfiguration().ListPageSize;
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.List;
+        database = commonApi.getDatabase();
+        pageSize = commonApi.getConfiguration().ListPageSize;
     }
 
     @Override

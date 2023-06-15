@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.commands.subcommands.AddCommand;
 import ru.reosfire.twl.common.commands.subcommands.CheckCommand;
 import ru.reosfire.twl.common.commands.subcommands.RemoveCommand;
@@ -14,16 +15,16 @@ public class TwlSyncCommand extends CommandNode
 {
     private final TwlCommandResultsConfig commandResults;
 
-    public TwlSyncCommand(TemporaryWhiteList pluginInstance)
+    public TwlSyncCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
 
-        commandResults = pluginInstance.getMessages().CommandResults.Twl;
+        commandResults = commonApi.getMessages().CommandResults.Twl;
 
-        addChildren(new AddCommand(pluginInstance, true));
-        addChildren(new SetCommand(pluginInstance, true));
-        addChildren(new CheckCommand(pluginInstance, true));
-        addChildren(new RemoveCommand(pluginInstance, true));
+        addChildren(new AddCommand(commonApi, true));
+        addChildren(new SetCommand(commonApi, true));
+        addChildren(new CheckCommand(commonApi, true));
+        addChildren(new RemoveCommand(commonApi, true));
     }
 
     @Override

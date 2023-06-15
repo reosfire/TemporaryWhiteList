@@ -13,12 +13,14 @@ import java.util.function.Function;
 
 public abstract class CommandNode
 {
-    private final String noPermissionMessage;
+    private final MultilineMessage noPermissionMessage;
+    private final MultilineMessage unexpectedErrorMessage;
     private List<CommandNode> children = null;
 
-    public CommandNode(String noPermission)
+    public CommandNode(MultilineMessage noPermission, MultilineMessage unexpectedError)
     {
         noPermissionMessage = noPermission;
+        unexpectedErrorMessage = unexpectedError;
 
         Class<? extends CommandNode> currentExtendedClass = this.getClass();
         Class<?>[] declaredClasses = currentExtendedClass.getDeclaredClasses();
@@ -44,8 +46,7 @@ public abstract class CommandNode
 
     public boolean onCommand(TwlCommandSender sender, String[] args)
     {
-        String requiredPermission = getPermission();
-        if (!(sender instanceof ConsoleCommandSender) && requiredPermission != null && !sender.hasPermission(requiredPermission))
+        if (!sender.canUseCommand(this))
         {
             noPermissionAction(sender);
             return true;
@@ -74,8 +75,7 @@ public abstract class CommandNode
 
     public List<String> onTabComplete(TwlCommandSender sender, String[] args)
     {
-        String requiredPermission = getPermission();
-        if (!(sender instanceof ConsoleCommandSender) && requiredPermission != null && !sender.hasPermission(requiredPermission) && !sender.isOp())
+        if (sender.canUseCommand(this))
         {
             return Collections.emptyList();
         }
@@ -94,14 +94,14 @@ public abstract class CommandNode
             List<String> result = new ArrayList<>();
             for (CommandNode child : children)
             {
-                if (child.getName().startsWith(args[0]) && (child.getPermission() == null || sender.hasPermission(child.getPermission())))
+                if (child.getName().startsWith(args[0]) && sender.canUseCommand(child))
                 {
                     result.add(child.getName());
                 }
             }
             return result;
         }
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     public final void addChildren(CommandNode child)
@@ -118,14 +118,14 @@ public abstract class CommandNode
             {
                 if (ex != null)
                 {
-                    sender.sendMessage("Unhandled exception while executing async command. More info in console");
+                    sender.sendMessage(unexpectedErrorMessage);
                     ex.printStackTrace();
                 }
                 return null;
             });
             return true;
         }
-        return execute(twlCommandSender, args);
+        return execute(sender, args);
     }
     protected abstract boolean execute(TwlCommandSender sender, String[] args);
 
@@ -134,24 +134,24 @@ public abstract class CommandNode
         return Collections.emptyList();
     }
 
-    protected String getName()
+    public String getName()
     {
         CommandName annotation = this.getClass().getAnnotation(CommandName.class);
         if (annotation == null) return null;
         return annotation.value();
     }
-    protected String getPermission()
+    public String getPermission()
     {
         CommandPermission annotation = this.getClass().getAnnotation(CommandPermission.class);
         if (annotation == null) return null;
         return annotation.value();
     }
-    protected boolean isAsync()
+    public boolean isAsync()
     {
         ExecuteAsync annotation = this.getClass().getAnnotation(ExecuteAsync.class);
         return annotation != null;
     }
-    private int getArgsCount()
+    public int getArgsCount()
     {
         ArgsCount annotation = this.getClass().getAnnotation(ArgsCount.class);
         if (annotation == null) return -1;
@@ -160,7 +160,7 @@ public abstract class CommandNode
 
     protected void noPermissionAction(TwlCommandSender sender)
     {
-        sender.SendMessage(noPermissionMessage);
+        sender.sendMessage(noPermissionMessage);
     }
 
     protected final <T> boolean tryParse(Function<String, T> parser, String s, AtomicReference<T> container)

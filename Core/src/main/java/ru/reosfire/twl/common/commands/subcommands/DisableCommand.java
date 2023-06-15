@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.configuration.localization.commandResults.DisableCommandResultsConfig;
 import ru.reosfire.twl.common.lib.commands.CommandName;
 import ru.reosfire.twl.common.lib.commands.CommandNode;
@@ -10,14 +11,15 @@ import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 @CommandPermission("TemporaryWhitelist.Administrate.EnableDisable")
 public class DisableCommand extends CommandNode
 {
-    private final TemporaryWhiteList plugin;
+    private final CommonTwlApi plugin;
     private final DisableCommandResultsConfig commandResults;
 
-    public DisableCommand(TemporaryWhiteList pluginInstance)
+    public DisableCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Disable;
-        plugin = pluginInstance;
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.Disable;
+        plugin = commonApi;
     }
 
     @Override

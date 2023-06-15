@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.commands.subcommands.*;
 import ru.reosfire.twl.common.configuration.localization.commandResults.TwlCommandResultsConfig;
 import ru.reosfire.twl.common.lib.commands.CommandName;
@@ -9,23 +10,27 @@ import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
+    public final ImportCommand Import;
+
     private final TwlCommandResultsConfig commandResults;
-    public TwlCommand(TemporaryWhiteList pluginInstance)
+    public TwlCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
 
-        commandResults = pluginInstance.getMessages().CommandResults.Twl;
+        commandResults = commonApi.getMessages().CommandResults.Twl;
 
-        addChildren(new AddCommand(pluginInstance));
-        addChildren(new SetCommand(pluginInstance));
-        addChildren(new RemoveCommand(pluginInstance));
-        addChildren(new CheckCommand(pluginInstance));
-        addChildren(new ListCommand(pluginInstance));
-        addChildren(new ImportCommand(pluginInstance));
-        addChildren(new ClearCommand(pluginInstance));
-        addChildren(new EnableCommand(pluginInstance));
-        addChildren(new DisableCommand(pluginInstance));
-        addChildren(new ReloadCommand(pluginInstance));
+        Import = new ImportCommand(commonApi);
+
+        addChildren(new AddCommand(commonApi));
+        addChildren(new SetCommand(commonApi));
+        addChildren(new RemoveCommand(commonApi));
+        addChildren(new CheckCommand(commonApi));
+        addChildren(new ListCommand(commonApi));
+        addChildren(Import);
+        addChildren(new ClearCommand(commonApi));
+        addChildren(new EnableCommand(commonApi));
+        addChildren(new DisableCommand(commonApi));
+        addChildren(new ReloadCommand(commonApi));
     }
 
     @Override

@@ -5,13 +5,14 @@ import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.TimeConverter;
-import ru.reosfire.twl.common.commands.TwlCommand;
-import ru.reosfire.twl.common.commands.TwlSyncCommand;
 import ru.reosfire.twl.common.configuration.Config;
 import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.data.IDataProvider;
@@ -20,6 +21,8 @@ import ru.reosfire.twl.common.data.providers.SqlDataProvider;
 import ru.reosfire.twl.common.lib.text.ColorizersCollection;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.versioning.VersionChecker;
+import ru.reosfire.twl.spigot.commands.TwlCommandExecutor;
+import ru.reosfire.twl.spigot.commands.TwlSyncCommandExecutor;
 import ru.reosfire.twl.spigot.data.providers.YamlDataProvider;
 import ru.reosfire.twl.spigot.lib.text.Text;
 import ru.reosfire.twl.spigot.loaders.LocalizationsLoader;
@@ -28,33 +31,37 @@ import java.io.*;
 import java.util.Map;
 import java.util.Objects;
 
-public final class TemporaryWhiteList extends JavaPlugin
+public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
 {
     private boolean loaded;
     private boolean enabled;
     private Config configuration;
     private PlayerDatabase database;
     private MessagesConfig messages;
-    private PlaceholdersExpansion placeholdersExpansion;
     private TimeConverter timeConverter;
-    private OnlinePlayersKicker onlinePlayersKicker;
     private VersionChecker versionChecker;
+    private PlaceholdersExpansion placeholdersExpansion;
+    private OnlinePlayersKicker onlinePlayersKicker;
 
-    public Config getConfiguration()
-    {
+    @Override
+    public Config getConfiguration() {
         return configuration;
     }
-    public MessagesConfig getMessages()
-    {
-        return messages;
-    }
-    public PlayerDatabase getDatabase()
-    {
+    @Override
+    public PlayerDatabase getDatabase() {
         return database;
     }
-    public TimeConverter getTimeConverter()
-    {
+    @Override
+    public MessagesConfig getMessages() {
+        return messages;
+    }
+    @Override
+    public TimeConverter getTimeConverter() {
         return timeConverter;
+    }
+    @Override
+    public VersionChecker getVersionChecker() {
+        return versionChecker;
     }
 
     public boolean isWhiteListEnabled()
@@ -99,10 +106,9 @@ public final class TemporaryWhiteList extends JavaPlugin
         database = loadDatabase(configuration);
 
         getLogger().info("Loading commands...");
-        TwlCommand commands = new TwlCommand(this);
-        commands.register(Objects.requireNonNull(getCommand("twl")));
-        TwlSyncCommand syncCommands = new TwlSyncCommand(this);
-        syncCommands.register(Objects.requireNonNull(getCommand("twl-sync")));
+
+        registerTabExecutor("twl", new TwlCommandExecutor(this));
+        registerTabExecutor("twl-sync", new TwlSyncCommandExecutor(this));
 
         getLogger().info("Loading placeholders...");
         Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");
@@ -131,6 +137,12 @@ public final class TemporaryWhiteList extends JavaPlugin
 
         loaded = true;
         getLogger().info("Loaded");
+    }
+
+    private void registerTabExecutor(String commandName, TabExecutor executor) {
+        PluginCommand pluginCommand = Objects.requireNonNull(getCommand(commandName));
+        pluginCommand.setExecutor(executor);
+        pluginCommand.setTabCompleter(executor);
     }
 
     private void unload()
@@ -207,6 +219,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         }
     }
 
+    @Override
     public boolean enable()
     {
         if (enabled) return false;
@@ -216,6 +229,7 @@ public final class TemporaryWhiteList extends JavaPlugin
         return true;
     }
 
+    @Override
     public boolean disable()
     {
         if (!enabled) return false;
@@ -223,6 +237,11 @@ public final class TemporaryWhiteList extends JavaPlugin
         setEnabledInFile(false);
         enabled = false;
         return true;
+    }
+
+    @Override
+    public void reload() {
+        load();
     }
 
     private void setEnabledInFile(boolean enabled)

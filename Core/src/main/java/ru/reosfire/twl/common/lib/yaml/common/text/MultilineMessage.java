@@ -15,6 +15,6 @@ public class MultilineMessage
     }
 
     public void Send(TwlCommandSender sender, Replacement... replacements) {
-        sender.SendMessage(this, replacements);
+        sender.sendMessage(this, replacements);
     }
 }

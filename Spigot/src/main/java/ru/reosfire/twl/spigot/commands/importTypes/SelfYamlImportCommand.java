@@ -1,5 +1,6 @@
-package ru.reosfire.twl.common.commands.subcommands.importTypes;
+package ru.reosfire.twl.spigot.commands.importTypes;
 
+import ru.reosfire.twl.common.commands.subcommands.importTypes.BaseImportCommandNode;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ImportCommandResultConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.exporters.IDataExporter;
@@ -15,12 +16,13 @@ public class SelfYamlImportCommand extends BaseImportCommandNode
     private final ImportCommandResultConfig commandResults;
     private final PlayerDatabase database;
 
-    public SelfYamlImportCommand(TemporaryWhiteList pluginInstance)
+    public SelfYamlImportCommand(TemporaryWhiteList commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        plugin = pluginInstance;
-        commandResults = pluginInstance.getMessages().CommandResults.Import;
-        database = pluginInstance.getDatabase();
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        plugin = commonApi;
+        commandResults = commonApi.getMessages().CommandResults.Import;
+        database = commonApi.getDatabase();
     }
 
     @Override

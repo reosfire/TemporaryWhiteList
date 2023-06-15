@@ -7,7 +7,9 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import ru.reosfire.twl.common.lib.commands.CommandNode;
 import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 import ru.reosfire.twl.common.lib.text.IColorizer;
 import ru.reosfire.twl.common.lib.text.Replacement;
@@ -26,7 +28,7 @@ public class SpigotTwlCommandSender extends TwlCommandSender {
     }
 
     @Override
-    public void SendMessage(TextComponentConfig messageLine, Replacement... replacements) {
+    public void sendMessage(TextComponentConfig messageLine, Replacement... replacements) {
         if (sender instanceof Player)
         {
             Player player = (Player) sender;
@@ -35,10 +37,32 @@ public class SpigotTwlCommandSender extends TwlCommandSender {
         else sender.sendMessage(messageLine.toString(replacements));
     }
 
+    @Override
+    public boolean canUseCommand(CommandNode command) {
+        String requiredPermission = command.getPermission();
+        return requiredPermission == null || sender.isOp() || (sender instanceof ConsoleCommandSender) || sender.hasPermission(requiredPermission);
+    }
+
+    @Override
+    public boolean hasPermission(String permission) {
+        return sender.hasPermission(permission);
+    }
+
+    @Override
+    public boolean isPlayer() {
+        return sender instanceof Player;
+    }
+
+    @Override
+    public String getName() {
+        return sender.getName();
+    }
+
     private TextComponent Unwrap(TextComponentConfig config, OfflinePlayer player, Replacement... replacements)
     {
         return Unwrap(config, s -> Text.colorize(player, s, replacements));
     }
+
 
     private TextComponent Unwrap(TextComponentConfig config, IColorizer colorizer)
     {

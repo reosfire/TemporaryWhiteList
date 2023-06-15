@@ -1,7 +1,7 @@
 package ru.reosfire.twl.common.commands.subcommands.importTypes;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.TimeConverter;
-import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ImportCommandResultConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.exporters.EasyWhitelist;
@@ -19,13 +19,13 @@ public class EasyWhitelistImportCommand extends BaseImportCommandNode
     private final PlayerDatabase database;
     private final TimeConverter timeConverter;
 
-    public EasyWhitelistImportCommand(MessagesConfig messages, PlayerDatabase database, TimeConverter timeConverter)
+    public EasyWhitelistImportCommand(CommonTwlApi commonApi)
     {
-        super(messages.NoPermission);
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
 
-        this.commandResults = messages.CommandResults.Import;
-        this.database = database;
-        this.timeConverter = timeConverter;
+        this.commandResults = commonApi.getMessages().CommandResults.Import;
+        this.database = commonApi.getDatabase();
+        this.timeConverter = commonApi.getTimeConverter();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.configuration.localization.commandResults.RemoveCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.lib.commands.*;
@@ -17,14 +18,15 @@ public class RemoveCommand extends CommandNode
     private final PlayerDatabase database;
     private final boolean forceSync;
 
-    public RemoveCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
+    public RemoveCommand(CommonTwlApi commonApi, boolean forceSync)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Remove;
-        database = pluginInstance.getDatabase();
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.Remove;
+        database = commonApi.getDatabase();
         this.forceSync = forceSync;
     }
-    public RemoveCommand(TemporaryWhiteList pluginInstance)
+    public RemoveCommand(CommonTwlApi pluginInstance)
     {
         this(pluginInstance, false);
     }
@@ -68,11 +70,11 @@ public class RemoveCommand extends CommandNode
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+    public List<String> onTabComplete(TwlCommandSender sender, String[] args)
     {
         if (args.length == 1)
             return database.allList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
-        return super.onTabComplete(sender, command, alias, args);
+        return super.onTabComplete(sender, args);
     }
 
     @Override

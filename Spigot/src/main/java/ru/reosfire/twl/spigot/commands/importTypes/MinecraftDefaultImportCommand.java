@@ -1,7 +1,8 @@
-package ru.reosfire.twl.common.commands.subcommands.importTypes;
+package ru.reosfire.twl.spigot.commands.importTypes;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.TimeConverter;
-import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
+import ru.reosfire.twl.common.commands.subcommands.importTypes.BaseImportCommandNode;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ImportCommandResultConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.exporters.IDataExporter;
@@ -18,12 +19,13 @@ public class MinecraftDefaultImportCommand extends BaseImportCommandNode
     private final PlayerDatabase database;
     private final TimeConverter timeConverter;
 
-    public MinecraftDefaultImportCommand(MessagesConfig messages, PlayerDatabase database, TimeConverter timeConverter)
+    public MinecraftDefaultImportCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        this.commandResults = messages.CommandResults.Import;
-        this.database = database
-        this.timeConverter = pluginInstance.getTimeConverter();
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.Import;
+        database = commonApi.getDatabase();
+        timeConverter = commonApi.getTimeConverter();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ReloadCommandResultsConfig;
 import ru.reosfire.twl.common.lib.commands.CommandName;
 import ru.reosfire.twl.common.lib.commands.CommandNode;
@@ -10,14 +11,15 @@ import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 @CommandPermission("TemporaryWhitelist.Administrate.Reload")
 public class ReloadCommand extends CommandNode
 {
-    private final TemporaryWhiteList plugin;
+    private final CommonTwlApi plugin;
     private final ReloadCommandResultsConfig commandResults;
 
-    public ReloadCommand(TemporaryWhiteList pluginInstance)
+    public ReloadCommand(CommonTwlApi commonApi)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Reload;
-        plugin = pluginInstance;
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.Reload;
+        plugin = commonApi;
     }
 
     @Override
@@ -25,7 +27,7 @@ public class ReloadCommand extends CommandNode
     {
         try
         {
-            plugin.load();
+            plugin.reload();
             commandResults.Success.Send(sender);
         }
         catch (Exception e)

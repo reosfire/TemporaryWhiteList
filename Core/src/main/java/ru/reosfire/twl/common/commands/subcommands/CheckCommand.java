@@ -1,5 +1,6 @@
 package ru.reosfire.twl.common.commands.subcommands;
 
+import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.TimeConverter;
 import ru.reosfire.twl.common.configuration.localization.commandResults.CheckCommandResultsConfig;
 import ru.reosfire.twl.common.data.PlayerData;
@@ -20,15 +21,16 @@ public class CheckCommand extends CommandNode
     private final TimeConverter timeconverter;
     private final boolean forceSync;
 
-    public CheckCommand(TemporaryWhiteList pluginInstance, boolean forceSync)
+    public CheckCommand(CommonTwlApi commonApi, boolean forceSync)
     {
-        super(pluginInstance.getMessages().NoPermission);
-        commandResults = pluginInstance.getMessages().CommandResults.Check;
-        database = pluginInstance.getDatabase();
-        timeconverter = pluginInstance.getTimeConverter();
+        super(commonApi.getMessages().NoPermission, commonApi.getMessages().UnexpectedError);
+
+        commandResults = commonApi.getMessages().CommandResults.Check;
+        database = commonApi.getDatabase();
+        timeconverter = commonApi.getTimeConverter();
         this.forceSync = forceSync;
     }
-    public CheckCommand(TemporaryWhiteList pluginInstance)
+    public CheckCommand(CommonTwlApi pluginInstance)
     {
         this(pluginInstance, false);
     }
@@ -38,13 +40,13 @@ public class CheckCommand extends CommandNode
     {
         if (args.length == 0)
         {
-            //if (sender instanceof Player) sendInfo(new SpigotTwlCommandSender(sender), sender.getName());
-            //else commandResults.ForPlayerOnly.Send(new SpigotTwlCommandSender(sender));
+            if (sender.isPlayer()) sendInfo(sender, sender.getName());
+            else commandResults.ForPlayerOnly.Send(sender);
         }
         else if (args.length == 1)
         {
-            //if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther")) noPermissionAction(sender);
-            //else sendInfo(new SpigotTwlCommandSender(sender), args[0]);
+            if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther")) noPermissionAction(sender);
+            else sendInfo(sender, args[0]);
         }
         else commandResults.Usage.Send(sender);
         return true;
@@ -73,13 +75,13 @@ public class CheckCommand extends CommandNode
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args)
+    public List<String> onTabComplete(TwlCommandSender sender, String[] args)
     {
         if (!sender.hasPermission("TemporaryWhitelist.Administrate.CheckOther"))
-            return super.onTabComplete(sender, command, alias, args);
+            return super.onTabComplete(sender, args);
         if (args.length == 1)
             return database.allList().stream().map(e -> e.Name).filter(e -> e.startsWith(args[0])).collect(Collectors.toList());
-        return super.onTabComplete(sender, command, alias, args);
+        return super.onTabComplete(sender, args);
     }
 
     @Override
