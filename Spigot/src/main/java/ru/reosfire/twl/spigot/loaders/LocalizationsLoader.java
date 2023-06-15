@@ -44,7 +44,6 @@ public class LocalizationsLoader
                 try (InputStream resource = plugin.getResource("translations/" + translationsResource);
                      Reader resourceReader = new InputStreamReader(resource, StandardCharsets.UTF_8);
                      Reader fileReader = new FileReader(translationFile, StandardCharsets.UTF_8)) {
-                    //new BufferedReader(resourceReader).lines().forEach(System.out::println);
                     Node fromResource = yaml.compose(resourceReader);
                     Node actual = yaml.compose(fileReader);
 
