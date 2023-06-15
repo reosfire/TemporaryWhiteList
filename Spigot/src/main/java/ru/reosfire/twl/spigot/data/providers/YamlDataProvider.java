@@ -21,7 +21,8 @@ public class YamlDataProvider implements IDataProvider
     public YamlDataProvider(File yamlFile) throws IOException, InvalidConfigurationException
     {
         yamlDataFile = yamlFile;
-        //yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
+        yamlDataConfig = new YamlConfiguration();
+        yamlDataConfig.load(yamlDataFile);
     }
 
     private void reloadYaml()
@@ -30,7 +31,8 @@ public class YamlDataProvider implements IDataProvider
         {
             try
             {
-                //yamlDataConfig = YamlConfig.loadOrCreate(yamlDataFile);
+                yamlDataConfig = new YamlConfiguration();
+                yamlDataConfig.load(yamlDataFile);
             }
             catch (Exception e)
             {
