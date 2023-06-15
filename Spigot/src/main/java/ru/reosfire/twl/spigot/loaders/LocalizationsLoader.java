@@ -29,7 +29,7 @@ public class LocalizationsLoader
 
     public void copyDefaultTranslations()
     {
-        File translationsDirectory = new File(plugin.getDataFolder(), "./translations/");
+        File translationsDirectory = new File(plugin.getDataFolder(), "translations/");
 
         if (!translationsDirectory.exists() && !translationsDirectory.mkdir())
             throw new RuntimeException("Directory for translations couldn't created.");
@@ -54,7 +54,7 @@ public class LocalizationsLoader
     {
         try
         {
-            File file = new File(plugin.getDataFolder(), "./translations/" + plugin.getConfiguration().Translation);
+            File file = new File(plugin.getDataFolder(), "translations/" + plugin.getConfiguration().Translation);
             Map<String, Object> loaded = new Yaml().load(new FileInputStream(file));
 
             return new MessagesConfig(new ConfigSection(loaded));
