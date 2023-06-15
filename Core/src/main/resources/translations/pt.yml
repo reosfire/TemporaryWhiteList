@@ -7,7 +7,10 @@ Kick:
     - "&b----------------------------"
     - "&bVocê não está na lista agora!"
     - "&b----------------------------"
-NoPermission: "&cSem permissão!"
+NoPermission:
+  - Content: "You don't have permission to perform this command"
+UnexpectedError:
+  - Content: "Unexpected error occurred while using command."
 WhiteListStatuses:
   Enabled: "&c&lhabilitado"
   Disabled: "&a&ldesabilitado"

@@ -57,6 +57,10 @@
                             <pattern>com.zaxxer.hikari</pattern>
                             <shadedPattern>ru.reosfire.shaded.com.zaxxer.hikari</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>org.yaml.snakeyaml</pattern>
+                            <shadedPattern>ru.reosfire.shaded.org.yaml.snakeyaml</shadedPattern>
+                        </relocation>
                     </relocations>
                     <filters>
                         <filter>

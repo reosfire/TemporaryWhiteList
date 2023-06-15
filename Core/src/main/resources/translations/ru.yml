@@ -7,7 +7,10 @@ Kick:
     - "&b-------------------------"
     - "&bВы теперь не в вайтлисте!"
     - "&b-------------------------"
-NoPermission: "&cНедостаточно прав!"
+NoPermission:
+  - Content: "Недостаточно прав!"
+UnexpectedError:
+  - Content: "Неожиданная ошибка!"
 WhiteListStatuses:
   Enabled: "&c&lвключен"
   Disabled: "&a&lвыключен"

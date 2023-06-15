@@ -1,13 +1,14 @@
 package ru.reosfire.twl.spigot.loaders;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.nodes.Node;
 import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
+import ru.reosfire.twl.common.lib.yaml.YamlUtils;
 import ru.reosfire.twl.spigot.TemporaryWhiteList;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Map;
 
@@ -15,12 +16,13 @@ public class LocalizationsLoader
 {
     private static final String[] translationsResources = new String[]
             {
-                    "en.yml",
                     "ru.yml",
+                    "en.yml",
                     "pt.yml",
             };
 
     private final TemporaryWhiteList plugin;
+    private final Yaml yaml = YamlUtils.createDumpYaml();
 
     public LocalizationsLoader(TemporaryWhiteList pluginInstance)
     {
@@ -37,25 +39,43 @@ public class LocalizationsLoader
         for (String translationsResource : translationsResources)
         {
             File translationFile = new File(translationsDirectory, translationsResource);
-            if (translationFile.exists()) continue;
+            if (translationFile.exists())
+            {
+                try (InputStream resource = plugin.getResource("translations/" + translationsResource);
+                     Reader resourceReader = new InputStreamReader(resource, StandardCharsets.UTF_8);
+                     Reader fileReader = new FileReader(translationFile, StandardCharsets.UTF_8)) {
+                    //new BufferedReader(resourceReader).lines().forEach(System.out::println);
+                    Node fromResource = yaml.compose(resourceReader);
+                    Node actual = yaml.compose(fileReader);
 
-            try (InputStream resource = plugin.getResource("translations/" + translationsResource))
-            {
-                Files.copy(resource, translationFile.toPath());
+                    YamlUtils.mergeYaml(fromResource, actual);
+
+                    try (Writer fileWriter = new FileWriter(translationFile, StandardCharsets.UTF_8)) {
+                        yaml.serialize(actual, fileWriter);
+                    }
+                }
+                catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
-            catch (Exception e)
+            else
             {
-                throw new RuntimeException("Can't load " + translationsResource + " from plugin jar. Is it corrupted?", e);
+                try (InputStream resource = plugin.getResource("translations/" + translationsResource)) {
+                    Files.copy(resource, translationFile.toPath());
+                }
+                catch (Exception e) {
+                    throw new RuntimeException("Can't load " + translationsResource + " from plugin jar. Is it corrupted?", e);
+                }
             }
         }
     }
 
     public MessagesConfig loadMessages()
     {
-        try
+        File file = new File(plugin.getDataFolder(), "translations/" + plugin.getConfiguration().Translation);
+        try (InputStream inputStream = new FileInputStream(file))
         {
-            File file = new File(plugin.getDataFolder(), "translations/" + plugin.getConfiguration().Translation);
-            Map<String, Object> loaded = new Yaml().load(new FileInputStream(file));
+            Map<String, Object> loaded = yaml.load(inputStream);
 
             return new MessagesConfig(new ConfigSection(loaded));
         }
