@@ -28,7 +28,7 @@ public class EventsListener implements Listener
         this.pluginInstance = pluginInstance;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPreLogin(AsyncPlayerPreLoginEvent event)
     {
         if (!pluginInstance.isWhiteListEnabled()) return;
@@ -43,7 +43,8 @@ public class EventsListener implements Listener
             bypassedByPreLogin.add(event.getUniqueId());
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    //Do not touch priority without checking SoftDetector
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onLogin(PlayerLoginEvent event)
     {
         if (!pluginInstance.isWhiteListEnabled()) return;

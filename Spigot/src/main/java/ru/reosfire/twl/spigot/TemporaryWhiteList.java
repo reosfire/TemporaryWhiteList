@@ -1,5 +1,8 @@
 package ru.reosfire.twl.spigot;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Logger;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
@@ -24,6 +27,7 @@ import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.TwlCommandExecutor;
 import ru.reosfire.twl.spigot.commands.TwlSyncCommandExecutor;
 import ru.reosfire.twl.spigot.data.providers.YamlDataProvider;
+import ru.reosfire.twl.spigot.kickLogFiltering.*;
 import ru.reosfire.twl.spigot.lib.text.Text;
 import ru.reosfire.twl.spigot.loaders.LocalizationsLoader;
 
@@ -75,6 +79,10 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
     {
         ColorizersCollection.shared.addColorizer(input -> ChatColor.translateAlternateColorCodes('&', input));
 
+        KickLogFilter kickLogFilter = new KickLogFilter(getKickMessageDetector("hard"));
+
+        registerLoggerFilters(kickLogFilter);
+
         load();
         Metrics metrics = new Metrics(this, 14858);
         metrics.addCustomChart(new SingleLineChart("whitelisted_players", () -> database.allList().size()));
@@ -86,6 +94,29 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
             versionChecker = new VersionChecker(99914);
             versionChecker.printVersionCheckAsync(getDescription().getVersion(), getLogger()::info);
         }, 10);
+    }
+
+    private KickMessageDetector getKickMessageDetector(String type) {
+        if (type.equalsIgnoreCase("soft")) {
+            SoftDetector detector = new SoftDetector(this);
+            getServer().getPluginManager().registerEvents(detector, this);
+            return detector;
+        }
+        else if (type.equalsIgnoreCase("hard")) return new HardDetector();
+        else if (type.equalsIgnoreCase("disabled")) return new DisabledDetector();
+        else throw new RuntimeException("Unknown kick message detector type");
+    }
+
+    private void registerLoggerFilters(Filter... filters) {
+        org.apache.logging.log4j.Logger rootLogger = LogManager.getRootLogger();
+        if (!(rootLogger instanceof Logger)) {
+            return;
+        }
+
+        Logger logger = (Logger) rootLogger;
+        for (Filter filter : filters) {
+            logger.addFilter(filter);
+        }
     }
 
     public void load()
