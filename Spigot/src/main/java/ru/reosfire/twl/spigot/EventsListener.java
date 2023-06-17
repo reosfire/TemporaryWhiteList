@@ -9,7 +9,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.data.PlayerDatabase;
-import ru.reosfire.twl.spigot.lib.text.Text;
 
 import java.util.HashSet;
 import java.util.UUID;

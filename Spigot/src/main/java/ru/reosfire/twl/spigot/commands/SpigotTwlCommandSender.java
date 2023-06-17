@@ -16,7 +16,7 @@ import ru.reosfire.twl.common.lib.text.Replacement;
 import ru.reosfire.twl.common.lib.yaml.common.text.ClickConfig;
 import ru.reosfire.twl.common.lib.yaml.common.text.HoverConfig;
 import ru.reosfire.twl.common.lib.yaml.common.text.TextComponentConfig;
-import ru.reosfire.twl.spigot.lib.text.Text;
+import ru.reosfire.twl.spigot.Text;
 
 import java.util.Locale;
 

@@ -1,4 +1,4 @@
-package ru.reosfire.twl.spigot.lib.text;
+package ru.reosfire.twl.spigot;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;

@@ -31,7 +31,6 @@ import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.SpigotCommandExecutor;
 import ru.reosfire.twl.spigot.commands.importTypes.MinecraftDefaultImportCommand;
 import ru.reosfire.twl.spigot.kickLogFiltering.*;
-import ru.reosfire.twl.spigot.lib.text.Text;
 import ru.reosfire.twl.spigot.loaders.LocalizationsLoader;
 
 import java.io.*;
