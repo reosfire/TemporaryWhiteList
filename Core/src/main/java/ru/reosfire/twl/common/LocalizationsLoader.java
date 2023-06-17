@@ -1,11 +1,10 @@
-package ru.reosfire.twl.spigot.loaders;
+package ru.reosfire.twl.common;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Node;
 import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.lib.yaml.YamlUtils;
-import ru.reosfire.twl.spigot.TemporaryWhiteList;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -21,27 +20,27 @@ public class LocalizationsLoader
                     "pt.yml",
             };
 
-    private final TemporaryWhiteList plugin;
+    private final File targetDirectory;
+    private final ClassLoader classLoader;
     private final Yaml yaml = YamlUtils.createDumpYaml();
 
-    public LocalizationsLoader(TemporaryWhiteList pluginInstance)
+    public LocalizationsLoader(File targetDirectory)
     {
-        plugin = pluginInstance;
+        this.targetDirectory = targetDirectory;
+        classLoader = getClass().getClassLoader();
     }
 
     public void copyDefaultTranslations()
     {
-        File translationsDirectory = new File(plugin.getDataFolder(), "translations/");
-
-        if (!translationsDirectory.exists() && !translationsDirectory.mkdir())
+        if (!targetDirectory.exists() && !targetDirectory.mkdir())
             throw new RuntimeException("Directory for translations couldn't created.");
 
         for (String translationsResource : translationsResources)
         {
-            File translationFile = new File(translationsDirectory, translationsResource);
+            File translationFile = new File(targetDirectory, translationsResource);
             if (translationFile.exists())
             {
-                try (InputStream resource = plugin.getResource("translations/" + translationsResource);
+                try (InputStream resource = getResource("translations/" + translationsResource);
                      Reader resourceReader = new InputStreamReader(resource, StandardCharsets.UTF_8);
                      Reader fileReader = new FileReader(translationFile, StandardCharsets.UTF_8)) {
                     Node fromResource = yaml.compose(resourceReader);
@@ -59,7 +58,7 @@ public class LocalizationsLoader
             }
             else
             {
-                try (InputStream resource = plugin.getResource("translations/" + translationsResource)) {
+                try (InputStream resource = getResource("translations/" + translationsResource)) {
                     Files.copy(resource, translationFile.toPath());
                 }
                 catch (Exception e) {
@@ -69,10 +68,9 @@ public class LocalizationsLoader
         }
     }
 
-    public MessagesConfig loadMessages()
+    public MessagesConfig loadMessages(String fileName)
     {
-        File file = new File(plugin.getDataFolder(), "translations/" + plugin.getConfiguration().Translation);
-        try (InputStream inputStream = new FileInputStream(file))
+        try (InputStream inputStream = new FileInputStream(new File(targetDirectory, fileName)))
         {
             Map<String, Object> loaded = yaml.load(inputStream);
 
@@ -82,6 +80,16 @@ public class LocalizationsLoader
         {
             e.printStackTrace();
             throw new RuntimeException("Can't load translation file", e);
+        }
+    }
+
+    public InputStream getResource(String filename) {
+        if (filename == null) throw new IllegalArgumentException("Filename cannot be null");
+
+        try {
+            return classLoader.getResourceAsStream(filename);
+        } catch (Exception e) {
+            return null;
         }
     }
 }

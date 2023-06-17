@@ -15,6 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
 import ru.reosfire.twl.common.CommonTwlApi;
+import ru.reosfire.twl.common.LocalizationsLoader;
 import ru.reosfire.twl.common.TimeConverter;
 import ru.reosfire.twl.common.commands.TwlCommand;
 import ru.reosfire.twl.common.commands.TwlSyncCommand;
@@ -31,7 +32,6 @@ import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.SpigotCommandExecutor;
 import ru.reosfire.twl.spigot.commands.importTypes.MinecraftDefaultImportCommand;
 import ru.reosfire.twl.spigot.kickLogFiltering.*;
-import ru.reosfire.twl.spigot.loaders.LocalizationsLoader;
 
 import java.io.*;
 import java.util.Map;
@@ -129,9 +129,9 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
         configuration = loadConfiguration();
 
         getLogger().info("Loading messages...");
-        LocalizationsLoader localizationsLoader = new LocalizationsLoader(this);
+        LocalizationsLoader localizationsLoader = new LocalizationsLoader(new File(getDataFolder(), "translations/"));
         localizationsLoader.copyDefaultTranslations();
-        messages = localizationsLoader.loadMessages();
+        messages = localizationsLoader.loadMessages(configuration.Translation);
 
         timeConverter = new TimeConverter(configuration.DurationFormat, configuration.DateTimeFormat);
 
