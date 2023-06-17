@@ -57,7 +57,6 @@ public class ConfigSection {
         return getOrDefault(path, Long.class, def);
     }
 
-
     private <T> T get(Map<String, Object> current, String path, Class<T> tClass) {
         if (path == null) throw new IllegalArgumentException("Path can not be null");
         if (path.isEmpty()) throw new IllegalArgumentException("Path can not be empty");
@@ -87,7 +86,6 @@ public class ConfigSection {
         if (this.path == null) return path;
         return this.path + path;
     }
-
 
     private static class PathToken {
         public final String first;

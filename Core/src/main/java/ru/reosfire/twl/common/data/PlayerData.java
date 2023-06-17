@@ -20,6 +20,7 @@ public class PlayerData
         Permanent = permanent;
     }
 
+    //todo move to data provider
     public PlayerData(ResultSet resultSet) throws SQLException
     {
         Name = resultSet.getString("Player");

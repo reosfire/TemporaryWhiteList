@@ -17,24 +17,25 @@ public class YamlDataProvider implements IDataProvider
 {
     private final Yaml yaml = YamlUtils.createDumpYaml();
     private final File yamlDataFile;
-    private Map<String, YamlPlayerData> yamlData;
+    private Map<String, Map<String, Object>> playersData;
 
     public YamlDataProvider(File yamlFile)
     {
         yamlDataFile = yamlFile;
 
-        reloadYaml(yamlFile);
+        reloadPlayersData(yamlFile);
     }
 
-    private void reloadYaml(File file)
-    {
-        Map<String, Map<String, YamlPlayerData>> loadedData = loadDataYaml(file);
-        yamlData = loadedData.get("Players");
-
-        if (yamlData == null) yamlData = new LinkedHashMap<>();
+    private void reloadPlayersData(File file) {
+        Map<String, Map<String, Map<String, Object>>> loadedData = loadYamlFile(file);
+        if (loadedData == null) playersData = new LinkedHashMap<>();
+        else {
+            playersData = loadedData.get("Players");
+            if (playersData == null) playersData = new LinkedHashMap<>();
+        }
     }
 
-    private Map<String, Map<String, YamlPlayerData>> loadDataYaml(File file) {
+    private Map<String, Map<String, Map<String, Object>>> loadYamlFile(File file) {
         synchronized (yamlDataFile)
         {
             try (Reader reader = new FileReader(file)) {
@@ -49,9 +50,9 @@ public class YamlDataProvider implements IDataProvider
     private void saveData() {
         synchronized (yamlDataFile) {
             try (Writer writer = new FileWriter(yamlDataFile)) {
-                Map<String, Map<String, YamlPlayerData>> output = new LinkedHashMap<>();
+                Map<String, Map<String, Map<String, Object>>> output = new LinkedHashMap<>();
 
-                output.put("Players", yamlData);
+                output.put("Players", playersData);
 
                 yaml.dump(output, writer);
             }
@@ -61,14 +62,9 @@ public class YamlDataProvider implements IDataProvider
         }
     }
 
-    private YamlPlayerData getPlayerData(String player)
+    private Map<String, Object> getPlayerData(String player)
     {
-        YamlPlayerData result = yamlData.get(player);
-        if (result == null) {
-            result = new YamlPlayerData();
-            yamlData.put(player, result);
-        }
-        return result;
+        return playersData.computeIfAbsent(player, k -> new LinkedHashMap<>());
     }
 
     @Override
@@ -78,20 +74,18 @@ public class YamlDataProvider implements IDataProvider
         {
             synchronized (yamlDataFile)
             {
-                reloadYaml(yamlDataFile);
+                reloadPlayersData(yamlDataFile);
 
-                YamlPlayerData dataContainer = getPlayerData(playerData.Name);
+                Map<String, Object> dataContainer = getPlayerData(playerData.Name);
 
-                dataContainer.lastStartTime = playerData.StartTime;
-                dataContainer.timeAmount = playerData.TimeAmount;
-                dataContainer.permanent = playerData.Permanent;
+                dataContainer.put("lastStartTime", playerData.StartTime);
+                dataContainer.put("timeAmount", playerData.TimeAmount);
+                dataContainer.put("permanent", playerData.Permanent);
 
-                try
-                {
+                try {
                     saveData();
                 }
-                catch (Exception e)
-                {
+                catch (Exception e) {
                     throw new RuntimeException("Error while updating player data for: " + playerData.Name, e);
                 }
             }
@@ -103,14 +97,13 @@ public class YamlDataProvider implements IDataProvider
     {
         return CompletableFuture.runAsync(() ->
         {
-            reloadYaml(yamlDataFile);
+            reloadPlayersData(yamlDataFile);
 
-            yamlData.remove(playerName);
+            playersData.remove(playerName);
 
             synchronized (yamlDataFile)
             {
-                try
-                {
+                try {
                     saveData();
                 }
                 catch (Exception e)
@@ -130,32 +123,39 @@ public class YamlDataProvider implements IDataProvider
     @Override
     public PlayerData get(String playerName)
     {
-        reloadYaml(yamlDataFile);
+        reloadPlayersData(yamlDataFile);
 
-        YamlPlayerData playerData = yamlData.get(playerName);
+        Map<String, Object> playerData = playersData.get(playerName);
         if (playerData == null) return null;
-        return new PlayerData(playerName, playerData.lastStartTime, playerData.timeAmount, playerData.permanent);
+
+        return playerDataFromMap(playerName, playerData);
     }
 
     @Override
     public List<PlayerData> getAll()
     {
-        reloadYaml(yamlDataFile);
+        reloadPlayersData(yamlDataFile);
 
         ArrayList<PlayerData> result = new ArrayList<>();
 
-        for (String key : yamlData.keySet())
-        {
-            YamlPlayerData playerData = yamlData.get(key);
-            result.add(new PlayerData(key, playerData.lastStartTime, playerData.timeAmount, playerData.permanent));
+        for (String key : playersData.keySet()) {
+            result.add(playerDataFromMap(key, playersData.get(key)));
         }
 
         return result;
     }
 
-    private static class YamlPlayerData {
-        public Long lastStartTime;
-        public Long timeAmount;
-        public Boolean permanent;
+    private PlayerData playerDataFromMap(String name, Map<String, Object> map) {
+        long lastStartTime = getLong(map, "lastStartTime");
+        long timeAmount = getLong(map, "timeAmount");
+        boolean permanent = (Boolean) map.get("permanent");
+        return new PlayerData(name, lastStartTime, timeAmount, permanent);
+    }
+
+    private long getLong(Map<String, Object> map, String path) {
+        Object result = map.get(path);
+        if (result instanceof Integer) return (Integer) result;
+        else if (result instanceof Long) return (Long) result;
+        else throw new RuntimeException(path + "is not an Int or Long");
     }
 }

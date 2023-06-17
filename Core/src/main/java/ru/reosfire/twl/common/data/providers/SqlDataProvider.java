@@ -35,12 +35,9 @@ public class SqlDataProvider implements IDataProvider
                 "Permanent BOOLEAN NOT NULL, " +
                 "LastStartTime BIGINT NOT NULL, " +
                 "TimeAmount BIGINT NOT NULL);";
-        try (Connection connection = dataSource.getConnection())
-        {
-            try (Statement statement = connection.createStatement())
-            {
-                statement.executeUpdate(createTableString);
-            }
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement()) {
+            statement.executeUpdate(createTableString);
         }
     }
 
@@ -53,23 +50,19 @@ public class SqlDataProvider implements IDataProvider
                     "TimeAmount)" + "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE Permanent=?, LastStartTime=?, " +
                     "TimeAmount=?;";
 
-            try (Connection connection = dataSource.getConnection())
-            {
-                try (PreparedStatement statement = connection.prepareStatement(setRequest))
-                {
-                    statement.setString(1, playerData.Name);
-                    statement.setBoolean(2, playerData.Permanent);
-                    statement.setLong(3, playerData.StartTime);
-                    statement.setLong(4, playerData.TimeAmount);
-                    statement.setBoolean(5, playerData.Permanent);
-                    statement.setLong(6, playerData.StartTime);
-                    statement.setLong(7, playerData.TimeAmount);
+            try (Connection connection = dataSource.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(setRequest)) {
+                statement.setString(1, playerData.Name);
+                statement.setBoolean(2, playerData.Permanent);
+                statement.setLong(3, playerData.StartTime);
+                statement.setLong(4, playerData.TimeAmount);
+                statement.setBoolean(5, playerData.Permanent);
+                statement.setLong(6, playerData.StartTime);
+                statement.setLong(7, playerData.TimeAmount);
 
-                    statement.executeUpdate();
-                }
+                statement.executeUpdate();
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new RuntimeException("Error while updating player data for: " + playerData.Name, e);
             }
         });
@@ -81,16 +74,12 @@ public class SqlDataProvider implements IDataProvider
         return CompletableFuture.runAsync(() ->
         {
             String removeRequest = "DELETE FROM " + configuration.table + " WHERE Player=?;";
-            try(Connection connection = dataSource.getConnection())
-            {
-                try(PreparedStatement statement = connection.prepareStatement(removeRequest))
-                {
-                    statement.setString(1, playerName);
-                    statement.executeUpdate();
-                }
+            try(Connection connection = dataSource.getConnection();
+                PreparedStatement statement = connection.prepareStatement(removeRequest)) {
+                statement.setString(1, playerName);
+                statement.executeUpdate();
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new RuntimeException("Error while removing player data about: " + playerName, e);
             }
         });
@@ -101,15 +90,11 @@ public class SqlDataProvider implements IDataProvider
         return CompletableFuture.runAsync(() ->
         {
             String removeRequest = "DELETE FROM " + configuration.table + ";";
-            try(Connection connection = dataSource.getConnection())
-            {
-                try(Statement statement = connection.createStatement())
-                {
-                    statement.executeUpdate(removeRequest);
-                }
+            try(Connection connection = dataSource.getConnection();
+                Statement statement = connection.createStatement()) {
+                statement.executeUpdate(removeRequest);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 throw new RuntimeException("Error while clearing", e);
             }
         });
@@ -119,20 +104,14 @@ public class SqlDataProvider implements IDataProvider
     public PlayerData get(String playerName)
     {
         String selectRequest = "SELECT * FROM " + configuration.table + " WHERE Player=?;";
-        try(Connection connection = dataSource.getConnection())
-        {
-            try(PreparedStatement statement = connection.prepareStatement(selectRequest))
-            {
-                statement.setString(1, playerName);
-                try(ResultSet player = statement.executeQuery())
-                {
-                    if (!player.next()) return null;
-                    return new PlayerData(player);
-                }
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(selectRequest)) {
+            try(ResultSet player = statement.executeQuery()) {
+                if (!player.next()) return null;
+                return new PlayerData(player);
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             return null;
         }
     }
@@ -141,24 +120,17 @@ public class SqlDataProvider implements IDataProvider
     public List<PlayerData> getAll()
     {
         String selectRequest = "SELECT * FROM " + configuration.table + ";";
-        try(Connection connection = dataSource.getConnection())
-        {
-            try(PreparedStatement statement = connection.prepareStatement(selectRequest))
-            {
-                List<PlayerData> result = new ArrayList<>();
+        List<PlayerData> result = new ArrayList<>();
 
-                try(ResultSet resultSet = statement.executeQuery(selectRequest))
-                {
-                    while (resultSet.next())
-                    {
-                        result.add(new PlayerData(resultSet));
-                    }
-                }
-                return result;
+        try(Connection connection = dataSource.getConnection();
+            PreparedStatement statement = connection.prepareStatement(selectRequest);
+            ResultSet resultSet = statement.executeQuery(selectRequest)) {
+            while (resultSet.next()) {
+                result.add(new PlayerData(resultSet));
             }
+            return result;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             throw new RuntimeException("Error while getting all data");
         }
     }
