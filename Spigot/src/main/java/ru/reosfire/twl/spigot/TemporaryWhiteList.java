@@ -16,17 +16,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
 import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.TimeConverter;
+import ru.reosfire.twl.common.commands.TwlCommand;
+import ru.reosfire.twl.common.commands.TwlSyncCommand;
+import ru.reosfire.twl.common.commands.subcommands.importTypes.SelfYamlImportCommand;
 import ru.reosfire.twl.common.configuration.Config;
 import ru.reosfire.twl.common.configuration.localization.MessagesConfig;
 import ru.reosfire.twl.common.data.IDataProvider;
 import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.providers.SqlDataProvider;
+import ru.reosfire.twl.common.data.providers.YamlDataProvider;
 import ru.reosfire.twl.common.lib.text.ColorizersCollection;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
 import ru.reosfire.twl.common.versioning.VersionChecker;
-import ru.reosfire.twl.spigot.commands.TwlCommandExecutor;
-import ru.reosfire.twl.spigot.commands.TwlSyncCommandExecutor;
-import ru.reosfire.twl.spigot.data.providers.YamlDataProvider;
+import ru.reosfire.twl.spigot.commands.SpigotCommandExecutor;
+import ru.reosfire.twl.spigot.commands.importTypes.MinecraftDefaultImportCommand;
 import ru.reosfire.twl.spigot.kickLogFiltering.*;
 import ru.reosfire.twl.spigot.lib.text.Text;
 import ru.reosfire.twl.spigot.loaders.LocalizationsLoader;
@@ -138,8 +141,8 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
 
         getLogger().info("Loading commands...");
 
-        registerTabExecutor("twl", new TwlCommandExecutor(this));
-        registerTabExecutor("twl-sync", new TwlSyncCommandExecutor(this));
+        registerTabExecutor("twl", new SpigotCommandExecutor(getTwlCommandWithSpigotAdditions()));
+        registerTabExecutor("twl-sync", new SpigotCommandExecutor(new TwlSyncCommand(this)));
 
         getLogger().info("Loading placeholders...");
         Plugin placeholderAPI = getServer().getPluginManager().getPlugin("PlaceholderAPI");
@@ -168,6 +171,15 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
 
         loaded = true;
         getLogger().info("Loaded");
+    }
+
+    private TwlCommand getTwlCommandWithSpigotAdditions() {
+        TwlCommand twlCommand = new TwlCommand(this);
+
+        twlCommand.Import.addChildren(new MinecraftDefaultImportCommand(this));
+        twlCommand.Import.addChildren(new SelfYamlImportCommand(this, new File(getDataFolder(), configuration.DataFile)));
+
+        return twlCommand;
     }
 
     private void registerTabExecutor(String commandName, TabExecutor executor) {
@@ -234,19 +246,6 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
         {
             e.printStackTrace();
             throw new RuntimeException("Error while loading yaml database!");
-        }
-    }
-
-    public SqlDataProvider loadSqlData(Config config)
-    {
-        try
-        {
-            return new SqlDataProvider(config.getSqlProviderConfiguration());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            throw new RuntimeException("Error while loading sql database!");
         }
     }
 

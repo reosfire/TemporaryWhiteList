@@ -2,6 +2,7 @@ package ru.reosfire.twl.common.commands.subcommands;
 
 import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.commands.subcommands.importTypes.EasyWhitelistImportCommand;
+import ru.reosfire.twl.common.commands.subcommands.importTypes.SelfSqlImportCommand;
 import ru.reosfire.twl.common.configuration.localization.commandResults.ImportCommandResultConfig;
 import ru.reosfire.twl.common.lib.commands.CommandName;
 import ru.reosfire.twl.common.lib.commands.CommandNode;
@@ -21,6 +22,7 @@ public class ImportCommand extends CommandNode
         commandResults = commonApi.getMessages().CommandResults.Import;
 
         addChildren(new EasyWhitelistImportCommand(commonApi));
+        addChildren(new SelfSqlImportCommand(commonApi));
     }
 
     @Override
