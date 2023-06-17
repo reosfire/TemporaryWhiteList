@@ -1,7 +1,5 @@
 package ru.reosfire.twl.common.data;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -18,15 +16,6 @@ public class PlayerData
         StartTime = startTime;
         TimeAmount = timeAmount;
         Permanent = permanent;
-    }
-
-    //todo move to data provider
-    public PlayerData(ResultSet resultSet) throws SQLException
-    {
-        Name = resultSet.getString("Player");
-        Permanent = resultSet.getBoolean("Permanent");
-        StartTime = resultSet.getLong("LastStartTime");
-        TimeAmount = resultSet.getLong("TimeAmount");
     }
 
     public long endTime()

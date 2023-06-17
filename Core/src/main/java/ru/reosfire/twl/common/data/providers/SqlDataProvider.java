@@ -108,7 +108,7 @@ public class SqlDataProvider implements IDataProvider
             PreparedStatement statement = connection.prepareStatement(selectRequest)) {
             try(ResultSet player = statement.executeQuery()) {
                 if (!player.next()) return null;
-                return new PlayerData(player);
+                return playerDataFromResultSet(player);
             }
         }
         catch (Exception e) {
@@ -126,13 +126,22 @@ public class SqlDataProvider implements IDataProvider
             PreparedStatement statement = connection.prepareStatement(selectRequest);
             ResultSet resultSet = statement.executeQuery(selectRequest)) {
             while (resultSet.next()) {
-                result.add(new PlayerData(resultSet));
+                result.add(playerDataFromResultSet(resultSet));
             }
             return result;
         }
         catch (Exception e) {
             throw new RuntimeException("Error while getting all data");
         }
+    }
+
+    private PlayerData playerDataFromResultSet(ResultSet resultSet) throws SQLException {
+        return new PlayerData(
+                resultSet.getString("Player"),
+                resultSet.getLong("LastStartTime"),
+                resultSet.getLong("TimeAmount"),
+                resultSet.getBoolean("Permanent")
+        );
     }
 
 
