@@ -21,8 +21,10 @@ public class ImportCommand extends CommandNode
 
         commandResults = commonApi.getMessages().CommandResults.Import;
 
-        addChildren(new EasyWhitelistImportCommand(commonApi));
-        addChildren(new SelfSqlImportCommand(commonApi));
+        addChildren(
+                new EasyWhitelistImportCommand(commonApi),
+                new SelfSqlImportCommand(commonApi)
+        );
     }
 
     @Override

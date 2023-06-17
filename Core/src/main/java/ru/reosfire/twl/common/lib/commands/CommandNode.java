@@ -5,6 +5,7 @@ import ru.reosfire.twl.common.lib.yaml.common.text.MultilineMessage;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -104,10 +105,10 @@ public abstract class CommandNode
         return Collections.emptyList();
     }
 
-    public final void addChildren(CommandNode child)
+    public final void addChildren(CommandNode... children)
     {
-        if (children == null) children = new ArrayList<>();
-        children.add(child);
+        if (this.children == null) this.children = new ArrayList<>();
+        this.children.addAll(Arrays.asList(children));
     }
 
     private boolean execute(TwlCommandSender sender, String[] args, boolean async)

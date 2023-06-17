@@ -13,6 +13,11 @@ import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 @CommandName("twl-sync")
 public class TwlSyncCommand extends CommandNode
 {
+    public final AddCommand Add;
+    public final SetCommand Set;
+    public final CheckCommand Check;
+    public final RemoveCommand Remove;
+
     private final TwlCommandResultsConfig commandResults;
 
     public TwlSyncCommand(CommonTwlApi commonApi)
@@ -21,10 +26,12 @@ public class TwlSyncCommand extends CommandNode
 
         commandResults = commonApi.getMessages().CommandResults.Twl;
 
-        addChildren(new AddCommand(commonApi, true));
-        addChildren(new SetCommand(commonApi, true));
-        addChildren(new CheckCommand(commonApi, true));
-        addChildren(new RemoveCommand(commonApi, true));
+        Add = new AddCommand(commonApi, true);
+        Set = new SetCommand(commonApi, true);
+        Check = new CheckCommand(commonApi, true);
+        Remove = new RemoveCommand(commonApi, true);
+
+        addChildren(Add, Set, Check, Remove);
     }
 
     @Override

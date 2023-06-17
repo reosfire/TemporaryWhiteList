@@ -10,7 +10,17 @@ import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
 @CommandName("twl")
 public class TwlCommand extends CommandNode
 {
+    public final AddCommand Add;
+    public final SetCommand Set;
+    public final RemoveCommand Remove;
+    public final CheckCommand Check;
+    public final ListCommand List;
+
     public final ImportCommand Import;
+    public final ClearCommand Clear;
+    public final EnableCommand Enable;
+    public final DisableCommand Disable;
+    public final ReloadCommand Reload;
 
     private final TwlCommandResultsConfig commandResults;
     public TwlCommand(CommonTwlApi commonApi)
@@ -19,18 +29,18 @@ public class TwlCommand extends CommandNode
 
         commandResults = commonApi.getMessages().CommandResults.Twl;
 
+        Add = new AddCommand(commonApi);
+        Set = new SetCommand(commonApi);
+        Remove = new RemoveCommand(commonApi);
+        Check = new CheckCommand(commonApi);
+        List = new ListCommand(commonApi);
         Import = new ImportCommand(commonApi);
+        Clear = new ClearCommand(commonApi);
+        Enable = new EnableCommand(commonApi);
+        Disable = new DisableCommand(commonApi);
+        Reload = new ReloadCommand(commonApi);
 
-        addChildren(new AddCommand(commonApi));
-        addChildren(new SetCommand(commonApi));
-        addChildren(new RemoveCommand(commonApi));
-        addChildren(new CheckCommand(commonApi));
-        addChildren(new ListCommand(commonApi));
-        addChildren(Import);
-        addChildren(new ClearCommand(commonApi));
-        addChildren(new EnableCommand(commonApi));
-        addChildren(new DisableCommand(commonApi));
-        addChildren(new ReloadCommand(commonApi));
+        addChildren(Add, Set, Remove, Check, List, Import, Clear, Enable, Disable, Reload);
     }
 
     @Override
