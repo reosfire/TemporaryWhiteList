@@ -10,7 +10,7 @@ public class ColorizersCollection {
     private final Object lock = new Object();
     private final List<IColorizer> colorizers = new ArrayList<>();
 
-    public ColorizersCollection() {
+    private ColorizersCollection() {
 
     }
 
