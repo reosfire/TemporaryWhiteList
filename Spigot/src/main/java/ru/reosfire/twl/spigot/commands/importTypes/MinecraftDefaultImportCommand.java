@@ -8,7 +8,7 @@ import ru.reosfire.twl.common.data.PlayerDatabase;
 import ru.reosfire.twl.common.data.exporters.IDataExporter;
 import ru.reosfire.twl.common.lib.commands.CommandName;
 import ru.reosfire.twl.common.lib.commands.TwlCommandSender;
-import ru.reosfire.twl.spigot.data.exporters.MinecraftDefaultWhitelist;
+import ru.reosfire.twl.spigot.dataExporters.MinecraftDefaultWhitelist;
 
 import java.util.concurrent.atomic.AtomicReference;
 
