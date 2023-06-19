@@ -75,11 +75,11 @@ public class YamlDataProvider implements IDataProvider
     @Override
     public CompletableFuture<Void> update(PlayerData playerData) {
         return CompletableFuture.runAsync(() -> {
+            reloadPlayersData(yamlDataFile);
+
             lock.writeLock().lock();
 
             try {
-                reloadPlayersData(yamlDataFile);
-
                 Map<String, Object> dataContainer = getPlayerData(playerData.Name);
 
                 dataContainer.put("lastStartTime", playerData.StartTime);
@@ -100,11 +100,10 @@ public class YamlDataProvider implements IDataProvider
     @Override
     public CompletableFuture<Void> remove(String playerName) {
         return CompletableFuture.runAsync(() -> {
+            reloadPlayersData(yamlDataFile);
+
             lock.writeLock().lock();
-
             try {
-                reloadPlayersData(yamlDataFile);
-
                 playersData.remove(playerName);
 
                 saveData();
@@ -127,11 +126,10 @@ public class YamlDataProvider implements IDataProvider
 
     @Override
     public PlayerData get(String playerName) {
+        reloadPlayersData(yamlDataFile);
+
         lock.readLock().lock();
-
         try {
-            reloadPlayersData(yamlDataFile);
-
             Map<String, Object> playerData = playersData.get(playerName);
             if (playerData == null) return null;
 
@@ -144,11 +142,10 @@ public class YamlDataProvider implements IDataProvider
 
     @Override
     public List<PlayerData> getAll() {
+        reloadPlayersData(yamlDataFile);
+
         lock.readLock().lock();
-
         try {
-            reloadPlayersData(yamlDataFile);
-
             ArrayList<PlayerData> result = new ArrayList<>();
 
             for (String key : playersData.keySet()) {
