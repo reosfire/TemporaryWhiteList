@@ -12,15 +12,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class YamlDataProvider implements IDataProvider
 {
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private final Yaml yaml = YamlUtils.createDumpYaml();
     private final File yamlDataFile;
     private Map<String, Map<String, Object>> playersData;
 
-    public YamlDataProvider(File yamlFile)
-    {
+    public YamlDataProvider(File yamlFile) {
         yamlDataFile = yamlFile;
 
         reloadPlayersData(yamlFile);
@@ -36,44 +37,47 @@ public class YamlDataProvider implements IDataProvider
     }
 
     private Map<String, Map<String, Map<String, Object>>> loadYamlFile(File file) {
-        synchronized (yamlDataFile)
-        {
-            try (Reader reader = new FileReader(file)) {
-                return yaml.load(reader);
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Error while reloading yaml data file", e);
-            }
+        lock.writeLock().lock();
+
+        try (Reader reader = new FileReader(file)) {
+            return yaml.load(reader);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error while reloading yaml data file", e);
+        }
+        finally {
+            lock.writeLock().unlock();
         }
     }
 
     private void saveData() {
-        synchronized (yamlDataFile) {
-            try (Writer writer = new FileWriter(yamlDataFile)) {
-                Map<String, Map<String, Map<String, Object>>> output = new LinkedHashMap<>();
+        lock.writeLock().lock();
 
-                output.put("Players", playersData);
+        try (Writer writer = new FileWriter(yamlDataFile)) {
+            Map<String, Map<String, Map<String, Object>>> output = new LinkedHashMap<>();
 
-                yaml.dump(output, writer);
-            }
-            catch (Exception e) {
-                throw new RuntimeException("Error while saving yaml data file", e);
-            }
+            output.put("Players", playersData);
+
+            yaml.dump(output, writer);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Error while saving yaml data file", e);
+        }
+        finally {
+            lock.writeLock().unlock();
         }
     }
 
-    private Map<String, Object> getPlayerData(String player)
-    {
+    private Map<String, Object> getPlayerData(String player) {
         return playersData.computeIfAbsent(player, k -> new LinkedHashMap<>());
     }
 
     @Override
-    public CompletableFuture<Void> update(PlayerData playerData)
-    {
-        return CompletableFuture.runAsync(() ->
-        {
-            synchronized (yamlDataFile)
-            {
+    public CompletableFuture<Void> update(PlayerData playerData) {
+        return CompletableFuture.runAsync(() -> {
+            lock.writeLock().lock();
+
+            try {
                 reloadPlayersData(yamlDataFile);
 
                 Map<String, Object> dataContainer = getPlayerData(playerData.Name);
@@ -82,34 +86,35 @@ public class YamlDataProvider implements IDataProvider
                 dataContainer.put("timeAmount", playerData.TimeAmount);
                 dataContainer.put("permanent", playerData.Permanent);
 
-                try {
-                    saveData();
-                }
-                catch (Exception e) {
-                    throw new RuntimeException("Error while updating player data for: " + playerData.Name, e);
-                }
+                saveData();
+            }
+            catch (Exception e) {
+                throw new RuntimeException("Error while updating player data for: " + playerData.Name, e);
+            }
+            finally {
+                lock.writeLock().unlock();
             }
         });
     }
 
     @Override
-    public CompletableFuture<Void> remove(String playerName)
-    {
-        return CompletableFuture.runAsync(() ->
-        {
-            reloadPlayersData(yamlDataFile);
+    public CompletableFuture<Void> remove(String playerName) {
+        return CompletableFuture.runAsync(() -> {
+            lock.writeLock().lock();
 
-            playersData.remove(playerName);
+            try {
+                reloadPlayersData(yamlDataFile);
 
-            synchronized (yamlDataFile)
+                playersData.remove(playerName);
+
+                saveData();
+            }
+            catch (Exception e)
             {
-                try {
-                    saveData();
-                }
-                catch (Exception e)
-                {
-                    throw new RuntimeException("Error while removing player data about: " + playerName, e);
-                }
+                throw new RuntimeException("Error while removing player data about: " + playerName, e);
+            }
+            finally {
+                lock.writeLock().unlock();
             }
         });
     }
@@ -121,28 +126,40 @@ public class YamlDataProvider implements IDataProvider
     }
 
     @Override
-    public PlayerData get(String playerName)
-    {
-        reloadPlayersData(yamlDataFile);
+    public PlayerData get(String playerName) {
+        lock.readLock().lock();
 
-        Map<String, Object> playerData = playersData.get(playerName);
-        if (playerData == null) return null;
+        try {
+            reloadPlayersData(yamlDataFile);
 
-        return playerDataFromMap(playerName, playerData);
+            Map<String, Object> playerData = playersData.get(playerName);
+            if (playerData == null) return null;
+
+            return playerDataFromMap(playerName, playerData);
+        }
+        finally {
+            lock.readLock().unlock();
+        }
     }
 
     @Override
-    public List<PlayerData> getAll()
-    {
-        reloadPlayersData(yamlDataFile);
+    public List<PlayerData> getAll() {
+        lock.readLock().lock();
 
-        ArrayList<PlayerData> result = new ArrayList<>();
+        try {
+            reloadPlayersData(yamlDataFile);
 
-        for (String key : playersData.keySet()) {
-            result.add(playerDataFromMap(key, playersData.get(key)));
+            ArrayList<PlayerData> result = new ArrayList<>();
+
+            for (String key : playersData.keySet()) {
+                result.add(playerDataFromMap(key, playersData.get(key)));
+            }
+
+            return result;
         }
-
-        return result;
+        finally {
+            lock.readLock().unlock();
+        }
     }
 
     private PlayerData playerDataFromMap(String name, Map<String, Object> map) {
