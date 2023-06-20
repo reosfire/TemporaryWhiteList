@@ -1,21 +1,28 @@
 package ru.reosfire.twl.common.lib.yaml;
 
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.*;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class YamlUtils {
-    public static Yaml createDumpYaml() {
+    public static Yaml createDefaultYaml() {
         DumperOptions dumperOptions = new DumperOptions();
 
         dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         dumperOptions.setPrettyFlow(true);
+        dumperOptions.setProcessComments(true);
 
-        return new Yaml(dumperOptions);
+        LoaderOptions loaderOptions = new LoaderOptions();
+        loaderOptions.setProcessComments(true);
+
+        return new Yaml(new Constructor(loaderOptions), new Representer(dumperOptions), dumperOptions, loaderOptions);
     }
 
     public static boolean mergeYaml(Node reference, Node receiver) {

@@ -22,7 +22,7 @@ public class LocalizationsLoader
 
     private final File targetDirectory;
     private final ClassLoader classLoader;
-    private final Yaml yaml = YamlUtils.createDumpYaml();
+    private final Yaml yaml = YamlUtils.createDefaultYaml();
 
     public LocalizationsLoader(File targetDirectory)
     {

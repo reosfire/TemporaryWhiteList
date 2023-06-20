@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class YamlDataProvider implements IDataProvider
 {
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Yaml yaml = YamlUtils.createDumpYaml();
+    private final Yaml yaml = YamlUtils.createDefaultYaml();
     private final File yamlDataFile;
     private Map<String, Map<String, Object>> playersData;
 
