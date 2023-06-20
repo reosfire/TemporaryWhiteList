@@ -46,10 +46,10 @@ public class LocalizationsLoader
                     Node fromResource = yaml.compose(resourceReader);
                     Node actual = yaml.compose(fileReader);
 
-                    YamlUtils.mergeYaml(fromResource, actual);
-
-                    try (Writer fileWriter = new FileWriter(translationFile, StandardCharsets.UTF_8)) {
-                        yaml.serialize(actual, fileWriter);
+                    if (YamlUtils.mergeYaml(fromResource, actual)) {
+                        try (Writer fileWriter = new FileWriter(translationFile, StandardCharsets.UTF_8)) {
+                            yaml.serialize(actual, fileWriter);
+                        }
                     }
                 }
                 catch (IOException e) {
