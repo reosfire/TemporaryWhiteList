@@ -13,7 +13,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.yaml.snakeyaml.Yaml;
 import ru.reosfire.twl.common.CommonTwlApi;
 import ru.reosfire.twl.common.LocalizationsLoader;
 import ru.reosfire.twl.common.TimeConverter;
@@ -28,12 +27,14 @@ import ru.reosfire.twl.common.data.providers.SqlDataProvider;
 import ru.reosfire.twl.common.data.providers.YamlDataProvider;
 import ru.reosfire.twl.common.lib.text.ColorizersCollection;
 import ru.reosfire.twl.common.lib.yaml.ConfigSection;
+import ru.reosfire.twl.common.lib.yaml.YamlUtils;
 import ru.reosfire.twl.common.versioning.VersionChecker;
 import ru.reosfire.twl.spigot.commands.SpigotCommandExecutor;
 import ru.reosfire.twl.spigot.commands.importTypes.MinecraftDefaultImportCommand;
 import ru.reosfire.twl.spigot.kickLogFiltering.*;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.Map;
 import java.util.Objects;
 
@@ -198,8 +199,7 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
     {
         try
         {
-            File file = new File(getDataFolder(), "./config.yml");
-            Map<String, Object> loaded = new Yaml().load(new FileInputStream(file));
+            Map<String, Object> loaded = loadOrCreateYaml("config.yml", "config.yml");
             return new Config(new ConfigSection(loaded));
         }
         catch (Exception e)
@@ -209,8 +209,16 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
         }
     }
 
-    private PlayerDatabase loadDatabase(Config config)
-    {
+    private File loadOrCreateFile(String path, String referencePath) throws IOException {
+        File file = new File(getDataFolder(), path);
+        if (!file.exists()) Files.copy(getResource(referencePath), file.toPath());
+        return file;
+    }
+    private Map<String, Object> loadOrCreateYaml(String path, String referencePath) throws IOException {
+        return YamlUtils.loadYaml(loadOrCreateFile(path, referencePath));
+    }
+
+    private PlayerDatabase loadDatabase(Config config) {
         IDataProvider dataProvider;
 
         if (config.DataProvider.equals("yaml"))
@@ -235,22 +243,18 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
         return new PlayerDatabase(dataProvider, config.RefreshAfter, config.IgnoreCase);
     }
 
-    public YamlDataProvider loadYamlData(Config config)
-    {
-        try
-        {
-            return new YamlDataProvider(new File(getDataFolder(), config.DataFile));
+    public YamlDataProvider loadYamlData(Config config) {
+        try {
+            return new YamlDataProvider(loadOrCreateFile(config.DataFile, "data.yml"));
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error while loading yaml database!");
         }
     }
 
     @Override
-    public boolean enable()
-    {
+    public boolean enable() {
         if (enabled) return false;
         onlinePlayersKicker.start();
         setEnabledInFile(true);
@@ -259,8 +263,7 @@ public final class TemporaryWhiteList extends JavaPlugin implements CommonTwlApi
     }
 
     @Override
-    public boolean disable()
-    {
+    public boolean disable() {
         if (!enabled) return false;
         onlinePlayersKicker.stop();
         setEnabledInFile(false);

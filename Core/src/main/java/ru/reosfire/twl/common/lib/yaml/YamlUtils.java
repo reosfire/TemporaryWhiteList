@@ -7,11 +7,17 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.*;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class YamlUtils {
+    private static final Object lock = new Object();
+    private static final Yaml shared = createDefaultYaml();
+
     public static Yaml createDefaultYaml() {
         DumperOptions dumperOptions = new DumperOptions();
 
@@ -23,6 +29,16 @@ public class YamlUtils {
         loaderOptions.setProcessComments(true);
 
         return new Yaml(new Constructor(loaderOptions), new Representer(dumperOptions), dumperOptions, loaderOptions);
+    }
+    public static Map<String, Object> loadYaml(File file) {
+        synchronized (lock) {
+            try (InputStream stream = new FileInputStream(file)) {
+                return shared.load(stream);
+            }
+            catch (Exception e) {
+                throw new RuntimeException("Error while loading yaml", e);
+            }
+        }
     }
 
     public static boolean mergeYaml(Node reference, Node receiver) {
